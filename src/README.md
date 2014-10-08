@@ -8,6 +8,12 @@ single command:
 $ make
 ```
 
+To run the compiled executeable file:
+
+```bash
+$ ./sss4910
+```
+
 After compilation, the Makefile can remove the object files generated for  
 the process:
 
