@@ -5,7 +5,7 @@ all: sss4910
 
 sss4910: sss4910.o accessreader.o cudaparser.o
 	@echo Linking object files...
-	@ $(CC) $(WARN) sss4910.o accessreader.o cudaparser.o -o sss4910
+	@ $(CC) $(WARN) sss4910.o accessreader.o cudaparser.o -o sss4910 -lpthread
 	@echo DONE!
 
 sss4910.o:
