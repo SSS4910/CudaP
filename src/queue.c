@@ -12,7 +12,6 @@
 # include "queue.h"
 
 
-
 char * 
 queue_read(Queue *queue){
     char * line = "";
@@ -35,7 +34,7 @@ queue_read(Queue *queue){
     return line;
 }
 
-int // or int??
+int
 queue_write(Queue *queue, char *strToWrite){
     int success = 0;
     if(is_queue_ready_write(queue) == 1)
@@ -94,7 +93,7 @@ queue_init(Queue *queue){
     queue->writePtr = 0;
     queue->readPtr = 0;
     queue->MAX_SIZE = 20;
-    queue->strArray[queue.MAX_SIZE];
+    queue->strArray[queue->MAX_SIZE];
 
     return queue;
 }
