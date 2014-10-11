@@ -10,6 +10,15 @@
 #		Seed
 #
 
+
+#current goals
+# change the way the random is done. 
+# right now its too random 
+#	instead of picking a random ip or message everytime
+#	just generate X random ips and put them in a list
+# 	instead of truly random why not make it so there is ahigher
+#	concentration near teh center?
+
 import random
 import string
 import sys
@@ -123,6 +132,8 @@ def getRef():
 	return ''
 def getUA():
 	return ''
+
+
 def createLine(imp):
 		
 	# [IP] - - [DATE] "command " 404or200 numbers "-" "internetbrowser?"
