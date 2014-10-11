@@ -17,6 +17,8 @@ import time
  
 #---------------Global variables-------------
 rSeed = 1337
+maxYear = 2014
+minYear = 2013
 random.seed(rSeed)
 #----------------LOG CREATOR------------------
 def ranDate():
@@ -60,7 +62,7 @@ def ranDate():
 	else :
 		mon = 'ERR'
 
-	year = random.randint(2000, 2014)
+	year = random.randint(minYear, maxYear)
 
 	hour = random.randint(0, 23)
 
@@ -78,12 +80,49 @@ def ranDate():
 	return out
 
 def getCommand():
-	return '"GET /apache_pb.gif HTTP/1.0"'			
-def getStatus():
-	return '404'
-def getSize():
-	return '2326'
 
+	ranL = random.randint(1,15)
+	ranS = ''.join(random.choice(string.ascii_lowercase) for _ in range(ranL))
+	
+	ranE = random.randint(1 ,10)
+	extention = '.ERROR'
+	if (ranE == 1):
+		extention = '.jpg'
+	elif (ranE == 2):
+		extention = '.png'
+	elif (ranE == 3): 
+		extention = '.exe'
+	elif (ranE == 4):
+		extention = '.mp3'
+	elif (ranE == 5):
+		extention = '.mp4'
+	elif (ranE == 6):
+		extention = '.gif'
+	elif (ranE == 7):
+		extention = '.cs'
+	elif (ranE == 8):
+		extention = '.js'
+	elif (ranE == 9):
+		extention = '.java'
+	else :
+		extention = ''
+
+		#.jpg .png .exe .mp3 .mp4 .gif .cs .js .java
+
+	return '"GET /%s%s HTTP/1.0"' %(ranS, extention)		
+	
+def getStatus():
+	status = random.randint(1,10)
+	if (status == 1):
+		return '404'
+	else:
+		return '200'
+def getSize():
+	return '%d' % random.randint(0, 10000000)
+def getRef():
+	return ''
+def getUA():
+	return ''
 def createLine(imp):
 		
 	# [IP] - - [DATE] "command " 404or200 numbers "-" "internetbrowser?"
@@ -107,6 +146,10 @@ def createLine(imp):
 	out = out + getStatus() + ' '
 		# (%b)
 	out = out + getSize() + ' '
+		# (\"%{referer}i\")
+	out = out + getRef() + ' '
+		# (\"%{User-agent}i\")
+	out = out + getUA() 
 
 	out = out + '\n'
 	return out 	
@@ -118,7 +161,7 @@ def createLine(imp):
 
 
 
-	#return '69.58.%d.58 - - - - [29/Sep/2014:08:49:28 -0400] "GET /robots.txt HTTP/1.1" 404 445 "-" "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:14.0; ips-agent) Gecko/20100101 Firefox/14.0.1" \n' % (a)
+	 #return '69.58.%d.58 - - - - [29/Sep/2014:08:49:28 -0400] "GET /robots.txt HTTP/1.1" 404 445 "-" "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:14.0; ips-agent) Gecko/20100101 Firefox/14.0.1" \n' % (a)
 
 #------------------MAIN------------------------
 
