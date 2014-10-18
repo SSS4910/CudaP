@@ -3,9 +3,9 @@ WARN= -Wall
 
 all: sss4910
 
-sss4910: sss4910.o accessreader.o cudaparser.o debug.o
+sss4910: sss4910.o accessreader.o parser.o debug.o
 	@echo Linking object files...
-	@ $(CC) $(WARN) sss4910.o accessreader.o cudaparser.o debug.o -o sss4910 -lpthread
+	@ $(CC) $(WARN) sss4910.o accessreader.o parser.o debug.o -o sss4910 -lpthread
 	@echo DONE!
 
 sss4910.o:
@@ -16,9 +16,9 @@ accessreader.o:
 	@echo Generating accessreader.c object file...
 	@ $(CC) $(WARN) -c accessreader.c
 
-cudaparser.o:
-	@echo Generating cudaparser.c object file...
-	@ $(CC) $(WARN) -c cudaparser.c
+parser.o:
+	@echo Generating parser.c object file...
+	@ $(CC) $(WARN) -c parser.c
 
 debug.o:
 	@echo Generating debug.c object file...

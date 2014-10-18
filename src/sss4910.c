@@ -1,31 +1,31 @@
+/*
+ * TODO:
+ *  -> BUG #1 - need to properly cleanup if buffer reading fails
+ *  -> BUG #2 -
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 
-#include "accessreader.h"
-#include "cudaparser.h"
+#include "sss4910.h"
+#include "parser.h"
 #include "debug.h"
-
-#define BUFFER_SIZE 512
-#define MAX_LINE_LENGTH 4096  
-
-typedef struct{
-    int available;
-    char ** strArray; 
-    struct Node* next;
-} Buffer;
-
-Buffer * leftBuffer;
-Buffer * rightBuffer;
 
 Buffer *
 create_buffer();
 
 int
+fill_buffer(Buffer *, FILE *);
+
+int
 main(int argc, char** argv){
     int err;
     FILE * logfile;
-    pthread_t cudaParser;
+    Buffer * leftBuffer;
+    Buffer * rightBuffer;
+    pthread_t processThreadLeft;
+    pthread_t processThreadRight;
 
     open_error_logfile();
     //handle options and flags (getopt)
@@ -34,51 +34,64 @@ main(int argc, char** argv){
     errlog_write("Opening access.log file\n");
     if ((logfile = fopen("access.log", "r")) == NULL)
     {
+        errlog_write("access.log not found, aborting!\n");
+        printf("access.log not found, aborting!\n");
         return -1;
     }
 
-    errlog_write("Allocating memory for line buffer\n");
+    errlog_write("Allocating memory for left buffer\n");
+    errlog_write("Allocating memory for right buffer\n");
     //at some point, we need to make this larger than 4096
     //its a pretty big deal
     
     leftBuffer = create_buffer();
     rightBuffer = create_buffer();
 
-    leftBuffer->available = 1;
-    rightBuffer->available = 1;
+    leftBuffer->available = TRUE;
+    rightBuffer->available = TRUE;
 
     while (!feof(logfile))
     {
         if (leftBuffer->available)
         {
-            int i;
-            for (i = 0; i < BUFFER_SIZE; i++)
+            leftBuffer->available = FALSE;
+            err = fill_buffer(leftBuffer, logfile);
+            if (err == -1)
             {
-                if (fgets(leftBuffer->strArray[i], MAX_LINE_LENGTH, logfile) != NULL)
-                {
-                    printf("%s", leftBuffer->strArray[i]);
-                }
+                //fix this later -> see BUG #1
+                return -1;
+            }
+
+            err = pthread_create(&processThreadLeft, NULL, process_buffer, (void *) leftBuffer);
+            if (err != 0)
+            {
+                //fix this later
+                return -1;
             }
         }
 
         if (rightBuffer->available)
         {
+            rightBuffer->available = FALSE;
+            err = fill_buffer(rightBuffer, logfile);
+            if (err == -1)
+            {
+                //fix this later
+                return -1;
+            }
             
-            printf("YEAHHHHHHHHHHHHHHH BUUUUUUUDDDDY\n");
+            err = pthread_create(&processThreadRight, NULL, process_buffer, (void *) rightBuffer);
+            if (err != 0)
+            {
+                //fix this later
+                return -1;
+            }
         }
     }
-
-    //Initialize cudaParser thread
-    err = pthread_create(&cudaParser, NULL, cuda_parser, NULL);
-    if (err != 0)
-    {
-        printf("error2: couldn't create CudaParser thread!!!\n");
-        return 1;
-    }   
-    //join CudaParser thread
-    pthread_join(cudaParser, NULL);
-
     //cleanup
+    
+    pthread_join(processThreadLeft, NULL);
+    pthread_join(processThreadRight, NULL);
     errlog_write("Closing access.log file...\n");
     fclose(logfile);
 
@@ -91,7 +104,8 @@ main(int argc, char** argv){
     return 0;
 }
 
-Buffer * create_buffer(){
+Buffer * 
+create_buffer(){
     Buffer * buffer;
  
     buffer = malloc(sizeof(Buffer));
@@ -108,4 +122,17 @@ Buffer * create_buffer(){
     }
 
     return buffer;
+}
+
+int
+fill_buffer(Buffer * buffer, FILE * logfile){
+    int i;
+    for (i = 0; i < BUFFER_SIZE; i++)
+    {
+        if (fgets(buffer->strArray[i], MAX_LINE_LENGTH, logfile) == NULL)
+        {
+            return -1;
+        }
+    }
+    return 0;
 }
