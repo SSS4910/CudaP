@@ -34,6 +34,8 @@ main(int argc, char **argv){
     print_header();
 
     print_request(&req);
+
+    print_ascii_row();
     close_parser_output();
     return 0;
 }

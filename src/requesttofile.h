@@ -8,4 +8,7 @@ int
 print_header();
 
 int
+print_ascii_row();
+
+int
 print_request(Request *);
