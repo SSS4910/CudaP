@@ -3,9 +3,9 @@ WARN= -Wall
 
 all: sss4910
 
-sss4910: sss4910.o parser.o debug.o requesttofile.o
+sss4910: sss4910.o parser.o debug.o outputreq.o
 	@echo Linking object files...
-	@ $(CC) $(WARN) sss4910.o parser.o debug.o requesttofile.o -o sss4910
+	@ $(CC) $(WARN) sss4910.o parser.o debug.o outputreq.o -o sss4910
 	@echo DONE!
 
 sss4910.o:
@@ -20,9 +20,9 @@ debug.o:
 	@echo Generating debug.c object file...
 	@ $(CC) $(WARN) -c debug.c
 
-requesttofile.o:
-	@echo Generating requesttofile.c objectfile...
-	@ $(CC) $(WARN) -c requesttofile.c
+outputreq.o:
+	@echo Generating outputreq.c objectfile...
+	@ $(CC) $(WARN) -c outputreq.c
 
 errorclean:
 	@echo Removin errorlog.txt...
