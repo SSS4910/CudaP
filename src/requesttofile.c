@@ -31,7 +31,7 @@ close_parser_output(){
 //prints the parser output file header
 int
 print_header(){
-    const char *header = "Contents of Buffer";
+    const char *header = "Contents of Buffer\n";
     fputs(header, parserOutput);
     return 0;
 }
@@ -39,8 +39,12 @@ print_header(){
 //prints a request to file
 int
 print_request(Request *request){
-    fprintf(parserOutput, "%s", request->host);
-    fprintf(parserOutput, "%s", request->country);
-    fprintf(parserOutput, "%s", request->region);
+    fputs("|", parserOutput);
+    fprintf(parserOutput, "%15.15s | ", request->host);
+    fprintf(parserOutput, "%32s | ", request->country);
+    fprintf(parserOutput, "%32s | ", request->region);
+    fprintf(parserOutput, "%32s | ", request->req);
+    fprintf(parserOutput, "%3d | ", request->httpReturnCode);
+    fprintf(parserOutput, "%4d |\n", request->dataSize);
     return 0;
 }

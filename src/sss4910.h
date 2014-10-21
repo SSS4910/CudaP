@@ -10,7 +10,7 @@ typedef struct{
     //rfc 1413
     //http auth
     //time_t accessTime;
-    char * request;
+    char * req;
     int httpReturnCode;
     int dataSize;
     char * referer;

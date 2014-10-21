@@ -1,0 +1,2 @@
+Contents of Buffer
+|      127.0.0.1 |                    United States |                         Michigan |                        GET stuff | 200 | 2048 |

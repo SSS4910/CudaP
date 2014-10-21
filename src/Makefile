@@ -28,11 +28,15 @@ errorclean:
 	@echo Removin errorlog.txt...
 	@rm -f errorlog.txt
 
+outputclean:
+	@echo Removing output.txt file...
+	@rm -f output.txt
+
 objectclean:
 	@echo Removing object files...
 	@rm -f *.o
 
-clean: objectclean errorclean
+clean: objectclean outputclean errorclean
 	@echo Removing executeable...
 	@rm -f ./sss4910
 	@echo DONE!
