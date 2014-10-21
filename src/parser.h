@@ -1,5 +1,2 @@
-void *
-process_buffer(void *);
-
-void *
-parse_line(void *);
+Request *
+parse(char *);

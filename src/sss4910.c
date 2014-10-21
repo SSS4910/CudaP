@@ -15,17 +15,16 @@
 Buffer *
 create_buffer();
 
-int
-fill_buffer(Buffer *, FILE *);
+char *
+log_readline(FILE *);
 
 int
 main(int argc, char** argv){
-    int err;
+    int i;
+    //int err;
+    char * logline;
     FILE * logfile;
-    Buffer * leftBuffer;
-    Buffer * rightBuffer;
-    pthread_t processThreadLeft;
-    pthread_t processThreadRight;
+    Buffer * buffer;
 
     open_error_logfile();
     //handle options and flags (getopt)
@@ -41,63 +40,36 @@ main(int argc, char** argv){
 
     errlog_write("Allocating memory for left buffer\n");
     errlog_write("Allocating memory for right buffer\n");
-    //at some point, we need to make this larger than 4096
-    //its a pretty big deal
     
-    leftBuffer = create_buffer();
-    rightBuffer = create_buffer();
-
-    leftBuffer->available = TRUE;
-    rightBuffer->available = TRUE;
+    buffer = create_buffer();
+    buffer->available = TRUE;
 
     while (!feof(logfile))
     {
-        if (leftBuffer->available)
+        buffer->currentSize = 0;
+        for (i = 0; i < BUFFER_SIZE; i++)
         {
-            leftBuffer->available = FALSE;
-            err = fill_buffer(leftBuffer, logfile);
-            if (err == -1)
+            //read a line
+            logline = log_readline(logfile);
+            if ((logline == (char *) NULL) && feof(logfile))
             {
-                //fix this later -> see BUG #1
-                return -1;
+                printf("hit eof\n");
             }
 
-            err = pthread_create(&processThreadLeft, NULL, process_buffer, (void *) leftBuffer);
-            if (err != 0)
-            {
-                //fix this later
-                return -1;
-            }
-        }
+            //parse a line
+            //LogLine = parse(logline);
 
-        if (rightBuffer->available)
-        {
-            rightBuffer->available = FALSE;
-            err = fill_buffer(rightBuffer, logfile);
-            if (err == -1)
-            {
-                //fix this later
-                return -1;
-            }
-            
-            err = pthread_create(&processThreadRight, NULL, process_buffer, (void *) rightBuffer);
-            if (err != 0)
-            {
-                //fix this later
-                return -1;
-            }
+            //add LogLine to buffer
+            buffer->strArray[i] = logline;
+            buffer->currentSize++;
         }
     }
+
     //cleanup
-    
-    pthread_join(processThreadLeft, NULL);
-    pthread_join(processThreadRight, NULL);
     errlog_write("Closing access.log file...\n");
     fclose(logfile);
 
-    free(leftBuffer);
-    free(rightBuffer);
-
+    free(buffer);
     errlog_write("Freeing memory for line buffer\n");
  
     close_error_logfile();
@@ -124,15 +96,12 @@ create_buffer(){
     return buffer;
 }
 
-int
-fill_buffer(Buffer * buffer, FILE * logfile){
-    int i;
-    for (i = 0; i < BUFFER_SIZE; i++)
+char *
+log_readline(FILE * logfile){
+    char * line = malloc((MAX_LINE_LENGTH) * sizeof(char));
+    if (fgets(line, MAX_LINE_LENGTH, logfile) != NULL)
     {
-        if (fgets(buffer->strArray[i], MAX_LINE_LENGTH, logfile) == NULL)
-        {
-            return -1;
-        }
+        return line;
     }
-    return 0;
+    return (char *)NULL;
 }

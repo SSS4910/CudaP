@@ -3,18 +3,14 @@ WARN= -Wall
 
 all: sss4910
 
-sss4910: sss4910.o accessreader.o parser.o debug.o
+sss4910: sss4910.o parser.o debug.o requesttofile.o
 	@echo Linking object files...
-	@ $(CC) $(WARN) sss4910.o accessreader.o parser.o debug.o -o sss4910 -lpthread
+	@ $(CC) $(WARN) sss4910.o parser.o debug.o requesttofile.o -o sss4910
 	@echo DONE!
 
 sss4910.o:
 	@echo Generating sss4910.c object file...
 	@ $(CC) $(WARN) -c sss4910.c
-
-accessreader.o:
-	@echo Generating accessreader.c object file...
-	@ $(CC) $(WARN) -c accessreader.c
 
 parser.o:
 	@echo Generating parser.c object file...
@@ -23,6 +19,10 @@ parser.o:
 debug.o:
 	@echo Generating debug.c object file...
 	@ $(CC) $(WARN) -c debug.c
+
+requesttofile.o:
+	@echo Generating requesttofile.c objectfile...
+	@ $(CC) $(WARN) -c requesttofile.c
 
 errorclean:
 	@echo Removin errorlog.txt...

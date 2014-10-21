@@ -1,34 +1,25 @@
 #include <stdio.h>
-#include <pthread.h>
+#include <stdlib.h>
 
+#include "sss4910.h"
 #include "parser.h"
 #include "debug.h"
-#include "sss4910.h"
 
-#define MAX_THREADS 512
-
-void *
-process_buffer(void* arg){
-    int i;
-    Buffer * buffer = (Buffer *) arg;
-    pthread_t parseThreads[MAX_THREADS];
-
-    for (i = 0; i < MAX_THREADS; i++)
-    {
-        pthread_create(&parseThreads[i], NULL, parse_line, (void *) buffer->strArray[i]);
-    }
-
-    for (i = 0; i < MAX_THREADS; i++)
-    {
-        pthread_join(parseThreads[i], NULL);
-    }
-    buffer->available = TRUE;
-    return 0;
-}
-
-void *
-parse_line(void * arg){
-    char * line = (char *) arg;
-    printf("%s", line);
-    return 0;
+Request *
+parse(char * line){
+    //int i = 0;
+    //int field = 0;
+    //int whiteSpaceIndex = 0;
+    Request * request = malloc(sizeof (Request *));
+    //for char c in line:
+    //  if c is ":
+    //      ignore whitespace == true
+    //  elif ignorewhitespace == true && c is ":
+    //      ignore whitespace == false
+    //  elif ignorewhitespace == false && c is whitespace:
+    //      mark whitespace index
+    //      strip out substring
+    //  else:
+    //      continue
+    return request;
 }
