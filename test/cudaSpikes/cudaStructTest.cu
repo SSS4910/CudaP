@@ -15,7 +15,7 @@ typedef struct{
     int height;
 } Person;
 
-Person * populate_array(Person *people);
+Person * populate_array();
 
 __global__ void analyze_id()
 {
@@ -35,68 +35,41 @@ __global__ void analyze_height()
 
 int main(void)
 {
-    Person *people = malloc(N * sizeof(Person));
-    people = populate_array(people);
+    Person * people;
+    people = populate_array();
+
+    int x;
+    for(x = 0; x < 1; x++)
+    {
+        printf("id = %d\n", people[x].id);
+        printf("age = %d\n", people[x].age);
+        printf("height = %d\n", people[x].height);
+        printf("\n");
+    }
 
     return 0;
 
 
 }
 
-Person * populate_array(Person *people)
+Person * populate_array()
 {
-    Person person1;
-    person1.id = 1;
-    person1.age = 25;
-    person1.height = 6;
+    Person people[10];
+    //people = malloc(N * sizeof(Person));
 
-    Person person2;
-    person2.id = 2;
-    person2.age = 21;
-    person2.height = 5;
-
-    Person person3;
-    person3.id = 3;
-    person3.age = 26;
-    person3.height = 6;
-
-    Person person4;
-    person4.id = 4;
-    person4.age = 23;
-    person4.height = 5;
-
-    Person person5;
-    person5.id = 5;
-    person5.age = 25;
-    person5.height = 7;
-
-    Person person6;
-    person6.id = 6;
-    person6.age = 27;
-    person6.height = 5;
-
-    Person person7;
-    person7.id = 7;
-    person7.age = 29;
-    person7.height = 6;
-
-    Person person8;
-    person8.id = 8;
-    person8.age = 24;
-    person8.height = 6;
-
-    Person person9;
-    person9.id = 9;
-    person9.age = 27;
-    person9.height = 6;
-
-    Person person10;
-    person10.id = 10;
-    person10.age = 30;
-    person10.height = 2;
+    Person person1 = {1, 25, 6};
+   /* Person *person2 = {2, 25, 6};
+    Person *person3 = {3, 25, 6};
+    Person *person4 = {4, 25, 6};
+    Person *person5 = {5, 25, 6};
+    Person *person6 = {6, 25, 6};
+    Person *person7 = {7, 25, 6};
+    Person *person8 = {8, 25, 6};
+    Person *person9 = {9, 25, 6};
+    Person *person10 = {10, 25, 6};*/
 
     people[0] = person1;
-    people[1] = person2;
+   /* people[1] = person2;
     people[2] = person3;
     people[3] = person4;
     people[4] = person5;
@@ -104,7 +77,7 @@ Person * populate_array(Person *people)
     people[6] = person7;
     people[7] = person8;
     people[8] = person9;
-    people[9] = person10;
+    people[9] = person10;*/
 
     return people;
 
