@@ -20,6 +20,7 @@ typedef struct{
 } Person;
 
 
+// Declare the Cuda kernels and any Cuda functions
 __global__ void analyze_id(Person *people, int *statResults)
 {
 
@@ -40,9 +41,9 @@ int main(void)
 {
     // CPU variables
     Person *people;
-    int *idStats[N];
-    int *ageStats[N];
-    int *heightStats[N];
+    int idStats[N];
+    int ageStats[N];
+    int heightStats[N];
 
     // GPU variables
     Person *dev_people;
