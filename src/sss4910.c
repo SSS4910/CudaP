@@ -1,9 +1,3 @@
-/*
- * TODO:
- *  -> BUG #1 - need to properly cleanup if buffer reading fails
- *  -> BUG #2 -
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -18,6 +12,16 @@ create_buffer();
 char *
 log_readline(FILE *);
 
+/*
+ * FUNCTION: main
+ * --------------
+ * the main entry point of the application
+ *
+ * argc: the number of command line arguments
+ * argv: the command line arguments, kept as a pointer to a string
+ *
+ * returns: 0 on successful completion, -1 on failure
+ */
 int
 main(int argc, char** argv){
     int i;
@@ -26,20 +30,20 @@ main(int argc, char** argv){
     FILE * logfile;
     Buffer * buffer;
 
-    open_error_logfile();
+    open_debug_file();
     //handle options and flags (getopt)
 
-    errlog_write("Initiating Access Reader thread\n");
-    errlog_write("Opening access.log file\n");
+    debug_write("Initiating Access Reader thread\n");
+    debug_write("Opening access.log file\n");
     if ((logfile = fopen("access.log", "r")) == NULL)
     {
-        errlog_write("access.log not found, aborting!\n");
+        debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
         return -1;
     }
 
-    errlog_write("Allocating memory for left buffer\n");
-    errlog_write("Allocating memory for right buffer\n");
+    debug_write("Allocating memory for left buffer\n");
+    debug_write("Allocating memory for right buffer\n");
     
     buffer = create_buffer();
     buffer->available = TRUE;
@@ -66,16 +70,24 @@ main(int argc, char** argv){
     }
 
     //cleanup
-    errlog_write("Closing access.log file...\n");
+    debug_write("Closing access.log file...\n");
     fclose(logfile);
 
     free(buffer);
-    errlog_write("Freeing memory for line buffer\n");
+    debug_write("Freeing memory for line buffer\n");
  
-    close_error_logfile();
+    close_debug_file();
     return 0;
 }
 
+
+/*
+ * FUNCTION: create_buffer
+ * -----------------------
+ * constructs a buffer to store each line of the log
+ *
+ * return: a pointer to a buffer structure on success, NULL on failure
+ */
 Buffer * 
 create_buffer(){
     Buffer * buffer;
@@ -96,6 +108,15 @@ create_buffer(){
     return buffer;
 }
 
+/*
+ * FUNCTION: log_readline
+ * ----------------------
+ * reads next line from provided log file
+ *
+ * logfile: the log file pointer
+ *
+ * return: a newline terminated string containing the next line from file
+ */
 char *
 log_readline(FILE * logfile){
     char * line = malloc((MAX_LINE_LENGTH) * sizeof(char));

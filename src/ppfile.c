@@ -2,38 +2,59 @@
 
 #include "sss4910.h"
 #include "debug.h"
-#include "outputreq.h"
+#include "ppfile.h"
 
 FILE *parserOutput;
 
-//opens a file for parser output
+/*
+ * FUNCTION: pp_open
+ * -----------------
+ * creates and opens a pretty print output file
+ *
+ * filename: filename string for file creation
+ *
+ * returns: 0 on successful completion, -1 on failure
+ */
 int 
 open_parser_output(char *filename){
     if ((parserOutput = fopen(filename, "w")) == NULL)
     {
-        errlog_write("failed to open parser output file\n");
+        debug_write("failed to open parser output file\n");
         return -1;
     }
     return 0;
 }
 
-//closes the parser output file
+
+/*
+ * FUNCTION: pp_close
+ * ------------------
+ * closes the pretty print output file
+ *
+ * returns: 0 on successful completion, -1 on failure
+ */
 int
-close_parser_output(){
+pp_close(){
     if (fclose(parserOutput) != 0)
     {
-        errlog_write("failed to close parser output file\n");
+        debug_write("failed to close parser output file\n");
         return -1;
     }
     return 0;
 }
 
-//prints the parser output file header
+/*
+ * FUNCTION: pp_header
+ * ----------------------
+ * pretty prints the table header
+ *
+ * returns: 0 on successful completion, -1 on failure
+ */
 int
-print_header(){
+pp_header(){
     const char *header = "Parsed Requests\n";
     fputs(header, parserOutput);
-    print_ascii_row();
+    pp_line();
     fputs("|", parserOutput);
     fprintf(parserOutput, "%15.15s|", "HOST");
     fprintf(parserOutput, "%32.32s|", "COUNTRY");
@@ -44,8 +65,15 @@ print_header(){
     return 0;
 }
 
+/*
+ * FUNCTION: pp_line
+ * --------------------
+ * prints a line of hyphens
+ *
+ * returns: 0 on successful completion, -1 on failure
+ */
 int
-print_ascii_row()
+pp_line()
 {
     int i;
     for (i = 0; i < 125; i++)
@@ -56,10 +84,18 @@ print_ascii_row()
     return 0;
 }
 
-//prints a request to file
+/*
+ * FUNCTION: pp_request
+ * -----------------------
+ * pretty prints a request structure to file
+ *
+ * request: a pointer to a request structure
+ *
+ * returns: 0 on successful completion, -1 on failure
+ */
 int
-print_request(Request *request){
-    print_ascii_row();
+pp_request(Request *request){
+    pp_line();
 
     fputs("|", parserOutput);
     fprintf(parserOutput, "%15.15s|", request->host);

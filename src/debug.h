@@ -1,8 +1,8 @@
 int
-open_error_logfile();
+open_debug_file();
 
 int
-close_error_logfile();
+close_debug_file();
 
 int
-errlog_write(char *);
+debug_write(char *);

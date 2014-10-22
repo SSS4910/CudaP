@@ -5,6 +5,15 @@
 #include "parser.h"
 #include "debug.h"
 
+/*
+ * FUNCTION: parse
+ * --------------
+ * parses a NCSA Common Log Format string into a Request structure
+ *
+ * line: a string containing a NCSA Common Log Format access line
+ *
+ * returns: a pointer to a Request structure
+ */
 Request *
 parse(char * line){
     //int i = 0;
