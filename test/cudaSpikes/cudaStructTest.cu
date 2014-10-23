@@ -10,8 +10,8 @@
 #include "book.h"
 
 #define N 10
-#define BLOCKS 1
-#define THREADS 10
+/*#define BLOCKS 2
+#define THREADS 5*/
 
 typedef struct{
     int id;
@@ -23,25 +23,70 @@ typedef struct{
 // Declare the Cuda kernels and any Cuda functions
 __global__ void analyze_id(Person *people, int *statResults)
 {
-    int id = threadIdx.x;
-    statResults[id] = id + 1;
+    int id = threadIdx.x + blockIdx.x * blockDim.x;
+
+    if(id < N)
+    {
+        Person person = people[id];
+
+        if(person.id < 6)
+        {
+            statResults[id] = 1;
+        }
+        else
+        {
+            statResults[id] = 0;
+        }
+    }
+    
 }
 
 __global__ void analyze_age(Person *people, int *statResults)
 {
-    int id = threadIdx.x;
-    statResults[id] = id + 2;
+    int id = threadIdx.x + blockIdx.x * blockDim.x;
+
+    if(id < N)
+    {
+        Person person = people[id];
+
+        if(person.age != 28)
+        {
+            statResults[id] = 1;
+        }
+        else
+        {
+            statResults[id] = 0;
+        }
+    }
+
 }
 
 __global__ void analyze_height(Person *people, int *statResults)
 {
-    int id = threadIdx.x;
-    statResults[id] = id -1;
+    int id = threadIdx.x + blockIdx.x * blockDim.x;
+
+    if(id < N)
+    {
+        Person person = people[id];
+
+        if(person.height != 6)
+        {
+            statResults[id] = 1;
+        }
+        else
+        {
+            statResults[id] = 0;
+        }
+    }
+    
 }
 
 
 int main(void)
 {
+    int *cudaValues;
+    cudaValues = cuda_setup(N);
+
     // CPU variables
     Person *people;
     int idStats[N];
@@ -87,13 +132,13 @@ int main(void)
 
     // check data in people
     int x;
-    for(x = 0; x < N; x++)
+    /*for(x = 0; x < N; x++)
     {
         printf("id = %d\n", people[x].id);
         printf("age = %d\n", people[x].age);
         printf("height = %d\n", people[x].height);
         printf("\n");
-    }
+    }*/
 
     // gives a pointer to the GPU to reference the zero-copy memory
     HANDLE_ERROR(cudaHostGetDevicePointer(&dev_people, people, 0));
@@ -111,33 +156,54 @@ int main(void)
     // make sure everyone is done
     HANDLE_ERROR(cudaThreadSynchronize());
 
-    // Print results
-    printf("\n");
-    printf("idStats results\n");
+    // cuda cleanup
+    cudaFree(dev_people);
+    cudaFree(dev_idStats);
+    cudaFree(dev_ageStats);
+    cudaFree(dev_heightStats);
+
+    // total results
+    int idTotal = 0;
+    int ageTotal = 0;
+    int heightTotal = 0;
+
+    // id totals
     for(x = 0; x < N; x++)
     {
-        printf("%d\n", idStats[x]);
+        idTotal += idStats[x];
+    }
+
+    // age totals
+    for(x = 0; x < N; x++)
+    {
+        ageTotal += ageStats[x];
+    }
+
+    // height totals
+    for(x = 0; x < N; x++)
+    {
+        heightTotal += heightStats[x];
     }
 
     printf("\n");
-    printf("ageStats results\n");
-    for(x = 0; x < N; x++)
-    {
-        printf("%d\n", ageStats[x]);
-    }
-
+    printf("ID total: %d\n", idTotal);
+    printf("Age total: %d\n", ageTotal);
+    printf("Height total: %d\n", heightTotal);
     printf("\n");
-    printf("heightStats results\n");
-    for(x = 0; x < N; x++)
-    {
-        printf("%d\n", heightStats[x]);
-    }
 
     printf("End of cuda struct test\n");
 
 
     return 0;
 
+
+}
+
+// checks system for cuda compatible devices;
+// makes sure the cuda devices have the necessary compute capabilities;
+// and 
+int * cuda_setup(int N)
+{
 
 }
 
