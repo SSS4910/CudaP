@@ -2,11 +2,58 @@
 
 import string
 import sys
+'''class hostData:
+        host = ''
+        number = 0;
+        def __init__(self, inhost):
+            self.host = inhost
+        setHost(inhost):
+            self.host = inhost
+        getHost():
+            return host
+        inc():
+            self.number = self.number + 1'''
 
+
+uniHost = []
+uniHost2 = []
+def listHost():
+    global uniHost
+    for x in uniHost:
+        print x
+    #print uniHost.len()
+
+
+
+def analize(host , rfc, auth, time, command, code,  size, referer, userAgent):
+    global uniHost
+    global uniHost2
+
+    #print host + ' ' + time + ' ' + command+ ' %d' % code + ' %d' % size 
+    flag = 0
+    #print host
+    '''for x in uniHost:
+        if x == host:
+            flag == 1
+    '''
+    flag = uniHost.count(host)
+    if flag == 0: 
+        uniHost.append(host)
+    
+    '''flag = 0
+    for x in uniHost2:
+        if x.getHost == x:
+            flag = 1
+            break
+    if flag == 0:'''
+
+
+    '''if command[1:4] != "GET":
+        print command'''
 
 
 def parse_line(line):
-    print line
+    #print line
     linedata = list(line)
     n = 0;
     i = 0;
@@ -16,11 +63,14 @@ def parse_line(line):
     time = ''
     command = ''
     retCode = ''
+    code = 0
+    size = 0
     retSize = ''
     referer = '' 
     userAgent = ''
     flag = 0;
-    px = ''
+    banana = 0;
+
     for x in linedata: 
         if n == 0:
             if x == ' ':
@@ -49,7 +99,7 @@ def parse_line(line):
                 time = time + x
         elif n == 4:
             if flag == 2:
-                if x != ' ' or px != '/' :
+                '''if x != ' ' or linedata[i-2] == "/":
                     if linedata[i+1] == '0':
                         flag = 0
                         n = 5
@@ -83,7 +133,12 @@ def parse_line(line):
                     else:
                         n = 4
                         flag = 1
-                        command = command + x
+                        command = command + x '''
+                if x != ' ':
+                    flag =  1
+                    n = 4
+                    banana = 1
+                    command = command + x    
                 else:
                     flag = 0
                     n = 5
@@ -95,11 +150,19 @@ def parse_line(line):
         elif n == 5:
             if x == ' ':
                 n = 6
+                try:
+                    code = int(retCode)
+                except ValueError:
+                    banana = 1
+                    command = command + retCode + x
+                    retCode = ''
+                    n = 5
             else: 
                 retCode = retCode + x
         elif n == 6:
             if x == ' ':
                 n = 7
+                size = long(retSize)
             elif x == '-':
                 retSize = retSize + '0'
             else:
@@ -123,26 +186,32 @@ def parse_line(line):
                 flag = flag + 1
             else:
                 userAgent = userAgent + x
-        px = x
         i = i + 1
 
-    print '##' + retCode + '##' + retSize
-    code = int(retCode)
-    size = long(retSize)
+    if banana == 1:
+        print ' ' + retCode + ' ' + command
+    #print '##' + retCode + '##' + retSize + command
+    #code = int(retCode)
+    #size = long(retSize)
             
 
-    print host + ' ' + time + ' ' + command+ ' %d' % code + ' %d' % size 
-
-
+    #print host + ' ' + time + ' ' + command+ ' %d' % code + ' %d' % size 
+        # code is all generated
+    analize(host , rfc, auth, time, command, code,  size, referer, userAgent)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print 'WRONG'
     else:
+        j = 0;
         f = open(sys.argv[1], 'r')
         for l in f:
             parse_line(l)
+            #print j
+            j = j + 1
+        
 
+        #listHost()
         print 'done :D'
-        close(f)
+        f.close()
 
