@@ -1,7 +1,7 @@
 /*
     cudaStructTest
     testing/optimizing how to access/manipulate/return
-    structures in cuda
+    structures in cuda.
 */
 
 #include <stdio.h>
@@ -23,17 +23,20 @@ typedef struct{
 // Declare the Cuda kernels and any Cuda functions
 __global__ void analyze_id(Person *people, int *statResults)
 {
-
+    int id = threadIdx.x;
+    statResults[id] = id + 1;
 }
 
 __global__ void analyze_age(Person *people, int *statResults)
 {
-    
+    int id = threadIdx.x;
+    statResults[id] = id + 2;
 }
 
 __global__ void analyze_height(Person *people, int *statResults)
 {
-    
+    int id = threadIdx.x;
+    statResults[id] = id -1;
 }
 
 
@@ -95,17 +98,43 @@ int main(void)
     // gives a pointer to the GPU to reference the zero-copy memory
     HANDLE_ERROR(cudaHostGetDevicePointer(&dev_people, people, 0));
 
-    // calls to cuda kernels
+    // calls to Cuda kernels
     analyze_id<<<BLOCKS, THREADS>>>(dev_people, dev_idStats);
     analyze_age<<<BLOCKS, THREADS>>>(dev_people, dev_ageStats);
     analyze_height<<<BLOCKS, THREADS>>>(dev_people, dev_heightStats);
 
     // Get the results from the GPU
-    HANDLE_ERROR(cudaMemcpy(idStats, &dev_idStats, N * sizeof(int), cudaMemcpyDeviceToHost));
-    HANDLE_ERROR(cudaMemcpy(ageStats, &dev_ageStats, N * sizeof(int), cudaMemcpyDeviceToHost));
-    HANDLE_ERROR(cudaMemcpy(heightStats, &dev_heightStats, N * sizeof(int), cudaMemcpyDeviceToHost));
+    HANDLE_ERROR(cudaMemcpy(idStats, dev_idStats, N * sizeof(int), cudaMemcpyDeviceToHost));
+    HANDLE_ERROR(cudaMemcpy(ageStats, dev_ageStats, N * sizeof(int), cudaMemcpyDeviceToHost));
+    HANDLE_ERROR(cudaMemcpy(heightStats, dev_heightStats, N * sizeof(int), cudaMemcpyDeviceToHost));
 
+    // make sure everyone is done
     HANDLE_ERROR(cudaThreadSynchronize());
+
+    // Print results
+    printf("\n");
+    printf("idStats results\n");
+    for(x = 0; x < N; x++)
+    {
+        printf("%d\n", idStats[x]);
+    }
+
+    printf("\n");
+    printf("ageStats results\n");
+    for(x = 0; x < N; x++)
+    {
+        printf("%d\n", ageStats[x]);
+    }
+
+    printf("\n");
+    printf("heightStats results\n");
+    for(x = 0; x < N; x++)
+    {
+        printf("%d\n", heightStats[x]);
+    }
+
+    printf("End of cuda struct test\n");
+
 
     return 0;
 
