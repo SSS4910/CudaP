@@ -6,12 +6,18 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "book.h"
 
 #define N 10
+#define TRUE 1
+#define FALSE 0
+#define MAX_BLOCKS 65000
 /*#define BLOCKS 2
 #define THREADS 5*/
+
+int cuda_setup(int computeCapability);
 
 typedef struct{
     int id;
@@ -84,8 +90,16 @@ __global__ void analyze_height(Person *people, int *statResults)
 
 int main(void)
 {
-    int *cudaValues;
-    cudaValues = cuda_setup(N);
+    int threads = N;
+    int blocks = threads/2; // to be more conservative w/blocks: (N + (threads - 1)) / threads
+    
+    if(blocks > MAX_BLOCKS)
+    {
+        printf("Data set is too large\nSet cannot exceed %d\n", MAX_BLOCKS);
+        exit(1);
+    }
+
+    cuda_setup(2);
 
     // CPU variables
     Person *people;
@@ -98,6 +112,13 @@ int main(void)
     int *dev_idStats;
     int *dev_ageStats;
     int *dev_heightStats;
+
+    // events to track performance time
+    float elapsedTime;
+    cudaEvent_t start, stop;
+    HANDLE_ERROR(cudaEventCreate(&start));
+    HANDLE_ERROR(cudaEventCreate(&stop));
+    HANDLE_ERROR(cudaEventRecord(start, 0));
 
     // creates zero-copy memory for buffer (both CPU and GPU point to same memory). A pointer will be given to the GPU later...
     HANDLE_ERROR( cudaHostAlloc( (void **) &people, N * sizeof(Person), cudaHostAllocWriteCombined | cudaHostAllocMapped));
@@ -130,23 +151,13 @@ int main(void)
     people[8] = person9;
     people[9] = person10;
 
-    // check data in people
-    int x;
-    /*for(x = 0; x < N; x++)
-    {
-        printf("id = %d\n", people[x].id);
-        printf("age = %d\n", people[x].age);
-        printf("height = %d\n", people[x].height);
-        printf("\n");
-    }*/
-
     // gives a pointer to the GPU to reference the zero-copy memory
     HANDLE_ERROR(cudaHostGetDevicePointer(&dev_people, people, 0));
 
     // calls to Cuda kernels
-    analyze_id<<<BLOCKS, THREADS>>>(dev_people, dev_idStats);
-    analyze_age<<<BLOCKS, THREADS>>>(dev_people, dev_ageStats);
-    analyze_height<<<BLOCKS, THREADS>>>(dev_people, dev_heightStats);
+    analyze_id<<<blocks, threads>>>(dev_people, dev_idStats);
+    analyze_age<<<blocks, threads>>>(dev_people, dev_ageStats);
+    analyze_height<<<blocks, threads>>>(dev_people, dev_heightStats);
 
     // Get the results from the GPU
     HANDLE_ERROR(cudaMemcpy(idStats, dev_idStats, N * sizeof(int), cudaMemcpyDeviceToHost));
@@ -156,16 +167,25 @@ int main(void)
     // make sure everyone is done
     HANDLE_ERROR(cudaThreadSynchronize());
 
+    //stop timing events
+    HANDLE_ERROR(cudaEventRecord(stop, 0));
+    HANDLE_ERROR(cudaEventSynchronize(stop));
+    HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
+
     // cuda cleanup
     cudaFree(dev_people);
     cudaFree(dev_idStats);
     cudaFree(dev_ageStats);
     cudaFree(dev_heightStats);
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
 
     // total results
     int idTotal = 0;
     int ageTotal = 0;
     int heightTotal = 0;
+
+    int x = 0; // loop iterator
 
     // id totals
     for(x = 0; x < N; x++)
@@ -185,12 +205,18 @@ int main(void)
         heightTotal += heightStats[x];
     }
 
+    // print final totals
     printf("\n");
     printf("ID total: %d\n", idTotal);
     printf("Age total: %d\n", ageTotal);
     printf("Height total: %d\n", heightTotal);
     printf("\n");
-
+    printf("blocks used: %d\n", blocks);
+    printf("threads used: %d\n", threads);
+    printf("threads per block: %d\n", (threads/blocks));
+    printf("\n");
+    printf("Elapsed time: %3.1f ms\n", elapsedTime);
+    printf("\n");
     printf("End of cuda struct test\n");
 
 
@@ -201,9 +227,33 @@ int main(void)
 
 // checks system for cuda compatible devices;
 // makes sure the cuda devices have the necessary compute capabilities;
-// and 
-int * cuda_setup(int N)
+// and picks the most suited device to compute on
+// returns an int for status
+int cuda_setup(int computeCapability)
 {
+    int dev;
+    //int numOfDevs;
 
+    cudaDeviceProp prop;
+
+    // assign number of cuda devices to 3rd element in specs array
+    //HANDLE_ERROR(cudaGetDeviceCount(&numOfDevs));
+
+    // gets current device
+    HANDLE_ERROR(cudaGetDevice(&dev));
+
+    // create a "pseudo" device w/ desired values and let cuda api pick device that matches
+    // memset is just zero-ing out the specified memory
+    memset(&prop, 0, sizeof(cudaDeviceProp));
+    prop.major = computeCapability;
+    HANDLE_ERROR(cudaChooseDevice(&dev, &prop));
+
+    // sets the device w/ the desired paramaters as the device to use
+    HANDLE_ERROR(cudaSetDevice(dev));
+
+    // get more info about the device
+    HANDLE_ERROR(cudaGetDeviceProperties(&prop, dev));
+
+    return 0;
 }
 
