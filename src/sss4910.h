@@ -20,6 +20,5 @@ typedef struct{
 typedef struct{
     int available;
     int currentSize;
-    char ** strArray;
     struct Request * requests;
 } Buffer;

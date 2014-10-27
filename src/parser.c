@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <regex.h>
 
 #include "sss4910.h"
 #include "parser.h"
 #include "debug.h"
+
+regex_t regex;
+const char *expression = "[^ ]*";
 
 /*
  * FUNCTION: parse
@@ -31,4 +36,31 @@ parse(char * line){
     //  else:
     //      continue
     return request;
+}
+
+/*
+ * FUNCTION: parse_init
+ * --------------------
+ * initializes memory for regular expression structures
+ *
+ * return:
+ *  0 on success
+ *  -1 on failure
+ */
+int
+parse_init(){
+    if (regcomp(&regex, expression, 0) != 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+/*
+ * FUNCTION: parse_teardown
+ * ------------------------
+ * frees memory allocated for regular expression
+ */
+void parse_teardown(){
+    regfree(&regex);
 }

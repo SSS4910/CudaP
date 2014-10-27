@@ -7,7 +7,7 @@
 #include "debug.h"
 
 Buffer *
-create_buffer();
+buffer_init();
 
 char *
 log_readline(FILE *);
@@ -15,7 +15,7 @@ log_readline(FILE *);
 /*
  * FUNCTION: main
  * --------------
- * the main entry point of the application
+ * the entry point of the application
  *
  * argc: the number of command line arguments
  * argv: the command line arguments, kept as a pointer to a string
@@ -30,23 +30,27 @@ main(int argc, char** argv){
     FILE * logfile;
     Buffer * buffer;
 
+    //getopt()
     open_debug_file();
-    //handle options and flags (getopt)
 
-    debug_write("Initiating Access Reader thread\n");
-    debug_write("Opening access.log file\n");
     if ((logfile = fopen("access.log", "r")) == NULL)
     {
         debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
         return -1;
     }
+    debug_write("Opening access.log file\n");
 
-    debug_write("Allocating memory for left buffer\n");
-    debug_write("Allocating memory for right buffer\n");
-    
-    buffer = create_buffer();
+    buffer = buffer_init();
     buffer->available = TRUE;
+    debug_write("Allocating memory for buffer\n");
+
+    if (parse_init() == -1)
+    {
+        debug_write("regex memory allocation failure\n");
+        return -1;
+    }
+    debug_write("Allocating memory for regex\n");
 
     while (!feof(logfile))
     {
@@ -58,13 +62,11 @@ main(int argc, char** argv){
             if ((logline == (char *) NULL) && feof(logfile))
             {
                 printf("hit eof\n");
+                break;
             }
-
-            //parse a line
-            //LogLine = parse(logline);
-
-            //add LogLine to buffer
-            buffer->strArray[i] = logline;
+            printf("%s", logline);
+            //parse a line and add to buffer
+            //buffer->requests[i] = parse(logline);
             buffer->currentSize++;
         }
     }
@@ -73,23 +75,27 @@ main(int argc, char** argv){
     debug_write("Closing access.log file...\n");
     fclose(logfile);
 
+    free(buffer->requests);
     free(buffer);
     debug_write("Freeing memory for line buffer\n");
  
+    parse_teardown();
+    debug_write("Freeing memory for regular expression\n");
+
     close_debug_file();
     return 0;
 }
 
 
 /*
- * FUNCTION: create_buffer
+ * FUNCTION: buffer_init
  * -----------------------
- * constructs a buffer to store each line of the log
+ * initialize buffer to store each line of the log
  *
  * return: a pointer to a buffer structure on success, NULL on failure
  */
 Buffer * 
-create_buffer(){
+buffer_init(){
     Buffer * buffer;
  
     buffer = malloc(sizeof(Buffer));
@@ -97,14 +103,7 @@ create_buffer(){
     {
         return (Buffer * ) NULL;
     }
-
-    buffer->strArray = malloc (BUFFER_SIZE * sizeof (char*));
-    int i;
-    for (i = 0; i < BUFFER_SIZE; i++)
-    {
-        buffer->strArray[i] = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
-    }
-
+    buffer->requests = malloc((BUFFER_SIZE) * sizeof(Request *));
     return buffer;
 }
 
