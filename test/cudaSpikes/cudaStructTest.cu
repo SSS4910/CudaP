@@ -102,7 +102,7 @@ int main(void)
     cuda_setup(2);
 
     // CPU variables
-    Person people[N];
+    Person *people;
     int idStats[N];
     int ageStats[N];
     int heightStats[N];

@@ -138,7 +138,7 @@ int main(void)
     HANDLE_ERROR(cudaMalloc( (void **) &dev_ageStats, N * sizeof(int) ));
     HANDLE_ERROR(cudaMalloc( (void **) &dev_heightStats, N * sizeof(int) ));
 
-    // page-locking (pin host memory for streams)
+    // page-locking output buffers (pin host memory for streams)
     HANDLE_ERROR(cudaHostAlloc( (void **) &idStats, N * sizeof(int), cudaHostAllocDefault));
     HANDLE_ERROR(cudaHostAlloc( (void **) &ageStats, N * sizeof(int), cudaHostAllocDefault));
     HANDLE_ERROR(cudaHostAlloc( (void **) &heightStats, N * sizeof(int), cudaHostAllocDefault));
@@ -216,9 +216,9 @@ int main(void)
     HANDLE_ERROR(cudaHostGetDevicePointer(&dev_people, people, 0));
 
     // calls to Cuda kernels, note streams have been added
-    analyze_id<<<blocks, threads, 0, stream0>>>(dev_people, dev_idStats);
-    analyze_age<<<blocks, threads, 0, stream1>>>(dev_people, dev_ageStats);
-    analyze_height<<<blocks, threads, 0, stream2>>>(dev_people, dev_heightStats);
+    analyze_id<<< blocks, threads, 0, stream0 >>>(dev_people, dev_idStats);
+    analyze_age<<< blocks, threads, 0, stream1 >>>(dev_people, dev_ageStats);
+    analyze_height<<< blocks, threads, 0, stream2 >>>(dev_people, dev_heightStats);
 
     // Get the results from the GPU
     HANDLE_ERROR(cudaMemcpyAsync(idStats, dev_idStats, N * sizeof(int), cudaMemcpyDeviceToHost, stream0));
@@ -242,8 +242,10 @@ int main(void)
     cudaFree(dev_idStats);
     cudaFree(dev_ageStats);
     cudaFree(dev_heightStats);
+
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
+
     cudaStreamDestroy(stream0);
     cudaStreamDestroy(stream1);
     cudaStreamDestroy(stream2);
