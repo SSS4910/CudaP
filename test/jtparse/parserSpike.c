@@ -11,27 +11,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "sss4910.h"
 
 
-int parse_line(char* line);
 
-    char* host;   
-    char* rfc;
-    char* auth;
-    char* time;
-    char* command; 
-    int code;
-    int size;
-    char* retCode; 
-    char* retSize;
-    char* referer;
-    char* userAgent;
-      
+    Request * parse_line(char* line);
+
+
+    static int const HOSTSIZE = 1000;
+    static int const CLIENTIDSIZE = 50;
+    static int const USERIDSIZE = 150;
+    static int const TIMESIZE = 100;
+    static int const REQSIZE = 2000;
+    static int const CODESIZE = 30;
+    static int const SIZESIZE = 30;
+    static int const REFERERSIZE = 30;
+    static int const USERAGENTSIZE = 30;
 
 
 int main(int argc, char **argv)
 {
-    host = (char *)malloc((1000) * sizeof(char));    
+    /*host = (char *)malloc((1000) * sizeof(char));    
     rfc = (char *)malloc((50) * sizeof(char));
     auth = (char *)malloc((150) * sizeof(char));  
     time = (char *)malloc((100) * sizeof(char));  
@@ -40,23 +40,26 @@ int main(int argc, char **argv)
     size = 0;
     retCode = (char *)malloc((30) * sizeof(char));  
     retSize = (char *)malloc((30) * sizeof(char));  
-    //referer = (char *)malloc((30) * sizeof(char));
-    //userAgent = (char *)malloc((30) * sizeof(char)); 
- 
+    referer = (char *)malloc((30) * sizeof(char));
+    userAgent = (char *)malloc((30) * sizeof(char)); 
+    */
     int lineN = 0;
 
 
 
     FILE *fp;
     
-    //fp = fopen("bgcsierravlanca_access.log","r");
+    fp = fopen("bgcsierravlanca_access.log","r");
     //fp = fopen("almhuette_access.log", "r");
-    fp = fopen("UofS_access_log","r");
+    //fp = fopen("UofS_access_log","r");
     //fp = fopen("redlug.log","r");
 
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
+
+    Request * out;
+
     if (fp == NULL) 
     {
         printf("Im sorry invalid file");
@@ -65,147 +68,221 @@ int main(int argc, char **argv)
     while ((read = getline(&line, &len, fp)) != -1)
     {
         //printf("    * * %s \n",line);
-        parse_line(line);
-       // printf("\n %d \n", lineN);
+        out = parse_line(line);
+        // printf("\n %d \n", lineN); 
+        
+        printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out->host, out->clientId, out->userId, out->time, out->req, out->httpReturnCode, out->dataSize );
+    
+
+
+        free(out->host);
+        free(out->clientId);
+        free(out->userId);
+        free(out->time);
+        free(out->req);
+        free(out->referer);
+        free(out->userAgent);
+
         lineN++;
     }
-    printf("%d    %s \n",lineN,line);
+    //printf("%d    %s \n",lineN,line);
     printf("DONE :D\n");
-   
 
-    //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n",host,rfc, auth, time, command, code, size );
-    
 
-    
-    
-        //CRASHING HERE!
-    free(host);
-    free(rfc);
-    free(auth);
-    free(time);
-    free(command);
-    free(retCode);
-    free(retSize);
-    //free(referer);
-    //free(userAgent);
     fclose(fp);
 }
 
-
-int parse_line(char* line)
+/* 
+ *FUNCTION: parse_line
+ *---------------------------------
+ * Returns a "Request"
+ *
+ * takes a line from an apache log file and looks at each character in order
+ *  it uses an apache log to generate a request struct, which it then passes on to the buffer
+ *
+ */
+Request * parse_line(char* line)
 {
-    //printf("%s \n",line);
+        //printf("%s \n",line);
+    
+    
+        //counters
     int n = 0;
     int j = 0;
     int i = 0;
     int h = 0;
     int k = 0;
-  
-    /*char* host;
-    host = (char *)malloc((30) * sizeof(char));    
-    
-    char* rfc;
-    rfc = (char *)malloc((30) * sizeof(char)); 
 
-    char* auth;
-    auth = (char *)malloc((30) * sizeof(char));  
     
-    char* time;
-    time = (char *)malloc((30) * sizeof(char));  
+
+        // alocate memory and create the Request that will be returned
+    Request * outRequest;
+    //outRequest = malloc(sizeof(Request*));
+    outRequest = malloc((sizeof(char)* 
+                        (
+                        HOSTSIZE+
+                        CLIENTIDSIZE+
+                        USERIDSIZE+
+                        TIMESIZE+
+                        REQSIZE+
+                        REFERERSIZE+
+                        USERAGENTSIZE))
+                    + (sizeof(int) * 2));
     
-    char* command;
-    command = (char *)malloc((100) * sizeof(char));  
+    outRequest->host = (char *)malloc(HOSTSIZE * sizeof(char));    
+      
+    outRequest->clientId = (char *)malloc(CLIENTIDSIZE * sizeof(char)); 
+     
+    outRequest->userId = (char *)malloc((USERIDSIZE) * sizeof(char));  
     
-    int code = 0;
-    int size = 0;
+    outRequest->time = (char *)malloc(TIMESIZE * sizeof(char));  
+    
+    outRequest->req = (char *)malloc((REQSIZE) * sizeof(char));  
 
     char* retCode;
     retCode = (char *)malloc((30) * sizeof(char));  
-    
+       
     char* retSize;
     retSize = (char *)malloc((30) * sizeof(char));  
-    
-    char* referer;
-    referer = (char *)malloc((30) * sizeof(char));  
-    
-    char* userAgent;
-    userAgent = (char *)malloc((30) * sizeof(char));*/  
-   
+       
+    outRequest->referer = (char *)malloc((REFERERSIZE) * sizeof(char));  
+
+    outRequest->userAgent = (char *)malloc(USERAGENTSIZE * sizeof(char));   
+
     int flag = 0;
     
+
+
+        // loop for every character in the input line 
     for(i =0; i < strlen(line); i++)
     {
+
+            //fflush(stdout);
+
+            //this parses and breaks down the line into fields, each case is a different 
         switch(n)
         {
+
+                //field one 
+                //      (%h) host field
+                //          this is either and IP or a website
+                //
+                //          terminated by ' '
             case 0:
+                    //printf(" In field one \n");
+                
                 if (line[i] == ' ')
                 {
                     n = 1;
-                    host[j] = '\0';
+                    outRequest->host[j] = '\0';
                     j =0;
                 }
                 else
                 {
-                    host[j] = line[i];
+                    outRequest->host[j] = line[i];
                     j++;
                 }
                 break;
+
+                //field two 
+                //      (%l) RFC
+                //          request 1413
+                //
+                //          terminated by ' '
             case 1:
+                    //printf(" In field two \n");
+
                 if(line[i] == ' ')
                 {
                     n = 2;
-                    rfc[j] = '\0';
+                    outRequest->clientId[j] = '\0';
                     j =0;
                 }
                 else
                 {
-                    rfc[j] = line[i];
+                    outRequest->clientId[j] = line[i];
                     j++;
                 }
                 break;
+
+                //field three
+                //      (%u)    user id
+                //      
+                //      terminated by a ' '
             case 2:
+                //printf(" In field three \n");
+
                 if(line[i] == ' ')
                 {
                     n = 3;
-                    auth[j] = '\0';
+                    outRequest->userId[j] = '\0';
                     j = 0;
                 }
                 else
                 {
-                    auth[j] = line[i];
+                    outRequest->userId[j] = line[i];
                     j++;
                 }
                 break;
+
+                //field four 
+                //      (%t) time
+                //      this is the time field 
+                //      
+                //      [day/month/year:hour:minute:second zone]
+                //      day = 2*digit
+                //      month = 3*letter
+                //      year = 4*digit
+                //      hour = 2*digit
+                //      minute = 2*digit
+                //      second = 2*digit
+                //      zone = (`+' | `-') 4*digit
+                //
+                //      terminated by a ']'
             case 3:
+                    //printf(" In field four \n");
                 if(flag == 1)
                 {
                     n = 4;
                     flag = 0;
-                    time[j] = '\0';
+                    outRequest->time[j] = '\0';
                     j = 0;
 
                 }
                 else if(line[i] == ']')
                 {
                     flag = 1;
-                    time[j] = line[i];
+                    outRequest->time[j] = line[i];
                     j++;
                 }
                 else
                 {
-                    time[j] = line[i];
+                    outRequest->time[j] = line[i];
                     j++;
                 }
                 break;
            
+                //field five
+                //      (\"%r\") request line
+                //
+                //      altho the program begins and ends with a '"' you cannot just assume that
+                //      you have hit the end of the feild becuase you hit a second '"' this is why
+                //      field six has to check and make sure field five(request line) has ended
+                //
+                //      terminated by 2nd '"' 
+                //      
+                //      PROBLAMATIC
+
             case 4:
+                    //printf(" In field five \n");
+
                 if(flag == 2)
                 {
                     if (line[i] != ' ')
                     {
                         flag = 1;
                         n = 4;
-                        command[j] = line[i];
+                        outRequest->req[j] = line[i];
                         j++;
                     }
                     else
@@ -213,32 +290,44 @@ int parse_line(char* line)
                         flag = 0;
                         n = 5;
                         h = 0;
-                        command[j] = '\0';
+                        outRequest->req[j] = '\0';
                     }
                 }
                 else if( line[i] == '"')
                 {
-                    command[j] = line[i];
+                    outRequest->req[j] = line[i];
                     j++;
                     flag++;
                 }
                 else
                 {
-                    command[j] = line[i];
+                    outRequest->req[j] = line[i];
                     j++;
                 }
                 break;
+
+                //field six 
+                //      (%>s) status code
+                //
+                //      this is a relatively simple field that usually returns 200 or 404
+                //          this also checks to make sure the arnt still looking at the request 
+                //          line because of a false positve
+                //
+                //          terminated by a ' '
+                //
             case 5:
+                    //printf(" In field six \n");
+
                 if(line[i] == ' ')
                 {
                     retCode[h] = '\0';
-                    code = atoi(retCode);
-                    if(code == 0)
+                    outRequest->httpReturnCode = atoi(retCode);
+                    if(outRequest->httpReturnCode == 0)
                     {
                         //n = 5;
                         for(k = 0; k < h; k++)
                         {
-                            command[j] = retCode[k];
+                            outRequest->req[j] = retCode[k];
                             j++;
                         }
                         h = 0;
@@ -257,13 +346,23 @@ int parse_line(char* line)
                     h++;
                 }
                 break;
+
+                //  feild seven
+                //      (%b) size of data
+                //
+                //      this is just how much data was returned 
+                //
+                //      terminated by a ' ' or a '\n' for "short" logs
+                //
             case 6:
-                if(line[i] == ' ')
+                    //printf(" In field seven \n");
+
+                if(line[i] == ' ' || line[i] == '\n')
                 {
                     n = 7;
                     retSize[h] = '\0';
                     h = 0;
-                    size = atoi(retSize);
+                    outRequest->dataSize = atoi(retSize);
                 }
                 else
                 {
@@ -272,28 +371,34 @@ int parse_line(char* line)
                 }
                 break;
 
+                //COMBINED FORMAT LOG DATA STILL NEEDED
+
         }   
 
 
     }
 
-        //this is going to need to get moved
-    size = atoi(retSize);
+        //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize );
     
-    //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n",host,rfc, auth, time, command, code, size );
     
-
-    //return struct here
-
-
-    /*free(host);
-    free(rfc);
-    free(auth);
-    free(time);
-    free(command);
+    /*free(outRequest.host);
+    free(outRequest.rfc);
+    free(outRequest.auth);
+    free(outRequest.time);
+    free(outRequest.req);*/
     free(retCode);
     free(retSize);
-    free(referer);
-    free(userAgent);*/
+    /*free(outRequest.referer);
+    free(outRequest.userAgent);*/
+
+    return outRequest;
+}
+
+time_t parse_time(char * input)
+{
+    time_t time;
+
+
+
 
 }
