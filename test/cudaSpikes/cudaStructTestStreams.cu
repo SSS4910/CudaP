@@ -102,7 +102,7 @@ int main(void)
     cuda_setup(2);
 
     // CPU variables
-    Person people[N];
+    Person *people;
     int idStats[N];
     int ageStats[N];
     int heightStats[N];
@@ -123,10 +123,25 @@ int main(void)
     // creates zero-copy memory for buffer (both CPU and GPU point to same memory). A pointer will be given to the GPU later...
     HANDLE_ERROR( cudaHostAlloc( (void **) &people, N * sizeof(Person), cudaHostAllocWriteCombined | cudaHostAllocMapped));
 
+    //Declare streams
+    cudaStream_t stream0;
+    cudaStream_t stream1;
+    cudaStream_t stream2;
+
+    //create steams
+    HANDLE_ERROR(cudaStreamCreate(&stream0));
+    HANDLE_ERROR(cudaStreamCreate(&stream1));
+    HANDLE_ERROR(cudaStreamCreate(&stream2));
+
     // allocating GPU memory (GPU only memory)
     HANDLE_ERROR(cudaMalloc( (void **) &dev_idStats, N * sizeof(int) ));
     HANDLE_ERROR(cudaMalloc( (void **) &dev_ageStats, N * sizeof(int) ));
     HANDLE_ERROR(cudaMalloc( (void **) &dev_heightStats, N * sizeof(int) ));
+
+    // page-locking (pin host memory for streams)
+    HANDLE_ERROR(cudaHostAlloc( (void **) &idStats, N * sizeof(int), cudaHostAllocDefault));
+    HANDLE_ERROR(cudaHostAlloc( (void **) &ageStats, N * sizeof(int), cudaHostAllocDefault));
+    HANDLE_ERROR(cudaHostAlloc( (void **) &heightStats, N * sizeof(int), cudaHostAllocDefault));
 
     /* FILL BUFFER WITH DATA */
 
@@ -200,17 +215,21 @@ int main(void)
     // gives a pointer to the GPU to reference the zero-copy memory
     HANDLE_ERROR(cudaHostGetDevicePointer(&dev_people, people, 0));
 
-    // calls to Cuda kernels
-    analyze_id<<<blocks, threads>>>(dev_people, dev_idStats);
-    analyze_age<<<blocks, threads>>>(dev_people, dev_ageStats);
-    analyze_height<<<blocks, threads>>>(dev_people, dev_heightStats);
+    // calls to Cuda kernels, note streams have been added
+    analyze_id<<<blocks, threads, 0, stream0>>>(dev_people, dev_idStats);
+    analyze_age<<<blocks, threads, 0, stream1>>>(dev_people, dev_ageStats);
+    analyze_height<<<blocks, threads, 0, stream2>>>(dev_people, dev_heightStats);
 
     // Get the results from the GPU
-    HANDLE_ERROR(cudaMemcpy(idStats, dev_idStats, N * sizeof(int), cudaMemcpyDeviceToHost));
-    HANDLE_ERROR(cudaMemcpy(ageStats, dev_ageStats, N * sizeof(int), cudaMemcpyDeviceToHost));
-    HANDLE_ERROR(cudaMemcpy(heightStats, dev_heightStats, N * sizeof(int), cudaMemcpyDeviceToHost));
+    HANDLE_ERROR(cudaMemcpyAsync(idStats, dev_idStats, N * sizeof(int), cudaMemcpyDeviceToHost, stream0));
+    HANDLE_ERROR(cudaMemcpyAsync(ageStats, dev_ageStats, N * sizeof(int), cudaMemcpyDeviceToHost, stream1));
+    HANDLE_ERROR(cudaMemcpyAsync(heightStats, dev_heightStats, N * sizeof(int), cudaMemcpyDeviceToHost, stream2));
 
-    // make sure everyone is done (only effective with multiple streams...)
+    // make sure everyone is done
+    HANDLE_ERROR(cudaStreamSynchronize(stream0));
+    HANDLE_ERROR(cudaStreamSynchronize(stream1));
+    HANDLE_ERROR(cudaStreamSynchronize(stream2));
+
     HANDLE_ERROR(cudaThreadSynchronize());
 
     //stop timing events
@@ -225,6 +244,9 @@ int main(void)
     cudaFree(dev_heightStats);
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
+    cudaStreamDestroy(stream0);
+    cudaStreamDestroy(stream1);
+    cudaStreamDestroy(stream2);
 
     // total results
     int idTotal = 0;
