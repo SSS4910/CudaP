@@ -1,0 +1,9 @@
+~~~ SSS4910 Runtime Log ~~~
+For debugging purposes only
+Opening access.log file
+Allocating memory for buffer
+Allocating memory for regex
+Closing access.log file...
+Freeing memory for line buffer
+Freeing memory for regular expression
+~~~ End of execution ~~~
