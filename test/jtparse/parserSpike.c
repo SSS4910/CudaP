@@ -31,24 +31,29 @@ int parse_line(char* line);
 
 int main(int argc, char **argv)
 {
-    host = (char *)malloc((30) * sizeof(char));    
-    rfc = (char *)malloc((30) * sizeof(char));
-    auth = (char *)malloc((30) * sizeof(char));  
-    time = (char *)malloc((30) * sizeof(char));  
-    command = (char *)malloc((100) * sizeof(char));  
+    host = (char *)malloc((1000) * sizeof(char));    
+    rfc = (char *)malloc((50) * sizeof(char));
+    auth = (char *)malloc((150) * sizeof(char));  
+    time = (char *)malloc((100) * sizeof(char));  
+    command = (char *)malloc((2000) * sizeof(char));  
     code = 0;
     size = 0;
     retCode = (char *)malloc((30) * sizeof(char));  
     retSize = (char *)malloc((30) * sizeof(char));  
-    referer = (char *)malloc((30) * sizeof(char));
-    userAgent = (char *)malloc((30) * sizeof(char)); 
+    //referer = (char *)malloc((30) * sizeof(char));
+    //userAgent = (char *)malloc((30) * sizeof(char)); 
  
     int lineN = 0;
 
 
 
     FILE *fp;
+    
+    //fp = fopen("bgcsierravlanca_access.log","r");
+    //fp = fopen("almhuette_access.log", "r");
     fp = fopen("UofS_access_log","r");
+    //fp = fopen("redlug.log","r");
+
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
@@ -59,13 +64,18 @@ int main(int argc, char **argv)
     }
     while ((read = getline(&line, &len, fp)) != -1)
     {
-        printf("    * * %s \n",line);
+        //printf("    * * %s \n",line);
         parse_line(line);
-        printf("\n %d \n", lineN);
+       // printf("\n %d \n", lineN);
         lineN++;
     }
+    printf("%d    %s \n",lineN,line);
     printf("DONE :D\n");
+   
+
+    //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n",host,rfc, auth, time, command, code, size );
     
+
     
     
         //CRASHING HERE!
@@ -76,8 +86,8 @@ int main(int argc, char **argv)
     free(command);
     free(retCode);
     free(retSize);
-    free(referer);
-    free(userAgent);
+    //free(referer);
+    //free(userAgent);
     fclose(fp);
 }
 
@@ -270,8 +280,12 @@ int parse_line(char* line)
         //this is going to need to get moved
     size = atoi(retSize);
     
-    printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n",host,rfc, auth, time, command, code, size );
+    //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n",host,rfc, auth, time, command, code, size );
     
+
+    //return struct here
+
+
     /*free(host);
     free(rfc);
     free(auth);
