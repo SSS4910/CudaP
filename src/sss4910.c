@@ -57,8 +57,8 @@ main(int argc, char** argv){
                 printf("hit eof\n");
                 break;
             }
-            printf("%s", logline);
-            //parse(logline);
+            //printf("%s", logline);
+            parse(logline);
             //parse a line and add to buffer
             //buffer->requests[i] = parse(logline);
             buffer->currentSize++;
