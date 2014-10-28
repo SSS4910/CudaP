@@ -1,8 +1,5 @@
 Request *
 parse(char *);
 
-int
-parse_init();
-
-void
-parse_teardown();
+char *
+slice(char *, int, int);

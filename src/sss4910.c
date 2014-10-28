@@ -45,13 +45,6 @@ main(int argc, char** argv){
     buffer->available = TRUE;
     debug_write("Allocating memory for buffer\n");
 
-    if (parse_init() == -1)
-    {
-        debug_write("regex memory allocation failure\n");
-        return -1;
-    }
-    debug_write("Allocating memory for regex\n");
-
     while (!feof(logfile))
     {
         buffer->currentSize = 0;
@@ -65,6 +58,7 @@ main(int argc, char** argv){
                 break;
             }
             printf("%s", logline);
+            //parse(logline);
             //parse a line and add to buffer
             //buffer->requests[i] = parse(logline);
             buffer->currentSize++;
@@ -79,9 +73,6 @@ main(int argc, char** argv){
     free(buffer);
     debug_write("Freeing memory for line buffer\n");
  
-    parse_teardown();
-    debug_write("Freeing memory for regular expression\n");
-
     close_debug_file();
     return 0;
 }

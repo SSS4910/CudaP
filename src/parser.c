@@ -1,14 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <regex.h>
 
 #include "sss4910.h"
 #include "parser.h"
 #include "debug.h"
-
-regex_t regex;
-const char *expression = "[^ ]*";
 
 /*
  * FUNCTION: parse
@@ -17,50 +13,28 @@ const char *expression = "[^ ]*";
  *
  * line: a string containing a NCSA Common Log Format access line
  *
- * returns: a pointer to a Request structure
+ * returns:
+ *  pointer to a Request structure on success
+ *  null on failure
  */
 Request *
 parse(char * line){
-    //int i = 0;
-    //int field = 0;
-    //int whiteSpaceIndex = 0;
     Request * request = malloc(sizeof (Request *));
-    //for char c in line:
-    //  if c is ":
-    //      ignore whitespace == true
-    //  elif ignorewhitespace == true && c is ":
-    //      ignore whitespace == false
-    //  elif ignorewhitespace == false && c is whitespace:
-    //      mark whitespace index
-    //      strip out substring
-    //  else:
-    //      continue
+    printf("%s", line);
     return request;
 }
 
 /*
- * FUNCTION: parse_init
- * --------------------
- * initializes memory for regular expression structures
+ * FUNCTION: slice
+ * ---------------
+ * returns a slice of given string from start offset to end offset
  *
- * return:
- *  0 on success
- *  -1 on failure
+ * line: a char pointer to be sliced
+ * so: the start offset
+ * eo: the end offset
  */
-int
-parse_init(){
-    if (regcomp(&regex, expression, 0) != 0)
-    {
-        return -1;
-    }
-    return 0;
-}
-
-/*
- * FUNCTION: parse_teardown
- * ------------------------
- * frees memory allocated for regular expression
- */
-void parse_teardown(){
-    regfree(&regex);
+char *
+slice(char *line, int so, int eo){
+    char *slice = NULL;
+    return slice;
 }
