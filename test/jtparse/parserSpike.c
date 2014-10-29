@@ -15,7 +15,8 @@
 
 
 
-    Request * parse_line(char* line);
+    int parse_line(char* line, Request * outRequest);
+    time_t parse_time(char * input);
 
 
     static int const HOSTSIZE = 1000;
@@ -31,26 +32,12 @@
 
 int main(int argc, char **argv)
 {
-    /*host = (char *)malloc((1000) * sizeof(char));    
-    rfc = (char *)malloc((50) * sizeof(char));
-    auth = (char *)malloc((150) * sizeof(char));  
-    time = (char *)malloc((100) * sizeof(char));  
-    command = (char *)malloc((2000) * sizeof(char));  
-    code = 0;
-    size = 0;
-    retCode = (char *)malloc((30) * sizeof(char));  
-    retSize = (char *)malloc((30) * sizeof(char));  
-    referer = (char *)malloc((30) * sizeof(char));
-    userAgent = (char *)malloc((30) * sizeof(char)); 
-    */
+
     int lineN = 0;
-
-
-
     FILE *fp;
     
-    fp = fopen("bgcsierravlanca_access.log","r");
-    //fp = fopen("almhuette_access.log", "r");
+    //fp = fopen("bgcsierravlanca_access.log","r");
+    fp = fopen("almhuette_access.log", "r");
     //fp = fopen("UofS_access_log","r");
     //fp = fopen("redlug.log","r");
 
@@ -58,7 +45,7 @@ int main(int argc, char **argv)
     size_t len = 0;
     ssize_t read;
 
-    Request * out;
+    Request out;
 
     if (fp == NULL) 
     {
@@ -67,23 +54,48 @@ int main(int argc, char **argv)
     }
     while ((read = getline(&line, &len, fp)) != -1)
     {
-        //printf("    * * %s \n",line);
-        out = parse_line(line);
+       /* out = malloc((sizeof(char)* 
+                        (
+                        HOSTSIZE+
+                        CLIENTIDSIZE+
+                        USERIDSIZE+
+                        TIMESIZE+
+                        REQSIZE+
+                        REFERERSIZE+
+                        USERAGENTSIZE))
+                    + (sizeof(int) * 20));*/
+
+        out.host = (char *)malloc(HOSTSIZE * sizeof(char));    
+        out.clientId = (char *)malloc(CLIENTIDSIZE * sizeof(char)); 
+        out.userId = (char *)malloc((USERIDSIZE) * sizeof(char));  
+        out.time = (char *)malloc(TIMESIZE * sizeof(char));  
+        out.req = (char *)malloc((REQSIZE) * sizeof(char));  
+        out.referer = (char *)malloc((REFERERSIZE) * sizeof(char));  
+        out.userAgent = (char *)malloc(USERAGENTSIZE * sizeof(char));  
+
+
+
+        if(parse_line(line,& out) == 0)
+        {
+            //printf("worked\n");
+        }
+
         // printf("\n %d \n", lineN); 
         
-        printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out->host, out->clientId, out->userId, out->time, out->req, out->httpReturnCode, out->dataSize );
+        //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out.host, out.clientId, out.userId, out.time, out.req, out.httpReturnCode, out.dataSize );
+    
     
 
-
-        free(out->host);
-        free(out->clientId);
-        free(out->userId);
-        free(out->time);
-        free(out->req);
-        free(out->referer);
-        free(out->userAgent);
-
+        free(out.host);
+        free(out.clientId);
+        free(out.userId);
+        free(out.time);
+        free(out.req);
+        free(out.referer);
+        free(out.userAgent);
         lineN++;
+        //free(out);
+
     }
     //printf("%d    %s \n",lineN,line);
     printf("DONE :D\n");
@@ -101,7 +113,7 @@ int main(int argc, char **argv)
  *  it uses an apache log to generate a request struct, which it then passes on to the buffer
  *
  */
-Request * parse_line(char* line)
+int parse_line(char* line, Request * outRequest)
 {
         //printf("%s \n",line);
     
@@ -116,9 +128,9 @@ Request * parse_line(char* line)
     
 
         // alocate memory and create the Request that will be returned
-    Request * outRequest;
+    //Request * outRequest;
     //outRequest = malloc(sizeof(Request*));
-    outRequest = malloc((sizeof(char)* 
+    /*outRequest = malloc((sizeof(char)* 
                         (
                         HOSTSIZE+
                         CLIENTIDSIZE+
@@ -127,7 +139,7 @@ Request * parse_line(char* line)
                         REQSIZE+
                         REFERERSIZE+
                         USERAGENTSIZE))
-                    + (sizeof(int) * 2));
+                    + (sizeof(int) * 20));
     
     outRequest->host = (char *)malloc(HOSTSIZE * sizeof(char));    
       
@@ -138,17 +150,17 @@ Request * parse_line(char* line)
     outRequest->time = (char *)malloc(TIMESIZE * sizeof(char));  
     
     outRequest->req = (char *)malloc((REQSIZE) * sizeof(char));  
-
+    */
     char* retCode;
     retCode = (char *)malloc((30) * sizeof(char));  
        
     char* retSize;
     retSize = (char *)malloc((30) * sizeof(char));  
-       
+    /*   
     outRequest->referer = (char *)malloc((REFERERSIZE) * sizeof(char));  
 
     outRequest->userAgent = (char *)malloc(USERAGENTSIZE * sizeof(char));   
-
+    */
     int flag = 0;
     
 
@@ -378,7 +390,7 @@ Request * parse_line(char* line)
 
     }
 
-        //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize );
+    //printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize );
     
     
     /*free(outRequest.host);
@@ -391,14 +403,57 @@ Request * parse_line(char* line)
     /*free(outRequest.referer);
     free(outRequest.userAgent);*/
 
-    return outRequest;
+    return 0;
 }
 
-time_t parse_time(char * input)
+
+
+/*time_t parse_time(char * input)
 {
-    time_t time;
+    /*
+      [day/month/year:hour:minute:second zone]
+      day = 2*digit
+      month = 3*letter
+      year = 4*digit
+      hour = 2*digit
+      minute = 2*digit
+      second = 2*digit
+      zone = (`+' | `-') 4*digit
+    */
+/*    time_t time;
+     
+    int i;
+    int n = 0;
 
+    int day = 0;
+    int month = 0;
+    int year = 0;
+    int hour = 0;
+    int minute = 0;
+    int second = 0;
+    int zone = 0;
 
+    for(i = 0;i < len(input); i++)
+    {
+        switch (n)
+        {
+            case 0:
+                n = 1;
+                break;
+            case 1:
+                if (input(i) == '/')
+                {
+                    n = 2;
+                }
+                else
+                {
+                    day = day + atoi(input(i));
+                }
+                    
 
+        }
 
-}
+    }
+
+    
+}*/
