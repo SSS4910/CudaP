@@ -100,12 +100,12 @@ parse_line(char * line, Request *request){
                 if (line[i] == ' ')
                 {
                     n = 1;
-                    outRequest->host[j] = '\0';
+                    request->host[j] = '\0';
                     j =0;
                 }
                 else
                 {
-                    outRequest->host[j] = line[i];
+                    request->host[j] = line[i];
                     j++;
                 }
                 break;
@@ -121,12 +121,12 @@ parse_line(char * line, Request *request){
                 if(line[i] == ' ')
                 {
                     n = 2;
-                    outRequest->clientId[j] = '\0';
+                    request->clientId[j] = '\0';
                     j =0;
                 }
                 else
                 {
-                    outRequest->clientId[j] = line[i];
+                    request->clientId[j] = line[i];
                     j++;
                 }
                 break;
@@ -141,12 +141,12 @@ parse_line(char * line, Request *request){
                 if(line[i] == ' ')
                 {
                     n = 3;
-                    outRequest->userId[j] = '\0';
+                    request->userId[j] = '\0';
                     j = 0;
                 }
                 else
                 {
-                    outRequest->userId[j] = line[i];
+                    request->userId[j] = line[i];
                     j++;
                 }
                 break;
@@ -171,19 +171,19 @@ parse_line(char * line, Request *request){
                 {
                     n = 4;
                     flag = 0;
-                    outRequest->time[j] = '\0';
+                    request->time[j] = '\0';
                     j = 0;
 
                 }
                 else if(line[i] == ']')
                 {
                     flag = 1;
-                    outRequest->time[j] = line[i];
+                    request->time[j] = line[i];
                     j++;
                 }
                 else
                 {
-                    outRequest->time[j] = line[i];
+                    request->time[j] = line[i];
                     j++;
                 }
                 break;
@@ -208,7 +208,7 @@ parse_line(char * line, Request *request){
                     {
                         flag = 1;
                         n = 4;
-                        outRequest->req[j] = line[i];
+                        request->req[j] = line[i];
                         j++;
                     }
                     else
@@ -216,18 +216,18 @@ parse_line(char * line, Request *request){
                         flag = 0;
                         n = 5;
                         h = 0;
-                        outRequest->req[j] = '\0';
+                        request->req[j] = '\0';
                     }
                 }
                 else if( line[i] == '"')
                 {
-                    outRequest->req[j] = line[i];
+                    request->req[j] = line[i];
                     j++;
                     flag++;
                 }
                 else
                 {
-                    outRequest->req[j] = line[i];
+                    request->req[j] = line[i];
                     j++;
                 }
                 break;
@@ -247,13 +247,13 @@ parse_line(char * line, Request *request){
                 if(line[i] == ' ')
                 {
                     retCode[h] = '\0';
-                    outRequest->httpReturnCode = atoi(retCode);
-                    if(outRequest->httpReturnCode == 0)
+                    request->retCode = atoi(retCode);
+                    if(request->retCode == 0)
                     {
                         //n = 5;
                         for(k = 0; k < h; k++)
                         {
-                            outRequest->req[j] = retCode[k];
+                            request->req[j] = retCode[k];
                             j++;
                         }
                         h = 0;
@@ -288,7 +288,7 @@ parse_line(char * line, Request *request){
                     n = 7;
                     retSize[h] = '\0';
                     h = 0;
-                    outRequest->dataSize = atoi(retSize);
+                    request->dataSize = atoi(retSize);
                 }
                 else
                 {

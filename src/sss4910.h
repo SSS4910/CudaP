@@ -9,7 +9,7 @@ typedef struct{
     char *host;
     char *clientId;
     char *userId;
-    time_t time;
+    char *time;
     char *req;
     int retCode;
     int dataSize;

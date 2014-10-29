@@ -9,8 +9,11 @@
 Buffer *
 buffer_init();
 
+int
+req_init(Request *);
+
 void
-free_req();
+req_free(Request *);
 
 char *
 log_readline(FILE *);
@@ -33,7 +36,6 @@ main(int argc, char** argv){
     char * logline;
     FILE * logfile;
     Buffer * buffer;
-    Request LogLine;
 
     //getopt()
     open_debug_file();
@@ -55,22 +57,30 @@ main(int argc, char** argv){
         buffer->currentSize = 0;
         for (i = 0; i < BUFFER_SIZE; i++)
         {
+            req_init(&buffer->requests[i]);
             //read a line
             logline = log_readline(logfile);
             if ((logline == (char *) NULL) && feof(logfile))
             {
-                printf("hit eof\n");
+                //printf("hit eof\n");
                 break;
             }
             lineNum++;
+            //printf("%s\n", logline);
             //parse line and add it to the buffer
-            err = parse_line(logline, &LogLine);
+            err = parse_line(logline, &buffer->requests[i]);
             if (err)
             {
                 printf("parse error on line %d\n", lineNum);
             }
-            buffer->requests[i] = LogLine;
             buffer->currentSize++;
+            //printf("%s\n", buffer->requests[i].host);
+            //printf("%s\n", buffer->requests[i].clientId);
+            //printf("%s\n", buffer->requests[i].userId);
+            //printf("%s\n", buffer->requests[i].time);
+            //printf("%s\n", buffer->requests[i].req);
+            //printf("%d\n", buffer->requests[i].retCode);
+            //printf("%d\n", buffer->requests[i].dataSize);
         }
     }
 
@@ -80,7 +90,7 @@ main(int argc, char** argv){
 
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        free_req(&buffer->requests[i]);
+        req_free(&buffer->requests[i]);
     }
     free(buffer->requests);
     free(buffer);
@@ -96,7 +106,8 @@ main(int argc, char** argv){
  * -----------------------
  * initialize buffer to store each line of the log
  *
- * return: a pointer to a buffer structure on success, NULL on failure
+ * return:
+ *  a pointer to a buffer structure on success, NULL on failure
  */
 Buffer * 
 buffer_init(){
@@ -111,6 +122,26 @@ buffer_init(){
     return buffer;
 }
 
+/*
+ * FUNCTION: req_init
+ * ------------------
+ * initialize request structure to store single line
+ *
+ * return:
+ *  0 on success
+ */
+int
+req_init(Request *request)
+{
+    request->host = malloc(1000 * sizeof(char));
+    request->clientId = malloc(50 * sizeof(char));
+    request->userId = malloc(150 * sizeof(char));
+    request->time = malloc(100 * sizeof(char));
+    request->req = malloc(2000 * sizeof(char));
+    request->referer = malloc(30 * sizeof(char));
+    request->userAgent = malloc(30 * sizeof(char));
+    return 0;
+}
 
 /*
  * FUNCTION: free_req
@@ -120,7 +151,7 @@ buffer_init(){
  * request: pointer to a Request structure to be freed
  */
 void
-free_req(Request *request){
+req_free(Request *request){
     free(request->host);
     free(request->clientId);
     free(request->userId);
@@ -130,7 +161,7 @@ free_req(Request *request){
     //int dataSize;
     free(request->referer);
     free(request->userAgent);
-    free(request);
+    //free(request);
 }
 
 /*
@@ -140,7 +171,8 @@ free_req(Request *request){
  *
  * logfile: the log file pointer
  *
- * return: a newline terminated string containing the next line from file
+ * return:
+ *  a newline terminated string containing the next line from file
  */
 char *
 log_readline(FILE * logfile){
