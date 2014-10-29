@@ -7,69 +7,19 @@
 #include "debug.h"
 
 /*
- * FUNCTION: parse
- * --------------
+ * FUNCTION: parse_line
+ * --------------------
  * parses a NCSA Common Log Format string into a Request structure
  *
  * line: a string containing a NCSA Common Log Format access line
+ * request: a pointer to a structure to hold parsed data
  *
  * returns:
- *  pointer to a Request structure on success
- *  null on failure
+ *  0 on success
  */
-Request *
-parse(char * line){
-    int so = 0;
-    int eo = so;
-    int field = 0;
-    int ignorespace = FALSE;
-    Request * request = malloc(sizeof (Request *));
-    printf("%s", line);
-    int i;
-    for (i = 0; i < strlen(line); i++)
-    {
-        switch (line[i])
-        {
-            case '\"':
-                printf("\"");
-                if (ignorespace) { ignorespace = FALSE; }
-                else { ignorespace = TRUE; }
-                break;
-            case '[':
-                ignorespace = TRUE;
-                printf("[");
-                break;
-            case ']':
-                ignorespace = FALSE;
-                printf("]");
-                break;
-            case '\n':
-            case ' ':
-                if (line[i] == '\n')
-                {
-                    printf("!");
-                    field++;
-                    break;
-                }
-                if (ignorespace)
-                {
-                    printf("*");
-                }
-                else
-                {
-                    printf(" ");
-                    field++;
-                }
-                break;
-            default:
-                printf("c");
-                eo++;
-                break;
-        }
-    }
-    printf("\n");
-    printf("SOME STATISTICS:\n\t%d fields\n", field);
-    return request;
+int
+parse_line(char * line, Request *request){
+    return 0;
 }
 
 /*

@@ -57,8 +57,8 @@ pp_header(){
     pp_line();
     fputs("|", parserOutput);
     fprintf(parserOutput, "%15.15s|", "HOST");
-    fprintf(parserOutput, "%32.32s|", "COUNTRY");
-    fprintf(parserOutput, "%32.32s|", "REGION");
+    fprintf(parserOutput, "%32.32s|", "CLIENT ID");
+    fprintf(parserOutput, "%32.32s|", "USER ID");
     fprintf(parserOutput, "%32.32s|", "REQUEST");
     fprintf(parserOutput, "%3.3s|", "RET");
     fprintf(parserOutput, "%4.4s|\n", "SIZE");
@@ -99,10 +99,10 @@ pp_request(Request *request){
 
     fputs("|", parserOutput);
     fprintf(parserOutput, "%15.15s|", request->host);
-    fprintf(parserOutput, "%32.32s|", request->country);
-    fprintf(parserOutput, "%32.32s|", request->region);
+    fprintf(parserOutput, "%32.32s|", request->clientId);
+    fprintf(parserOutput, "%32.32s|", request->userId);
     fprintf(parserOutput, "%32.32s|", request->req);
-    fprintf(parserOutput, "%3d|", request->httpReturnCode);
+    fprintf(parserOutput, "%3d|", request->retCode);
     fprintf(parserOutput, "%4d|\n", request->dataSize);
 
     return 0;
