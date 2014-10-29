@@ -1,16 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <string.h>
 
 #include "sss4910.h"
 #include "parser.h"
 #include "debug.h"
 
-Buffer *
-buffer_init();
+int
+buffer_init(Buffer *);
+
+void
+buffer_free(Buffer *);
 
 int
 req_init(Request *);
+
+int
+req_null(Request *);
 
 void
 req_free(Request *);
@@ -35,29 +42,45 @@ main(int argc, char** argv){
     int lineNum = 0;
     char * logline;
     FILE * logfile;
-    Buffer * buffer;
+    Buffer buffer;
 
     //getopt()
     open_debug_file();
 
+    debug_write("Opening access.log file\n");
     if ((logfile = fopen("access.log", "r")) == NULL)
     {
         debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
         return -1;
     }
-    debug_write("Opening access.log file\n");
 
-    buffer = buffer_init();
-    buffer->available = TRUE;
     debug_write("Allocating memory for buffer\n");
+    err = buffer_init(&buffer);
+    if (err)
+    {
+        debug_write("buffer allocation failure, aborting!\n");
+        return -1;
+    }
+    buffer.available = TRUE;
+
+    strcpy(buffer.requests[0].host, "127.0.0.1");
+
+    printf("%s\n", buffer.requests[0].host);
+
+    req_null(&buffer.requests[0]);
+
+    printf("%s\n", buffer.requests[0].host);
+
+    /*
 
     while (!feof(logfile))
     {
-        buffer->currentSize = 0;
+        buffer.currentSize = 0;
         for (i = 0; i < BUFFER_SIZE; i++)
         {
-            req_init(&buffer->requests[i]);
+            //insure that the structure is empty
+            req_null(&buffer.requests[i]);
             //read a line
             logline = log_readline(logfile);
             if ((logline == (char *) NULL) && feof(logfile))
@@ -68,12 +91,12 @@ main(int argc, char** argv){
             lineNum++;
             //printf("%s\n", logline);
             //parse line and add it to the buffer
-            err = parse_line(logline, &buffer->requests[i]);
+            err = parse_line(logline, &buffer.requests[i]);
             if (err)
             {
                 printf("parse error on line %d\n", lineNum);
             }
-            buffer->currentSize++;
+            buffer.currentSize++;
             //printf("%s\n", buffer->requests[i].host);
             //printf("%s\n", buffer->requests[i].clientId);
             //printf("%s\n", buffer->requests[i].userId);
@@ -83,19 +106,14 @@ main(int argc, char** argv){
             //printf("%d\n", buffer->requests[i].dataSize);
         }
     }
+    */
 
     //cleanup
-    debug_write("Closing access.log file...\n");
-    fclose(logfile);
-
-    for (i = 0; i < BUFFER_SIZE; i++)
-    {
-        req_free(&buffer->requests[i]);
-    }
-    free(buffer->requests);
-    free(buffer);
+    buffer_free(&buffer);
     debug_write("Freeing memory for line buffer\n");
- 
+
+    fclose(logfile);
+    debug_write("Closing access.log file...\n");
     close_debug_file();
     return 0;
 }
@@ -109,23 +127,43 @@ main(int argc, char** argv){
  * return:
  *  a pointer to a buffer structure on success, NULL on failure
  */
-Buffer * 
-buffer_init(){
-    Buffer * buffer;
- 
-    buffer = malloc(sizeof(Buffer));
-    if (buffer == NULL)
-    {
-        return (Buffer * ) NULL;
-    }
+int 
+buffer_init(Buffer * buffer){
+    int i;
     buffer->requests = malloc((BUFFER_SIZE) * sizeof(Request));
-    return buffer;
+    for (i = 0; i < BUFFER_SIZE; i++)
+    {
+        if (req_init(&buffer->requests[i]))
+        {
+            debug_write("request struct allocation error!\n");
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*
+ * FUNCTION: buffer_free
+ * ---------------------
+ * frees memory allocated to buffer
+ */
+void
+buffer_free(Buffer * buffer){
+    int i = 0;
+    for (i = 0; i < BUFFER_SIZE; i++)
+    {
+        req_free(&buffer->requests[i]);
+    }
+    debug_write("free requests pointer\n");
+    free(buffer->requests);
 }
 
 /*
  * FUNCTION: req_init
  * ------------------
- * initialize request structure to store single line
+ * allocates memory for a request
+ *
+ * request: Request structure requiring memory
  *
  * return:
  *  0 on success
@@ -133,35 +171,59 @@ buffer_init(){
 int
 req_init(Request *request)
 {
-    request->host = malloc(1000 * sizeof(char));
-    request->clientId = malloc(50 * sizeof(char));
-    request->userId = malloc(150 * sizeof(char));
-    request->time = malloc(100 * sizeof(char));
-    request->req = malloc(2000 * sizeof(char));
-    request->referer = malloc(30 * sizeof(char));
-    request->userAgent = malloc(30 * sizeof(char));
+    debug_write("allocating request structure field memory!\n");
+    request->host = (char *) malloc(1000 * sizeof(char));
+    request->clientId = (char *) malloc(50 * sizeof(char));
+    request->userId = (char *) malloc(150 * sizeof(char));
+    request->time = (char *) malloc(100 * sizeof(char));
+    request->req = (char *) malloc(2000 * sizeof(char));
+    request->referer = (char *) malloc(30 * sizeof(char));
+    request->userAgent = (char *) malloc(30 * sizeof(char));
     return 0;
 }
 
 /*
- * FUNCTION: free_req
+ * FUNCTION: req_null
  * ------------------
- * frees request structure data
+ * tombstones a request structure
  *
- * request: pointer to a Request structure to be freed
+ * return:
+ *  0 on success
+ */
+int
+req_null(Request *request)
+{
+    strcpy(request->host, "~");
+    strcpy(request->clientId, "~");
+    strcpy(request->userId, "~");
+    strcpy(request->time, "~");
+    strcpy(request->req = "~");
+    request->retCode = -1;
+    request->dataSize = -1;
+    strcpy(request->referer, "~");
+    strcpy(request->userAgent, "~");
+    return 0;
+}
+
+
+/*
+ * FUNCTION: req_free
+ * ------------------
+ * frees individual fields of provided request
+ *
+ * request: Request structure to free
  */
 void
-req_free(Request *request){
+req_free(Request *request)
+{
+    debug_write("freeing request structure field memory\n");
     free(request->host);
     free(request->clientId);
     free(request->userId);
-    //time_t time;
+    free(request->time);
     free(request->req);
-    //int retCode;
-    //int dataSize;
     free(request->referer);
     free(request->userAgent);
-    //free(request);
 }
 
 /*
