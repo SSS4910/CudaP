@@ -178,8 +178,8 @@ req_init(Request *request)
     request->userId = (char *) malloc(150 * sizeof(char));
     request->time = (char *) malloc(100 * sizeof(char));
     request->req = (char *) malloc(2000 * sizeof(char));
-    request->referer = (char *) malloc(30 * sizeof(char));
-    request->userAgent = (char *) malloc(30 * sizeof(char));
+    request->referer = (char *) malloc(700 * sizeof(char));
+    request->userAgent = (char *) malloc(300 * sizeof(char));
     return 0;
 }
 
