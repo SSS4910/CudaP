@@ -7,6 +7,11 @@
 //
 //
 
+#define debug1 0   
+#define debug2 0
+#define debug3 0
+#define stripdebug 1
+#define stripdebug2 0
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,9 +19,9 @@
 #include "sss4910.h"
 
 
-
-    int parse_line(char* line, Request * outRequest);
-    time_t parse_time(char * input);
+char * stripreq(char * inreq);
+int parse_line(char* line, Request * outRequest );
+time_t parse_time(char * input);
 
 
     static int const HOSTSIZE = 1000;
@@ -37,13 +42,15 @@ int main(int argc, char **argv)
     FILE *fp;
     
     //fp = fopen("bgcsierravlanca_access.log","r");
-    fp = fopen("almhuette_access.log", "r");
-    //fp = fopen("UofS_access_log","r");
+    //fp = fopen("almhuette_access.log", "r");
+    fp = fopen("UofS_access_log","r");
     //fp = fopen("redlug.log","r");
 
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
+    
+    char * stripS;
 
     Request out;
 
@@ -63,7 +70,7 @@ int main(int argc, char **argv)
                         REQSIZE+
                         REFERERSIZE+
                         USERAGENTSIZE))
-                    + (sizeof(int) * 20));*/
+                    + (sizeof(int) * 2));*/
 
         out.host = (char *)malloc(HOSTSIZE * sizeof(char));    
         out.clientId = (char *)malloc(CLIENTIDSIZE * sizeof(char)); 
@@ -72,19 +79,21 @@ int main(int argc, char **argv)
         out.req = (char *)malloc((REQSIZE) * sizeof(char));  
         out.referer = (char *)malloc((REFERERSIZE) * sizeof(char));  
         out.userAgent = (char *)malloc(USERAGENTSIZE * sizeof(char));  
-
-
+        
 
         if(parse_line(line,& out) == 0)
         {
-            //printf("worked\n");
+            if(debug3) printf("worked\n");
         }
 
-        // printf("\n %d \n", lineN); 
+        if(debug3)printf("\n %d \n", lineN); 
         
-        //printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out.host, out.clientId, out.userId, out.time, out.req, out.httpReturnCode, out.dataSize );
+        if(debug2) printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out.host, out.clientId, out.userId, out.time, out.req, out.httpReturnCode, out.dataSize );
     
-    
+
+        stripS = stripreq(out.req);
+        free(stripS);
+
 
         free(out.host);
         free(out.clientId);
@@ -104,6 +113,26 @@ int main(int argc, char **argv)
     fclose(fp);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* 
  *FUNCTION: parse_line
  *---------------------------------
@@ -115,15 +144,17 @@ int main(int argc, char **argv)
  */
 int parse_line(char* line, Request * outRequest)
 {
-        //printf("%s \n",line);
+        if(debug2) printf("%s \n",line);
     
     
         //counters
-    int n = 0;
-    int j = 0;
+    int currentField = 0;
+    int lengthOfCurrentField = 0;
     int i = 0;
-    int h = 0;
+    int lengthOfReq = 0;
     int k = 0;
+    
+
 
     
 
@@ -150,19 +181,21 @@ int parse_line(char* line, Request * outRequest)
     outRequest->time = (char *)malloc(TIMESIZE * sizeof(char));  
     
     outRequest->req = (char *)malloc((REQSIZE) * sizeof(char));  
-    */
-    char* retCode;
-    retCode = (char *)malloc((30) * sizeof(char));  
-       
-    char* retSize;
-    retSize = (char *)malloc((30) * sizeof(char));  
-    /*   
+
     outRequest->referer = (char *)malloc((REFERERSIZE) * sizeof(char));  
 
     outRequest->userAgent = (char *)malloc(USERAGENTSIZE * sizeof(char));   
     */
+    
     int flag = 0;
     
+
+    char* retCode;
+    retCode = (char *)malloc((30) * sizeof(char));  
+       
+    char* retSize;
+    retSize = (char *)malloc((30) * sizeof(char));
+
 
 
         // loop for every character in the input line 
@@ -172,7 +205,7 @@ int parse_line(char* line, Request * outRequest)
             //fflush(stdout);
 
             //this parses and breaks down the line into fields, each case is a different 
-        switch(n)
+        switch(currentField)
         {
 
                 //field one 
@@ -181,18 +214,18 @@ int parse_line(char* line, Request * outRequest)
                 //
                 //          terminated by ' '
             case 0:
-                    //printf(" In field one \n");
+                    if(debug3)printf(" In field one \n");
                 
                 if (line[i] == ' ')
                 {
-                    n = 1;
-                    outRequest->host[j] = '\0';
-                    j =0;
+                    currentField = 1;
+                    outRequest->host[lengthOfCurrentField] = '\0';
+                    lengthOfCurrentField = 0;
                 }
                 else
                 {
-                    outRequest->host[j] = line[i];
-                    j++;
+                    outRequest->host[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
 
@@ -202,18 +235,18 @@ int parse_line(char* line, Request * outRequest)
                 //
                 //          terminated by ' '
             case 1:
-                    //printf(" In field two \n");
+                    if(debug3)printf(" In field two \n");
 
                 if(line[i] == ' ')
                 {
-                    n = 2;
-                    outRequest->clientId[j] = '\0';
-                    j =0;
+                    currentField = 2;
+                    outRequest->clientId[lengthOfCurrentField] = '\0';
+                    lengthOfCurrentField = 0;
                 }
                 else
                 {
-                    outRequest->clientId[j] = line[i];
-                    j++;
+                    outRequest->clientId[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
 
@@ -222,18 +255,18 @@ int parse_line(char* line, Request * outRequest)
                 //      
                 //      terminated by a ' '
             case 2:
-                //printf(" In field three \n");
+                if(debug3) printf(" In field three \n");
 
                 if(line[i] == ' ')
                 {
-                    n = 3;
-                    outRequest->userId[j] = '\0';
-                    j = 0;
+                    currentField = 3;
+                    outRequest->userId[lengthOfCurrentField] = '\0';
+                    lengthOfCurrentField = 0;
                 }
                 else
                 {
-                    outRequest->userId[j] = line[i];
-                    j++;
+                    outRequest->userId[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
 
@@ -252,25 +285,25 @@ int parse_line(char* line, Request * outRequest)
                 //
                 //      terminated by a ']'
             case 3:
-                    //printf(" In field four \n");
+                    if(debug3)printf(" In field four \n");
                 if(flag == 1)
                 {
-                    n = 4;
+                    currentField = 4;
                     flag = 0;
-                    outRequest->time[j] = '\0';
-                    j = 0;
+                    outRequest->time[lengthOfCurrentField] = '\0';
+                    lengthOfCurrentField = 0;
 
                 }
                 else if(line[i] == ']')
                 {
                     flag = 1;
-                    outRequest->time[j] = line[i];
-                    j++;
+                    outRequest->time[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 else
                 {
-                    outRequest->time[j] = line[i];
-                    j++;
+                    outRequest->time[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
            
@@ -286,35 +319,37 @@ int parse_line(char* line, Request * outRequest)
                 //      PROBLAMATIC
 
             case 4:
-                    //printf(" In field five \n");
+                    if(debug3) printf(" In field five \n");
 
                 if(flag == 2)
                 {
                     if (line[i] != ' ')
                     {
                         flag = 1;
-                        n = 4;
-                        outRequest->req[j] = line[i];
-                        j++;
+                        currentField = 4;
+                        outRequest->req[lengthOfCurrentField] = line[i];
+                        lengthOfCurrentField++;
                     }
                     else
                     {
                         flag = 0;
-                        n = 5;
-                        h = 0;
-                        outRequest->req[j] = '\0';
+                        outRequest->req[lengthOfCurrentField] = '\0';
+                        lengthOfReq = lengthOfCurrentField;
+                        currentField = 5;
+                        lengthOfCurrentField = 0;
                     }
                 }
                 else if( line[i] == '"')
                 {
-                    outRequest->req[j] = line[i];
-                    j++;
+
+                    outRequest->req[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                     flag++;
                 }
                 else
                 {
-                    outRequest->req[j] = line[i];
-                    j++;
+                    outRequest->req[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
 
@@ -328,34 +363,35 @@ int parse_line(char* line, Request * outRequest)
                 //          terminated by a ' '
                 //
             case 5:
-                    //printf(" In field six \n");
+                    if(debug3)printf(" In field six \n");
 
                 if(line[i] == ' ')
                 {
-                    retCode[h] = '\0';
+                    retCode[lengthOfCurrentField] = '\0';
                     outRequest->httpReturnCode = atoi(retCode);
                     if(outRequest->httpReturnCode == 0)
                     {
-                        //n = 5;
-                        for(k = 0; k < h; k++)
+
+                        outRequest->req[lengthOfReq] = ' ';
+                        lengthOfReq++;
+                        for(k = 0; k < lengthOfCurrentField; k++)
                         {
-                            outRequest->req[j] = retCode[k];
-                            j++;
+                            outRequest->req[lengthOfReq] = retCode[k];
+                            lengthOfReq++;
                         }
-                        h = 0;
+                        lengthOfCurrentField = 0;
                     }
                     else
                     {
-                        n = 6;
-                        h = 0;
-                        j = 0;
+                        currentField = 6;
+                        lengthOfCurrentField = 0;
                     }
                 }
                 else
                 {
                     
-                    retCode[h] = line[i];
-                    h++;
+                    retCode[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
 
@@ -367,19 +403,19 @@ int parse_line(char* line, Request * outRequest)
                 //      terminated by a ' ' or a '\n' for "short" logs
                 //
             case 6:
-                    //printf(" In field seven \n");
+                    if(debug3) printf(" In field seven \n");
 
                 if(line[i] == ' ' || line[i] == '\n')
                 {
-                    n = 7;
-                    retSize[h] = '\0';
-                    h = 0;
+                    currentField = 7;
+                    retSize[lengthOfCurrentField] = '\0';
+                    lengthOfCurrentField = 0;
                     outRequest->dataSize = atoi(retSize);
                 }
                 else
                 {
-                    retSize[h] = line[i];
-                    h++;
+                    retSize[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
                 }
                 break;
 
@@ -390,8 +426,7 @@ int parse_line(char* line, Request * outRequest)
 
     }
 
-    //printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize );
-    
+    if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize );
     
     /*free(outRequest.host);
     free(outRequest.rfc);
@@ -405,6 +440,77 @@ int parse_line(char* line, Request * outRequest)
 
     return 0;
 }
+
+
+char * stripreq(char * inputString )
+{
+    int spaces = 0;
+    int i;
+    int currentSpace = 0;
+    char * buffer;
+    buffer = (char *)malloc((2000) * sizeof(char));  
+
+   
+    int currentLengthOfBuffer = 0;
+    
+    if(stripdebug2) printf("A"); 
+    
+    for(i = 0; i < strlen(inputString);i++)
+    {
+        if (inputString[i] == ' ')
+        {
+            spaces++;
+        }
+    }
+    
+
+    if(stripdebug2) printf("B %d ",spaces);
+    
+    for(i = 0; i < strlen(inputString); i++)
+    {
+        if(stripdebug2) printf("C%d ", i);
+            
+        if(currentSpace == 0)
+        {
+            if(inputString[i] == ' ')
+            {
+                currentSpace++;
+            }
+        }
+        else if(currentSpace == spaces)
+        {
+            if(spaces == 1)
+            {
+                buffer[currentLengthOfBuffer] = inputString[i];
+                currentLengthOfBuffer++;
+            }
+            else
+            {
+                buffer[currentLengthOfBuffer] = '\0';
+                break;
+            }
+        }
+        else
+        {
+            if(inputString[i] == ' ')
+            {
+                currentSpace++;
+            }
+            buffer[currentLengthOfBuffer] = inputString[i];
+            currentLengthOfBuffer++;
+        }   
+    }
+    if(spaces == 1)
+    {
+        buffer[currentLengthOfBuffer-1] = '\0';
+    }
+
+    if(stripdebug) printf("\n\n\n stripout:\n %s \n\n%s \n",inputString,buffer);
+    
+    return buffer;
+}
+
+
 
 
 
@@ -455,5 +561,4 @@ int parse_line(char* line, Request * outRequest)
 
     }
 
-    
 }*/
