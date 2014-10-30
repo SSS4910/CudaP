@@ -7,10 +7,10 @@
 //
 //
 
-#define debug1 0   
-#define debug2 0
+#define debug1 1
+#define debug2 1
 #define debug3 0
-#define stripdebug 1
+#define stripdebug 0
 #define stripdebug2 0
 
 #include <stdio.h>
@@ -27,12 +27,12 @@ time_t parse_time(char * input);
     static int const HOSTSIZE = 1000;
     static int const CLIENTIDSIZE = 50;
     static int const USERIDSIZE = 150;
-    static int const TIMESIZE = 100;
+    static int const TIMESIZE = 30;
     static int const REQSIZE = 2000;
     static int const CODESIZE = 30;
     static int const SIZESIZE = 30;
-    static int const REFERERSIZE = 30;
-    static int const USERAGENTSIZE = 30;
+    static int const REFERERSIZE = 700;
+    static int const USERAGENTSIZE = 300;
 
 
 int main(int argc, char **argv)
@@ -41,9 +41,9 @@ int main(int argc, char **argv)
     int lineN = 0;
     FILE *fp;
     
-    //fp = fopen("bgcsierravlanca_access.log","r");
+    fp = fopen("bgcsierravlanca_access.log","r");
     //fp = fopen("almhuette_access.log", "r");
-    fp = fopen("UofS_access_log","r");
+    //fp = fopen("UofS_access_log","r");
     //fp = fopen("redlug.log","r");
 
     char * line = NULL;
@@ -85,14 +85,24 @@ int main(int argc, char **argv)
         {
             if(debug3) printf("worked\n");
         }
+        else
+        {
+            printf("ERROR ON LINE: %d \n",lineN);
+        }
+
 
         if(debug3)printf("\n %d \n", lineN); 
         
-        if(debug2) printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out.host, out.clientId, out.userId, out.time, out.req, out.httpReturnCode, out.dataSize );
+        if(debug3) printf("H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",out.host, out.clientId, out.userId, out.time, out.req, out.httpReturnCode, out.dataSize );
     
 
-        stripS = stripreq(out.req);
-        free(stripS);
+        /*if(strlen(out.time)> 30) 
+        {
+            printf("\n%s N:%d\n",line, lineN );
+            printf("%s\n",out.time);
+        }*/
+        if(stripdebug) stripS = stripreq(out.req);
+        if(stripdebug) free(stripS);
 
 
         free(out.host);
@@ -154,39 +164,6 @@ int parse_line(char* line, Request * outRequest)
     int lengthOfReq = 0;
     int k = 0;
     
-
-
-    
-
-        // alocate memory and create the Request that will be returned
-    //Request * outRequest;
-    //outRequest = malloc(sizeof(Request*));
-    /*outRequest = malloc((sizeof(char)* 
-                        (
-                        HOSTSIZE+
-                        CLIENTIDSIZE+
-                        USERIDSIZE+
-                        TIMESIZE+
-                        REQSIZE+
-                        REFERERSIZE+
-                        USERAGENTSIZE))
-                    + (sizeof(int) * 20));
-    
-    outRequest->host = (char *)malloc(HOSTSIZE * sizeof(char));    
-      
-    outRequest->clientId = (char *)malloc(CLIENTIDSIZE * sizeof(char)); 
-     
-    outRequest->userId = (char *)malloc((USERIDSIZE) * sizeof(char));  
-    
-    outRequest->time = (char *)malloc(TIMESIZE * sizeof(char));  
-    
-    outRequest->req = (char *)malloc((REQSIZE) * sizeof(char));  
-
-    outRequest->referer = (char *)malloc((REFERERSIZE) * sizeof(char));  
-
-    outRequest->userAgent = (char *)malloc(USERAGENTSIZE * sizeof(char));   
-    */
-    
     int flag = 0;
     
 
@@ -197,12 +174,15 @@ int parse_line(char* line, Request * outRequest)
     retSize = (char *)malloc((30) * sizeof(char));
 
 
+    outRequest->referer[0] = '~';
+    outRequest->referer[1] = '\0';
 
-        // loop for every character in the input line 
+    outRequest->userAgent[0] = '~';
+    outRequest->userAgent[1] = '\0';
+
+         // loop for every character in the input line 
     for(i =0; i < strlen(line); i++)
     {
-
-            //fflush(stdout);
 
             //this parses and breaks down the line into fields, each case is a different 
         switch(currentField)
@@ -239,9 +219,17 @@ int parse_line(char* line, Request * outRequest)
 
                 if(line[i] == ' ')
                 {
+                    if(line[i+1] == '[')
+                    {
                     currentField = 2;
                     outRequest->clientId[lengthOfCurrentField] = '\0';
                     lengthOfCurrentField = 0;
+                    }
+                    else
+                    {
+                        outRequest->clientId[lengthOfCurrentField] = line[i];
+                        lengthOfCurrentField++;
+                    }
                 }
                 else
                 {
@@ -286,6 +274,12 @@ int parse_line(char* line, Request * outRequest)
                 //      terminated by a ']'
             case 3:
                     if(debug3)printf(" In field four \n");
+                
+                if(lengthOfCurrentField >= 30)
+                {
+                    //time cannot be bigger than 23
+                    return -1;
+                }
                 if(flag == 1)
                 {
                     currentField = 4;
@@ -419,14 +413,61 @@ int parse_line(char* line, Request * outRequest)
                 }
                 break;
 
-                //COMBINED FORMAT LOG DATA STILL NEEDED
+           //EXTENDED LOG FORMAT FOLLOWS 
+            case 7:
+                    if(debug3) printf(" In field eight \n");
+                
+                if(flag == 2)
+                {
+                    flag = 0;
+                    outRequest->referer[lengthOfCurrentField] = '\0';
+                    currentField = 8;
+                    lengthOfCurrentField = 0;
+                }
+                else if( line[i] == '"')
+                {
+
+                    //outRequest->referer[lengthOfCurrentField] = line[i];
+                    //lengthOfCurrentField++;
+                    flag++;
+                }
+                else
+                {
+                    outRequest->referer[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
+                }
+                break;
+             case 8:
+                    if(debug3) printf(" In field eight \n");
+                
+                if(flag == 2)
+                {
+                    flag = 0;
+                    outRequest->userAgent[lengthOfCurrentField] = '\0';
+                    currentField = 9;
+                    lengthOfCurrentField = 0;
+                }
+                else if( line[i] == '"')
+                {
+
+                    //outRequest->userAgent[lengthOfCurrentField] = line[i];
+                    //lengthOfCurrentField++;
+                    flag++;
+                }
+                else
+                {
+                    outRequest->userAgent[lengthOfCurrentField] = line[i];
+                    lengthOfCurrentField++;
+                }
+                break;
+            
 
         }   
 
 
     }
 
-    if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize );
+    if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
     
     /*free(outRequest.host);
     free(outRequest.rfc);
