@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "sss4910.h"
+#include "core.h"
 #include "debug.h"
 #include "ppfile.h"
 

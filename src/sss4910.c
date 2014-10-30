@@ -3,7 +3,7 @@
 #include <pthread.h>
 #include <string.h>
 
-#include "sss4910.h"
+#include "core.h"
 #include "parser.h"
 #include "debug.h"
 
