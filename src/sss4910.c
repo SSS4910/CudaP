@@ -64,6 +64,8 @@ main(int argc, char** argv){
     }
     buffer.available = TRUE;
 
+    /*
+
     strcpy(buffer.requests[0].host, "127.0.0.1");
 
     printf("%s\n", buffer.requests[0].host);
@@ -72,8 +74,7 @@ main(int argc, char** argv){
 
     printf("%s\n", buffer.requests[0].host);
 
-    /*
-
+    */
     while (!feof(logfile))
     {
         buffer.currentSize = 0;
@@ -94,9 +95,10 @@ main(int argc, char** argv){
             err = parse_line(logline, &buffer.requests[i]);
             if (err)
             {
-                printf("parse error on line %d\n", lineNum);
+                //printf("parse error on line %d\n", lineNum);
             }
             buffer.currentSize++;
+            free(logline);
             //printf("%s\n", buffer->requests[i].host);
             //printf("%s\n", buffer->requests[i].clientId);
             //printf("%s\n", buffer->requests[i].userId);
@@ -106,7 +108,6 @@ main(int argc, char** argv){
             //printf("%d\n", buffer->requests[i].dataSize);
         }
     }
-    */
 
     //cleanup
     buffer_free(&buffer);
@@ -197,7 +198,7 @@ req_null(Request *request)
     strcpy(request->clientId, "~");
     strcpy(request->userId, "~");
     strcpy(request->time, "~");
-    strcpy(request->req = "~");
+    strcpy(request->req, "~");
     request->retCode = -1;
     request->dataSize = -1;
     strcpy(request->referer, "~");

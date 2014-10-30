@@ -2,7 +2,7 @@
 
 #define TRUE 1
 #define FALSE 0
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 327680
 #define MAX_LINE_LENGTH 16384
 
 typedef struct{
