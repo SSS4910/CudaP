@@ -37,6 +37,6 @@ int analyze_data(Buffer *input_buffer);
 
 int cuda_setup(int computeCapability);
 
-char * cuda_strcpy(char *dest, char *source);
+char * cuda_strcpy(char *dest, const char *source);
 
 int cuda_strcmp(char *str1, char *str2);

@@ -4,24 +4,143 @@
 
 
 // Declare the Cuda kernels and any Cuda functions
-__global__ void analyze_404(Buffer *buffer, Struct404 *results)
+__global__ void analyze_404(Buffer *buffer, Struct404 *results, int *stats)
 {
     int id = threadIdx.x + blockIdx.x * blockDim.x;
 
     if(id < buffer->currentSize)
     {
+        if( buffer->requests[id].retCode == 404)
+        {
+           /* cuda_strcpy(results[id].host, buffer->requests[id]->host);
+            cuda_strcpy(results[id].req, buffer->requests[id]->req);
+            cuda_strcpy(results[id].time, buffer->requests[id]->time);
 
+            if(cuda_strcmp(buffer->requests[id]->req, "/PHPMYADMIN/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/PMA/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/PMA2005/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/SSLMySQLAdmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/SQL/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/admin/phpmyadmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/admin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/bbs/data/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/cpadmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/cpadmindb/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/admin/pma/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/cpanelmysql/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/cpanelphpmyadmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/cpanelsql/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/cpphpmyadmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/db/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/dbadmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/myadmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/mysql-admin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/mysql/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/mysqladmin/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/mysqladminconfig/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else if(cuda_strcmp(buffer->requests[id]->req, "/mysqlmanager/scripts/setup.php") == 0)
+            {
+                results[id].is_injection = TRUE;
+            }
+            else
+            {
+                results[id].is_injection = FALSE;
+            }*/
+
+            //if(results[id].is_injection)
+           // {
+                stats[id] = 1;
+            //}
+
+        }
+        else
+        {
+            stats[id] = 0;
+        }
     }
     
 }
 
-__global__ void analyze_200(Buffer *buffer, Struct200 *results)
+__global__ void analyze_200(Buffer *buffer, Struct200 *results, int *stats)
 {
     int id = threadIdx.x + blockIdx.x * blockDim.x;
 
     if(id < buffer->currentSize)
     {
-
+        if(buffer->requests[id].retCode == 200)
+        {
+            stats[id] = 1;
+        }
+        else
+        {
+            stats[id] = 0;
+        }
     }
 
 }
@@ -59,13 +178,15 @@ int analyze_data(Buffer *input_buffer)
     Buffer *cudaBuffer;
     Struct404 results404[N];
     Struct200 results200[N];
-    //int heightStats[N];
+    int stats404[N];
+    int stats200[N];
 
     // GPU variables
     Buffer *dev_buffer;
     Struct404 *dev_results404;
     Struct200 *dev_results200;
-    //int *dev_heightStats;
+    int *dev_stats404;
+    int *dev_stats200;
 
     // events to track performance time
     float elapsedTime;
@@ -77,7 +198,7 @@ int analyze_data(Buffer *input_buffer)
     // creates zero-copy memory for buffer (both CPU and GPU point to same memory). A pointer will be given to the GPU later...
     HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer, buffer_size, cudaHostAllocWriteCombined | cudaHostAllocMapped));
 
-    // fill the zero-copy memorywith data from input_buffer
+    // fill the zero-copy memory with data from input_buffer
     cudaBuffer = (Buffer *)memcpy(&cudaBuffer, &input_buffer, buffer_size);
 
     // lets main know the buffer is free
@@ -95,12 +216,20 @@ int analyze_data(Buffer *input_buffer)
 
     // allocating GPU memory (GPU only memory)
     HANDLE_ERROR(cudaMalloc( (void **) &dev_results404, N * sizeof(Struct404) ));
+    HANDLE_ERROR(cudaMalloc( (void **) &dev_stats404, N * sizeof(int) ));
+
     HANDLE_ERROR(cudaMalloc( (void **) &dev_results200, N * sizeof(Struct200) ));
+    HANDLE_ERROR(cudaMalloc( (void **) &dev_stats200, N * sizeof(int) ));
+    
     //HANDLE_ERROR(cudaMalloc( (void **) &dev_heightStats, N * sizeof(int) ));
 
     // page-locking output buffers (pin host memory for streams)
     HANDLE_ERROR(cudaHostAlloc( (void **) &results404, N * sizeof(Struct404), cudaHostAllocDefault));
+    HANDLE_ERROR(cudaHostAlloc( (void **) &stats404, N * sizeof(int), cudaHostAllocDefault));
+
     HANDLE_ERROR(cudaHostAlloc( (void **) &results200, N * sizeof(Struct200), cudaHostAllocDefault));
+    HANDLE_ERROR(cudaHostAlloc( (void **) &stats200, N * sizeof(int), cudaHostAllocDefault));
+    
     //HANDLE_ERROR(cudaHostAlloc( (void **) &heightStats, N * sizeof(int), cudaHostAllocDefault));
 
     /* FILL BUFFER WITH DATA */
@@ -109,13 +238,16 @@ int analyze_data(Buffer *input_buffer)
     HANDLE_ERROR(cudaHostGetDevicePointer(&dev_buffer, cudaBuffer, 0));
 
     // calls to Cuda kernels, note streams have been added
-    analyze_404<<< blocks, threads, 0, stream0 >>>(dev_buffer, dev_results404);
-    analyze_200<<< blocks, threads, 0, stream1 >>>(dev_buffer, dev_results200);
+    analyze_404<<< blocks, threads, 0, stream0 >>>(dev_buffer, dev_results404, dev_stats404);
+    analyze_200<<< blocks, threads, 0, stream1 >>>(dev_buffer, dev_results200, dev_stats200);
     //analyze_height<<< blocks, threads, 0, stream2 >>>(dev_buffer, dev_heightStats);
 
     // Get the results from the GPU
     HANDLE_ERROR(cudaMemcpyAsync(results404, dev_results404, N * sizeof(Struct404), cudaMemcpyDeviceToHost, stream0));
+    HANDLE_ERROR(cudaMemcpyAsync(stats404, dev_stats404, N * sizeof(int), cudaMemcpyDeviceToHost, stream0));
+
     HANDLE_ERROR(cudaMemcpyAsync(results200, dev_results200, N * sizeof(Struct200), cudaMemcpyDeviceToHost, stream1));
+    HANDLE_ERROR(cudaMemcpyAsync(stats200, dev_stats200, N * sizeof(int), cudaMemcpyDeviceToHost, stream1));
     //HANDLE_ERROR(cudaMemcpyAsync(heightStats, dev_heightStats, N * sizeof(int), cudaMemcpyDeviceToHost, stream2));
 
     // make sure everyone is done
@@ -130,12 +262,33 @@ int analyze_data(Buffer *input_buffer)
     HANDLE_ERROR(cudaEventSynchronize(stop));
     HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 
+    /* Print output for testing */
+    int total404 = 0;
+    int total200 = 0;
+
+    int x;
+    for(x = 0; x < N; x++)
+    {
+        total404 += stats404[x];
+        total200 += stats200[x];
+
+        /*if(results404[x] != NULL)
+            printf("%s : %s\n", results404[x]->host, results404[x]->req);*/
+    }
+
+    printf("Total 404s: %d\n", total404);
+    printf("Total 200s: %d\n", total404);
+
     // cuda cleanup
     cudaFree(dev_buffer);
     cudaFree(dev_results404);
+    cudaFree(dev_stats404);
     cudaFree(dev_results200);
+    cudaFree(dev_stats200);
     cudaFree(results404);
+    cudaFree(stats404);
     cudaFree(results200);
+    cudaFree(stats200);
     //cudaFree(dev_heightStats);
 
     cudaEventDestroy(start);
@@ -184,8 +337,20 @@ int cuda_setup(int computeCapability)
 
 // Copies strings in cuda code
 // Returns: pointer to dest
-char * cuda_strcpy(char *dest, char *source)
+char * cuda_strcpy(char *dest, const char *source)
 {
+    int length = strlen(source);
+    dest = (char *) malloc(length + 1);
+
+    int x = 0;
+    for(x = 0; x < length; x++)
+    {
+        dest[x] = source[x];
+    }
+    dest[length + 1] = '\0';
+
+    return dest;
+
     
 }
 
