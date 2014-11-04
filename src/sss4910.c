@@ -7,6 +7,8 @@
 #include "parser.h"
 #include "debug.h"
 
+#define debug 0
+
 int
 buffer_init(Buffer *);
 
@@ -95,17 +97,20 @@ main(int argc, char** argv){
             err = parse_line(logline, &buffer.requests[i]);
             if (err)
             {
-                //printf("parse error on line %d\n", lineNum);
+                printf("parse error on line %d\n", lineNum);
             }
             buffer.currentSize++;
             free(logline);
-            //printf("%s\n", buffer->requests[i].host);
-            //printf("%s\n", buffer->requests[i].clientId);
-            //printf("%s\n", buffer->requests[i].userId);
-            //printf("%s\n", buffer->requests[i].time);
-            //printf("%s\n", buffer->requests[i].req);
-            //printf("%d\n", buffer->requests[i].retCode);
-            //printf("%d\n", buffer->requests[i].dataSize);
+
+            if(debug) printf("%s\n", buffer.requests[i].host);
+            if(debug) printf("%s\n", buffer.requests[i].clientId);
+            if(debug) printf("%s\n", buffer.requests[i].userId);
+            if(debug) printf("%s\n", buffer.requests[i].time);
+            if(debug) printf("%s\n", buffer.requests[i].req);
+            if(debug) printf("%d\n", buffer.requests[i].retCode);
+            if(debug) printf("%d\n", buffer.requests[i].dataSize);
+	    if(debug) printf("%s\n", buffer.requests[i].referer);
+	    if(debug) printf("%s\n", buffer.requests[i].userAgent);
         }
     }
 
