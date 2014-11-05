@@ -100,7 +100,7 @@ main(int argc, char** argv){
             buffer.currentSize++;
             free(logline);
 
-#if DEBUG==1
+#if DEBUG==0
             printf("%s\n", buffer.requests[i].host);
             printf("%s\n", buffer.requests[i].clientId);
             printf("%s\n", buffer.requests[i].userId);

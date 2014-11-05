@@ -7,14 +7,6 @@
 #include "debug.h"
 
 
-    //debug output for parcer and striprep
-#define debug1 0
-#define debug2 0
-#define debug3 0
-#define stripdebug 0
-#define stripdebug2 0
-
-
 
 
 /*
@@ -30,7 +22,7 @@
  */
 int
 parse_line(char * line, Request *outRequest){
-    if(debug2) printf("%s \n",line);
+    //if(debug2) printf("%s \n",line);
     
     
         //counters
@@ -70,7 +62,7 @@ parse_line(char * line, Request *outRequest){
                 //
                 //          terminated by ' '
             case 0:
-                    if(debug3)printf(" In field one \n");
+                    //if(debug3)printf(" In field one \n");
                 
                 if (line[i] == ' ')
                 {
@@ -91,7 +83,7 @@ parse_line(char * line, Request *outRequest){
                 //
                 //          terminated by ' '
             case 1:
-                    if(debug3)printf(" In field two \n");
+                //printf(" In field two \n");
 
                 if(line[i] == ' ')
                 {
@@ -119,7 +111,7 @@ parse_line(char * line, Request *outRequest){
                 //      
                 //      terminated by a ' '
             case 2:
-                if(debug3) printf(" In field three \n");
+                //if(debug3) printf(" In field three \n");
 
                 if(line[i] == ' ')
                 {
@@ -149,7 +141,7 @@ parse_line(char * line, Request *outRequest){
                 //
                 //      terminated by a ']'
             case 3:
-                    if(debug3)printf(" In field four \n");
+                    //if(debug3)printf(" In field four \n");
                 
                 if(lengthOfCurrentField >= 30)
                 {
@@ -189,7 +181,7 @@ parse_line(char * line, Request *outRequest){
                 //      PROBLAMATIC
 
             case 4:
-                    if(debug3) printf(" In field five \n");
+                    //if(debug3) printf(" In field five \n");
 
                 if(flag == 2)
                 {
@@ -233,7 +225,7 @@ parse_line(char * line, Request *outRequest){
                 //          terminated by a ' '
                 //
             case 5:
-                    if(debug3)printf(" In field six \n");
+                    //if(debug3)printf(" In field six \n");
 
                 if(line[i] == ' ')
                 {
@@ -273,7 +265,7 @@ parse_line(char * line, Request *outRequest){
                 //      terminated by a ' ' or a '\n' for "short" logs
                 //
             case 6:
-                    if(debug3) printf(" In field seven \n");
+                    //if(debug3) printf(" In field seven \n");
 
                 if(line[i] == ' ' || line[i] == '\n')
                 {
@@ -291,7 +283,7 @@ parse_line(char * line, Request *outRequest){
 
            //EXTENDED LOG FORMAT FOLLOWS 
             case 7:
-                    if(debug3) printf(" In field eight \n");
+                    //if(debug3) printf(" In field eight \n");
                 
                 if(flag == 2)
                 {
@@ -314,7 +306,7 @@ parse_line(char * line, Request *outRequest){
                 }
                 break;
              case 8:
-                    if(debug3) printf(" In field eight \n");
+                    //if(debug3) printf(" In field eight \n");
                 
                 if(flag == 2)
                 {
@@ -343,7 +335,7 @@ parse_line(char * line, Request *outRequest){
 
     }
 
-    if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->retCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
+    //if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->retCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
     
     /*free(outRequest.host);
     free(outRequest.rfc);
@@ -377,7 +369,7 @@ char * stripreq(char * inputString )
    
     int currentLengthOfBuffer = 0;
     
-    if(stripdebug2) printf("A"); 
+    //if(stripdebug2) printf("A"); 
     
     for(i = 0; i < strlen(inputString);i++)
     {
@@ -388,11 +380,11 @@ char * stripreq(char * inputString )
     }
     
 
-    if(stripdebug2) printf("B %d ",spaces);
+    //if(stripdebug2) printf("B %d ",spaces);
     
     for(i = 0; i < strlen(inputString); i++)
     {
-        if(stripdebug2) printf("C%d ", i);
+        //if(stripdebug2) printf("C%d ", i);
             
         if(currentSpace == 0)
         {
@@ -429,7 +421,7 @@ char * stripreq(char * inputString )
         buffer[currentLengthOfBuffer-1] = '\0';
     }
 
-    if(stripdebug) printf("\n\n\n stripout:\n %s \n\n%s \n",inputString,buffer);
+    //if(stripdebug) printf("\n\n\n stripout:\n %s \n\n%s \n",inputString,buffer);
     
     return buffer;
 }
