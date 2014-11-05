@@ -1,28 +1,28 @@
-CC=gcc
-WARN= -Wall
+CC= nvcc
+ARCH= -arch=sm_20
 
 all: sss4910
 
-sss4910: sss4910.o parser.o debug.o ppfile.o
+sss4910: sss4910.o parser.o debug.o cuda.o
 	@echo Linking object files...
-	@ $(CC) $(WARN) sss4910.o parser.o debug.o ppfile.o -o sss4910
+	@ $(CC) $(ARCH) sss4910.o parser.o debug.o cuda.o -o sss4910
 	@echo DONE!
 
 sss4910.o:
 	@echo Generating sss4910.c object file...
-	@ $(CC) $(WARN) -c sss4910.c
+	@ $(CC) sss4910.cu -c 
 
 parser.o:
 	@echo Generating parser.c object file...
-	@ $(CC) $(WARN) -c parser.c
+	@ $(CC) -c parser.c
 
 debug.o:
 	@echo Generating debug.c object file...
-	@ $(CC) $(WARN) -c debug.c
+	@ $(CC) -c debug.c
 
-ppfile.o:
-	@echo Generating ppfile.c objectfile...
-	@ $(CC) $(WARN) -c ppfile.c
+cuda.o:
+	@echo Generating cuda.cu objectfile...
+	@ $(CC) cuda.cu -c 
 
 errorclean:
 	@echo Removin errorlog.txt...

@@ -1,8 +1,15 @@
+
+#ifndef CORE_H
+#define CORE_H
+
 #include <time.h>
+/*#include "cuda.cuh"
+#include "parser.h"
+#include "debug.h"*/
 
 #define TRUE 1
 #define FALSE 0
-#define BUFFER_SIZE 327680
+#define BUFFER_SIZE 512 //327680
 #define MAX_LINE_LENGTH 16384
 
 typedef struct{
@@ -22,3 +29,5 @@ typedef struct{
     int currentSize;
     Request * requests;
 } Buffer;
+
+#endif

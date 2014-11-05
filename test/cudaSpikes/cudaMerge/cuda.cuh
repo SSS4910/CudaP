@@ -1,17 +1,19 @@
 
+#ifndef CUDA_CUH
+#define CUDA_CUH
 
-
+#include "core.h"
 //#define N 30
-#define TRUE 1
-#define FALSE 0
+//#define TRUE 1
+//#define FALSE 0
 #define MAX_BLOCKS 65000
 #define COMPUTE_ABILITY 2
 
-typedef struct{
+/*typedef struct{
     int available;
     int currentSize;
     struct Request * requests;
-} Buffer;
+} Buffer;*/
 
 typedef struct{
     char *host;
@@ -27,9 +29,9 @@ typedef struct{
 } Struct200;
 
 // cuda prototypes
-__global__ void analyze_404(Buffer *buffer, Struct404 *results);
+__global__ void analyze_404(Buffer *buffer, Struct404 *results, int *stats);
 
-__global__ void analyze_200(Buffer *buffer, Struct200 *results);
+__global__ void analyze_200(Buffer *buffer, Struct200 *results, int *stats);
 
 //__global__ void analyze_height(Buffer *bufer, int *statResults);
 
@@ -40,3 +42,5 @@ int cuda_setup(int computeCapability);
 char * cuda_strcpy(char *dest, const char *source);
 
 int cuda_strcmp(char *str1, char *str2);
+
+#endif
