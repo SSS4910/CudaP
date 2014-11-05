@@ -6,6 +6,7 @@
 #include "core.h"
 #include "parser.h"
 #include "debug.h"
+#include "cuda.cuh"
 
 int
 buffer_init(Buffer *);
@@ -25,6 +26,8 @@ req_free(Request *);
 char *
 log_readline(FILE *);
 
+Buffer buffer;
+
 /*
  * FUNCTION: main
  * --------------
@@ -42,7 +45,7 @@ main(int argc, char** argv){
     int lineNum = 0;
     char * logline;
     FILE * logfile;
-    Buffer buffer;
+    //pthread_t cudaThread;
 
     //getopt()
     open_debug_file();
@@ -60,10 +63,18 @@ main(int argc, char** argv){
     if (err)
     {
         debug_write("buffer allocation failure, aborting!\n");
+        fclose(logfile);
+        debug_write("Closing access.log file...\n");
+        close_debug_file();
         return -1;
     }
-    buffer.available = TRUE;
 
+    //err = pthread_create(&cudaThread, NULL, analyze_data, (void *) &buffer);
+    //if (err)
+    //{
+        //debug_write("thread creation failure, aborting!\n");
+        //return -1;
+    //}
     /*
 
     strcpy(buffer.requests[0].host, "127.0.0.1");
@@ -107,7 +118,10 @@ main(int argc, char** argv){
             //printf("%d\n", buffer->requests[i].retCode);
             //printf("%d\n", buffer->requests[i].dataSize);
         }
+        buffer.available = TRUE;
     }
+
+    //pthread_join(cudaThread, NULL);
 
     //cleanup
     buffer_free(&buffer);
