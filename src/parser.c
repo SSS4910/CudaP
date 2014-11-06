@@ -22,7 +22,7 @@
  */
 int
 parse_line(char * line, Request *outRequest){
-    //if(debug2) printf("%s \n",line);
+        //if(debug2) printf("%s \n",line);
     
     
         //counters
@@ -83,21 +83,13 @@ parse_line(char * line, Request *outRequest){
                 //
                 //          terminated by ' '
             case 1:
-                //printf(" In field two \n");
+                    //if(debug3)printf(" In field two \n");
 
                 if(line[i] == ' ')
                 {
-                    if(line[i+1] == '[')
-                    {
                     currentField = 2;
                     outRequest->clientId[lengthOfCurrentField] = '\0';
                     lengthOfCurrentField = 0;
-                    }
-                    else
-                    {
-                        outRequest->clientId[lengthOfCurrentField] = line[i];
-                        lengthOfCurrentField++;
-                    }
                 }
                 else
                 {
@@ -111,13 +103,21 @@ parse_line(char * line, Request *outRequest){
                 //      
                 //      terminated by a ' '
             case 2:
-                //if(debug3) printf(" In field three \n");
-
+                	//if(debug3) printf(" In field three \n");
+                
                 if(line[i] == ' ')
                 {
-                    currentField = 3;
-                    outRequest->userId[lengthOfCurrentField] = '\0';
-                    lengthOfCurrentField = 0;
+                    if(line[i+1] == '[')
+                    {
+                        currentField = 3;
+                        outRequest->userId[lengthOfCurrentField] = '\0';
+                        lengthOfCurrentField = 0;
+                    }
+                    else
+                    {
+                        outRequest->userId[lengthOfCurrentField] = line[i];
+                        lengthOfCurrentField++;
+                    }
                 }
                 else
                 {
@@ -335,7 +335,7 @@ parse_line(char * line, Request *outRequest){
 
     }
 
-    //if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->retCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
+    //if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
     
     /*free(outRequest.host);
     free(outRequest.rfc);
