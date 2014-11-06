@@ -10,7 +10,7 @@ sss4910: sss4910.o parser.o debug.o cuda.o
 
 sss4910.o:
 	@echo Generating sss4910.c object file...
-	@ $(CC) sss4910.cu -c 
+	@ $(CC) $(ARCH) sss4910.cu -c 
 
 parser.o:
 	@echo Generating parser.c object file...
@@ -22,7 +22,7 @@ debug.o:
 
 cuda.o:
 	@echo Generating cuda.cu objectfile...
-	@ $(CC) cuda.cu -c 
+	@ $(CC) $(ARCH) cuda.cu -c 
 
 errorclean:
 	@echo Removin errorlog.txt...

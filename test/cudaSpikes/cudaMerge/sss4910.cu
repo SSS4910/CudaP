@@ -12,23 +12,7 @@
 int
 parse_line(char *, Request *);
 
-int
-buffer_init(Buffer *);
 
-void
-buffer_free(Buffer *);
-
-int
-req_init(Request *);
-
-int
-req_null(Request *);
-
-void
-req_free(Request *);
-
-char *
-log_readline(FILE *);
 
 /*
  * FUNCTION: main

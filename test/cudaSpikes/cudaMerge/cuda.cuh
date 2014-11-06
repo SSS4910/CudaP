@@ -29,7 +29,7 @@ typedef struct{
 } Struct200;
 
 // cuda prototypes
-__global__ void analyze_404(Buffer *buffer, Struct404 *results, int *stats);
+//__global__ void analyze_404(Buffer *buffer, Struct404 *results, int *stats);
 
 __global__ void analyze_200(Buffer *buffer, Struct200 *results, int *stats);
 
@@ -42,5 +42,11 @@ int cuda_setup(int computeCapability);
 char * cuda_strcpy(char *dest, const char *source);
 
 int cuda_strcmp(char *str1, char *str2);
+
+unsigned int deep_sizeof(Buffer *buffer);
+
+int cuda_buffer_init(Buffer * buffer);
+
+int cuda_req_init(Request *request);
 
 #endif
