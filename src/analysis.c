@@ -16,7 +16,7 @@ void * manage_data()
         Master loop that keeps the thread alive until 
         there is no more data being read in.
         The loop waits/checks for a buffer to
-        be reading for reading
+        be ready for reading
     */
     while(MASTER_SWITCH == TRUE)
     {
@@ -113,9 +113,9 @@ int analyze(Buffer *buffer)
             }
 
             // Add 404 to queue404 
-            memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
+            /*memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
             queue404.currentIndex++;
-            queue404.currentSize++;
+            queue404.currentSize++;*/
         }
 
         totalVisits++;

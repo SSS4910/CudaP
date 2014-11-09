@@ -13,7 +13,7 @@
 Buffer buffer1;
 Buffer buffer2;
 Statistics totalStats;
-Queue404 queue404;
+//Queue404 queue404;
 int MASTER_SWITCH;
 
 /*
@@ -37,9 +37,9 @@ main(int argc, char** argv){
     MASTER_SWITCH = TRUE;
 
     // Initialize Queue404
-    queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
+    /*queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
     queue404.currentSize  = 0;
-    queue404.currentIndex = 0;
+    queue404.currentIndex = 0;*/
 
     // Initialize totalStats
     totalStats.total200        = 0;
@@ -51,7 +51,7 @@ main(int argc, char** argv){
     open_debug_file();
 
     debug_write("Opening access.log file\n");
-    if ((logfile = fopen("../../../access.log", "r")) == NULL)
+    if ((logfile = fopen("../../UofS_access_log", "r")) == NULL)
     {
         debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
@@ -111,12 +111,18 @@ main(int argc, char** argv){
 
                 //read a line
                 logline = log_readline(logfile);
-                if ((logline == (char *) NULL) && feof(logfile))
+                lineNum++;
+                if (feof(logfile))
                 {
                     //printf("hit eof\n");
                     break;
                 }
-                lineNum++;
+                else if(logline == (char *) NULL)
+                {
+                    fprintf(stderr, "Error: reading line: %d in log file\n", lineNum);
+                }
+                
+
                 //printf("%s\n", logline);
                 //parse line and add it to the buffer
                 err = parse_line(logline, &buffer1.requests[i]);
@@ -157,12 +163,16 @@ main(int argc, char** argv){
 
                 //read a line
                 logline = log_readline(logfile);
-                if ((logline == (char *) NULL) && feof(logfile))
+                lineNum++;
+                if (feof(logfile))
                 {
                     //printf("hit eof\n");
                     break;
                 }
-                lineNum++;
+                else if(logline == (char *) NULL)
+                {
+                    fprintf(stderr, "Error: reading line: %d in log file\n", lineNum);
+                }
                 //printf("%s\n", logline);
                 //parse line and add it to the buffer
                 err = parse_line(logline, &buffer2.requests[i]);
@@ -206,12 +216,12 @@ main(int argc, char** argv){
         printf("Total injections: %d\n", totalStats.totalInjections);
         printf("Total visits: %d\n", totalStats.totalVisits);
 
-        printf("\nList of 404 requests\n");
+        /*printf("\nList of 404 requests\n");
         printf("Total 404 requests: %d\n", queue404.currentSize);
         for(i = 0; i < queue404.currentSize; i++)
         {
             printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].strTime, queue404.requests[i].retCode);
-        }
+        }*/
     #endif
 
     //cleanup

@@ -4,10 +4,10 @@
 
 #include <time.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define TRUE 1
 #define FALSE 0
-#define BUFFER_SIZE 100//327680
+#define BUFFER_SIZE 1024//327680
 #define MAX_LINE_LENGTH 16384
 
 // Structures
