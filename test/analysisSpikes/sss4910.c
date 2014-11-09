@@ -9,12 +9,12 @@
 #include "debug.h"
 #include "analysis.h"
 
-
+// Globals
 Buffer buffer1;
 Buffer buffer2;
 Statistics totalStats;
 Queue404 queue404;
-int MASTER_SWITCH = TRUE;
+int MASTER_SWITCH;
 
 /*
  * FUNCTION: main
@@ -34,8 +34,10 @@ main(int argc, char** argv){
     char * logline;
     FILE * logfile;
 
+    MASTER_SWITCH = TRUE;
+
     // Initialize Queue404
-    queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);
+    queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
     queue404.currentSize  = 0;
     queue404.currentIndex = 0;
 
@@ -208,7 +210,7 @@ main(int argc, char** argv){
         printf("Total 404 requests: %d\n", queue404.currentSize);
         for(i = 0; i < queue404.currentSize; i++)
         {
-            printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].time, queue404.requests[i].retCode);
+            printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].strTime, queue404.requests[i].retCode);
         }
     #endif
 
@@ -216,15 +218,14 @@ main(int argc, char** argv){
     buffer_free(&buffer1);
     buffer_free(&buffer2);
 
-    for(i = 0; i < BUFFER_SIZE; i++)
-    {
-        req_free(&queue404.requests[i]);
-    }
     debug_write("Freeing memory for line buffer\n");
-
     fclose(logfile);
+
     debug_write("Closing access.log file...\n");
     close_debug_file();
+
+    printf("\nEND OF PROGRAM\n");
+
     return 0;
 }
 
@@ -285,7 +286,7 @@ req_init(Request *request)
     request->host = (char *) malloc(1000 * sizeof(char));
     request->clientId = (char *) malloc(50 * sizeof(char));
     request->userId = (char *) malloc(150 * sizeof(char));
-    request->time = (char *) malloc(100 * sizeof(char));
+    request->strTime = (char *) malloc(100 * sizeof(char));
     request->req = (char *) malloc(2000 * sizeof(char));
     request->referer = (char *) malloc(700 * sizeof(char));
     request->userAgent = (char *) malloc(300 * sizeof(char));
@@ -306,7 +307,7 @@ req_null(Request *request)
     strcpy(request->host, "~");
     strcpy(request->clientId, "~");
     strcpy(request->userId, "~");
-    strcpy(request->time, "~");
+    strcpy(request->strTime, "~");
     strcpy(request->req, "~");
     request->retCode = -1;
     request->dataSize = -1;
@@ -330,7 +331,7 @@ req_free(Request *request)
     free(request->host);
     free(request->clientId);
     free(request->userId);
-    free(request->time);
+    free(request->strTime);
     free(request->req);
     free(request->referer);
     free(request->userAgent);

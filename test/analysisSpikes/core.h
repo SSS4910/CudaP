@@ -15,7 +15,8 @@ typedef struct{
     char *host;
     char *clientId;
     char *userId;
-    char *time;
+    char *strTime;
+    time_t time;
     char *req;
     int retCode;
     int dataSize;

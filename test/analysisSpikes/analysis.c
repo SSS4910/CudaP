@@ -113,7 +113,6 @@ int analyze(Buffer *buffer)
             }
 
             // Add 404 to queue404 
-            req_init(&queue404.requests[queue404.currentIndex]);
             memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
             queue404.currentIndex++;
             queue404.currentSize++;
