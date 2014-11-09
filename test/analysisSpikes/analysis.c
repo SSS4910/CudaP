@@ -1,6 +1,8 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#include "core.h"
 #include "analysis.h"
 
 
@@ -8,7 +10,7 @@
     Monitors the availability of the buffers
     and chooses which buffer to perform analysis on
 */
-void manage_data()
+void * manage_data()
 {
     /* 
         Master loop that keeps the thread alive until 
@@ -16,22 +18,30 @@ void manage_data()
         The loop waits/checks for a buffer to
         be reading for reading
     */
-    while(MASTER_SWITCH)
+    while(MASTER_SWITCH == TRUE)
     {
         if(buffer1.readyRead)
         {
-            analyze(&buffer1);
+            // Don't analyze empty buffers
+            if(buffer1.currentSize != 0)
+            {
+                analyze(&buffer1);
 
-            buffer1.readyRead = FALSE;
-            buffer1.readyWrite = TRUE;
+                buffer1.readyRead = FALSE;
+                buffer1.readyWrite = TRUE;
+            }
         }
 
         if(buffer2.readyRead)
         {
-            analyze(&buffer2);
+            // Don't analyze empty buffers
+            if(buffer2.currentSize != 0)
+            {
+                analyze(&buffer2);
 
-            buffer2.readyRead = FALSE;
-            buffer2.readyWrite = TRUE;
+                buffer2.readyRead = FALSE;
+                buffer2.readyWrite = TRUE;
+            }
         }
     }
 
@@ -41,19 +51,27 @@ void manage_data()
     */
     if(buffer1.readyRead)
     {
-        analyze(&buffer1);
+        if(buffer1.currentSize != 0)
+        {
+            analyze(&buffer1);
 
-        buffer1.readyRead = FALSE;
-        buffer1.readyWrite = TRUE;
+            buffer1.readyRead = FALSE;
+            buffer1.readyWrite = TRUE;
+        }
     }
 
     if(buffer2.readyRead)
     {
-        analyze(&buffer2);
+        if(buffer2.currentSize != 0)
+        {
+            analyze(&buffer2);
 
-        buffer2.readyRead = FALSE;
-        buffer2.readyWrite = TRUE;
+            buffer2.readyRead = FALSE;
+            buffer2.readyWrite = TRUE;
+        }
     }
+
+    return 0;
 }
 
 /*
@@ -84,21 +102,42 @@ int analyze(Buffer *buffer)
             {
                 totalInjections++;
             }
-        } // check and handle 400 error codes
+        } // check and handle 404 error codes
         else if(buffer->requests[x].retCode == 404)
         {
             total404++;
 
             if(is_injection(buffer->requests[x].req))
             {
-                totalInjections++;
+                totalInjections++;    
             }
+
+            // Add 404 to queue404 
+            req_init(&queue404.requests[queue404.currentIndex]);
+            memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
+            queue404.currentIndex++;
+            queue404.currentSize++;
         }
 
         totalVisits++;
     }
 
+    #if DEBUG==1
+        printf("\nBuffer%d\n", buffer->id);
+        printf("Total visits: %d\n", totalVisits);
+        printf("Total 200s: %d\n", total200);
+        printf("Total 404s: %d\n", total404);
+        printf("Total Injections: %d\n", totalInjections);
+    #endif
+
+    // add totals to totalStats
+    totalStats.total200        += total200;
+    totalStats.total404        += total404;
+    totalStats.totalInjections += totalInjections;
+    totalStats.totalVisits     += totalVisits;
+
     return TRUE;
+
 }
 
 int is_injection(char * request)
