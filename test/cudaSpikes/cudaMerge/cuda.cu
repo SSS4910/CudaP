@@ -10,14 +10,14 @@
     Upon finding a 404, a stucture is made out of the request
     containing: who sent the request, when was the request made, what was the request, and if the request was a phpmyadmin injection 
 */
-__global__ void analyze_200(Request *buffer, Struct200 *results, int *stats)
+__global__ void analyze_200(char **buffer, Struct200 *results, int *stats)
 { // buffer->requests[id].thing
     int id = threadIdx.x + blockIdx.x * blockDim.x;
 
-    if(id < 15)
+    if(id < 5)
     {
-        printf("GPU-Host: %s\tGPU-Return Code: %d\n", buffer[id].host, buffer[id].retCode);
-        stats[id] = buffer[id].retCode;
+        printf("GPU: %s\n", buffer[id]);
+        stats[id] = id;
     }
 }
  
@@ -66,30 +66,39 @@ int analyze_data(Buffer *input_buffer)
     
 
     // CPU variables
-    Request *cudaBuffer;// = (Buffer *)malloc(sizeof(Buffer));
+    //Request *cudaBuffer;// = (Buffer *)malloc(sizeof(Buffer));
+    char *cudaBuffer[] = {"one", "two", "three", "four", "five"};
     Struct200 results200[N];
     int stats200[N];
 
     // GPU variables
-    Request *dev_buffer;
+    //Request *dev_buffer;
+    char **dev_buffer;
     Struct200 *dev_results200;
     int *dev_stats200;
 
     // creates zero-copy memory for buffer (both CPU and GPU point to same memory). A pointer will be given to the GPU later...
-    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer, sizeof(Request) * N, cudaHostAllocWriteCombined | cudaHostAllocMapped));
+    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer, sizeof(cudaBuffer), cudaHostAllocWriteCombined | cudaHostAllocMapped));
+    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer[0], 4, cudaHostAllocWriteCombined | cudaHostAllocMapped));
+    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer[1], 4, cudaHostAllocWriteCombined | cudaHostAllocMapped));
+    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer[2], 5, cudaHostAllocWriteCombined | cudaHostAllocMapped));
+    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer[3], 5, cudaHostAllocWriteCombined | cudaHostAllocMapped));
+    HANDLE_ERROR( cudaHostAlloc( (void **) &cudaBuffer[4], 5, cudaHostAllocWriteCombined | cudaHostAllocMapped));
     
-    int i;
+
+
+    /*int i;
     for(i = 0; i < N; i++)
     {
         cuda_req_init(&cudaBuffer[i]);
-    }
+    }*/
 
-    memcpy(cudaBuffer, input_buffer->requests, sizeof(Request) * N);
+    /*memcpy(cudaBuffer, input_buffer->requests, sizeof(Request) * N);
     int j;
     for(j = 0; j < N; j++)
     {
         printf("CPU-Host: %s\tCPU-Return Code: %d\n", cudaBuffer[j].host, cudaBuffer[j].retCode);
-    }
+    }*/
 
     // allocating GPU memory (GPU only memory)
     HANDLE_ERROR(cudaMalloc( (void **) &dev_results200, N * sizeof(Struct200) ));
@@ -102,7 +111,7 @@ int analyze_data(Buffer *input_buffer)
     /* FILL BUFFER WITH DATA */
 
     // gives a pointer to the GPU to reference the zero-copy memory
-    HANDLE_ERROR(cudaHostGetDevicePointer(&dev_buffer, cudaBuffer, 0));
+    HANDLE_ERROR(cudaHostGetDevicePointer(&dev_buffer, *cudaBuffer, 0));
 
     // calls to Cuda kernels, note streams have been added
     analyze_200<<< blocks, threads >>>(dev_buffer, dev_results200, dev_stats200);

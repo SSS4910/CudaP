@@ -2,28 +2,19 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "core.h"
 #include "parser.h"
 #include "debug.h"
+#include "analysis.h"
 
-int
-buffer_init(Buffer *);
-
-void
-buffer_free(Buffer *);
-
-int
-req_init(Request *);
-
-int
-req_null(Request *);
-
-void
-req_free(Request *);
-
-char *
-log_readline(FILE *);
+// Globals
+Buffer buffer1;
+Buffer buffer2;
+Statistics totalStats;
+Queue404 queue404;
+int MASTER_SWITCH;
 
 /*
  * FUNCTION: main
@@ -42,27 +33,54 @@ main(int argc, char** argv){
     int lineNum = 0;
     char * logline;
     FILE * logfile;
-    Buffer buffer;
+
+    MASTER_SWITCH = TRUE;
+
+    // Initialize Queue404
+    queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
+    queue404.currentSize  = 0;
+    queue404.currentIndex = 0;
+
+    // Initialize totalStats
+    totalStats.total200        = 0;
+    totalStats.total404        = 0;
+    totalStats.totalInjections = 0;
+    totalStats.totalVisits     = 0;
 
     //getopt()
     open_debug_file();
 
     debug_write("Opening access.log file\n");
-    if ((logfile = fopen("access.log", "r")) == NULL)
+    if ((logfile = fopen("../../../access.log", "r")) == NULL)
     {
         debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
         return -1;
     }
 
-    debug_write("Allocating memory for buffer\n");
-    err = buffer_init(&buffer);
+    // Initialize buffers
+    debug_write("Allocating memory for buffer1\n");
+    err = buffer_init(&buffer1);
     if (err)
     {
-        debug_write("buffer allocation failure, aborting!\n");
+        debug_write("buffer1 allocation failure, aborting!\n");
         return -1;
     }
-    buffer.available = TRUE;
+
+    debug_write("Allocating memory for buffer2\n");
+    err = buffer_init(&buffer2);
+    if (err)
+    {
+        debug_write("buffer2 allocation failure, aborting!\n");
+        return -1;
+    }
+    buffer1.id = 1;
+    buffer1.readyRead = FALSE;
+    buffer1.readyWrite = TRUE;
+
+    buffer2.id = 2;
+    buffer2.readyRead = FALSE;
+    buffer2.readyWrite = TRUE;
 
     /*
 
@@ -75,52 +93,139 @@ main(int argc, char** argv){
     printf("%s\n", buffer.requests[0].host);
 
     */
+
+    /* SPAWN ANALYSIS THREAD HERE */
+    pthread_t analysisThread;
+    pthread_create(&analysisThread, NULL, manage_data, NULL);
+
+
     while (!feof(logfile))
     {
-        buffer.currentSize = 0;
-        for (i = 0; i < BUFFER_SIZE; i++)
+        if(buffer1.readyWrite)
         {
-            //insure that the structure is empty
-            req_null(&buffer.requests[i]);
-            //read a line
-            logline = log_readline(logfile);
-            if ((logline == (char *) NULL) && feof(logfile))
+            buffer1.currentSize = 0;
+            for (i = 0; i < BUFFER_SIZE; i++)
             {
-                //printf("hit eof\n");
-                break;
-            }
-            lineNum++;
-            //printf("%s\n", logline);
-            //parse line and add it to the buffer
-            err = parse_line(logline, &buffer.requests[i]);
-            if (err)
-            {
-                printf("parse error on line %d\n", lineNum);
-            }
-            buffer.currentSize++;
-            free(logline);
+                //insure that the structure is empty
+                req_null(&buffer1.requests[i]);
 
-#if DEBUG==0
-            printf("%s\n", buffer.requests[i].host);
-            printf("%s\n", buffer.requests[i].clientId);
-            printf("%s\n", buffer.requests[i].userId);
-            printf("%s\n", buffer.requests[i].time);
-            printf("%s\n", buffer.requests[i].req);
-            printf("%d\n", buffer.requests[i].retCode);
-            printf("%d\n", buffer.requests[i].dataSize);
-            printf("%s\n", buffer.requests[i].referer);
-            printf("%s\n", buffer.requests[i].userAgent);
-#endif
+                //read a line
+                logline = log_readline(logfile);
+                if ((logline == (char *) NULL) && feof(logfile))
+                {
+                    //printf("hit eof\n");
+                    break;
+                }
+                lineNum++;
+                //printf("%s\n", logline);
+                //parse line and add it to the buffer
+                err = parse_line(logline, &buffer1.requests[i]);
+                if (err)
+                {
+                    printf("parse error on line %d\n", lineNum);
+                }
+                buffer1.currentSize++;
+                free(logline);
+
+                /*#if DEBUG==1
+                    printf("%s\n", buffer1.requests[i].host);
+                    printf("%s\n", buffer1.requests[i].clientId);
+                    printf("%s\n", buffer1.requests[i].userId);
+                    printf("%s\n", buffer1.requests[i].time);
+                    printf("%s\n", buffer1.requests[i].req);
+                    printf("%d\n", buffer1.requests[i].retCode);
+                    printf("%d\n", buffer1.requests[i].dataSize);
+                    printf("%s\n", buffer1.requests[i].referer);
+                    printf("%s\n", buffer1.requests[i].userAgent);
+                #endif*/
+
+            }
+
+            buffer1.readyWrite = FALSE;
+            buffer1.readyRead = TRUE;
+
+            //manage_data(); // this should actually be a thread
         }
+
+        if(buffer2.readyWrite)
+        {
+            buffer2.currentSize = 0;
+            for (i = 0; i < BUFFER_SIZE; i++)
+            {
+                //insure that the structure is empty
+                req_null(&buffer2.requests[i]);
+
+                //read a line
+                logline = log_readline(logfile);
+                if ((logline == (char *) NULL) && feof(logfile))
+                {
+                    //printf("hit eof\n");
+                    break;
+                }
+                lineNum++;
+                //printf("%s\n", logline);
+                //parse line and add it to the buffer
+                err = parse_line(logline, &buffer2.requests[i]);
+                if (err)
+                {
+                    printf("parse error on line %d\n", lineNum);
+                }
+                buffer2.currentSize++;
+                free(logline);
+
+                /*#if DEBUG==1
+                    printf("%s\n", buffer2.requests[i].host);
+                    printf("%s\n", buffer2.requests[i].clientId);
+                    printf("%s\n", buffer2.requests[i].userId);
+                    printf("%s\n", buffer2.requests[i].time);
+                    printf("%s\n", buffer2.requests[i].req);
+                    printf("%d\n", buffer2.requests[i].retCode);
+                    printf("%d\n", buffer2.requests[i].dataSize);
+                    printf("%s\n", buffer2.requests[i].referer);
+                    printf("%s\n", buffer2.requests[i].userAgent);
+                #endif*/
+
+            }
+
+            buffer2.readyWrite = FALSE;
+            buffer2.readyRead = TRUE;
+
+            //manage_data(); // this should actually be a thread
+        }
+   
     }
 
-    //cleanup
-    buffer_free(&buffer);
-    debug_write("Freeing memory for line buffer\n");
+    MASTER_SWITCH = FALSE;
+    /* JOIN ANALYSIS THREAD HERE */
+    pthread_join(analysisThread, NULL);
 
+    #if DEBUG==1
+        printf("\nTotal Statistics\n");
+        printf("Total 200s: %d\n", totalStats.total200);
+        printf("Total 404s: %d\n", totalStats.total404);
+        printf("Total injections: %d\n", totalStats.totalInjections);
+        printf("Total visits: %d\n", totalStats.totalVisits);
+
+        printf("\nList of 404 requests\n");
+        printf("Total 404 requests: %d\n", queue404.currentSize);
+        for(i = 0; i < queue404.currentSize; i++)
+        {
+            printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].strTime, queue404.requests[i].retCode);
+        }
+    #endif
+
+    //cleanup
+    buffer_free(&buffer1);
+    buffer_free(&buffer2);
+
+    debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
+
     debug_write("Closing access.log file...\n");
     close_debug_file();
+
+    printf("\nEND OF PROGRAM\n");
+
     return 0;
 }
 
@@ -181,7 +286,7 @@ req_init(Request *request)
     request->host = (char *) malloc(1000 * sizeof(char));
     request->clientId = (char *) malloc(50 * sizeof(char));
     request->userId = (char *) malloc(150 * sizeof(char));
-    request->time = (char *) malloc(100 * sizeof(char));
+    request->strTime = (char *) malloc(100 * sizeof(char));
     request->req = (char *) malloc(2000 * sizeof(char));
     request->referer = (char *) malloc(700 * sizeof(char));
     request->userAgent = (char *) malloc(300 * sizeof(char));
@@ -202,7 +307,7 @@ req_null(Request *request)
     strcpy(request->host, "~");
     strcpy(request->clientId, "~");
     strcpy(request->userId, "~");
-    strcpy(request->time, "~");
+    strcpy(request->strTime, "~");
     strcpy(request->req, "~");
     request->retCode = -1;
     request->dataSize = -1;
@@ -226,7 +331,7 @@ req_free(Request *request)
     free(request->host);
     free(request->clientId);
     free(request->userId);
-    free(request->time);
+    free(request->strTime);
     free(request->req);
     free(request->referer);
     free(request->userAgent);
