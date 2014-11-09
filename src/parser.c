@@ -6,6 +6,8 @@
 #include "parser.h"
 #include "debug.h"
 
+time_t parse_time(char * input);
+
 
 
 
@@ -20,8 +22,8 @@
  * returns:
  *  0 on success
  */
-int
-parse_line(char * line, Request *outRequest){
+int parse_line(char * line, Request *outRequest)
+{
         //if(debug2) printf("%s \n",line);
     
     
@@ -152,19 +154,19 @@ parse_line(char * line, Request *outRequest){
                 {
                     currentField = 4;
                     flag = 0;
-                    outRequest->time[lengthOfCurrentField] = '\0';
+                    outRequest->strTime[lengthOfCurrentField] = '\0';
                     lengthOfCurrentField = 0;
 
                 }
                 else if(line[i] == ']')
                 {
                     flag = 1;
-                    outRequest->time[lengthOfCurrentField] = line[i];
+                    outRequest->strTime[lengthOfCurrentField] = line[i];
                     lengthOfCurrentField++;
                 }
                 else
                 {
-                    outRequest->time[lengthOfCurrentField] = line[i];
+                    outRequest->strTime[lengthOfCurrentField] = line[i];
                     lengthOfCurrentField++;
                 }
                 break;
@@ -347,6 +349,9 @@ parse_line(char * line, Request *outRequest){
     /*free(outRequest.referer);
     free(outRequest.userAgent);*/
 
+    outRequest->time = parse_time(outRequest->strTime);
+    
+            
     return 0;
 }
 
@@ -427,7 +432,268 @@ char * stripreq(char * inputString )
 }
 
 
+/*
+ * FUNCTION: Parse Time
+ * ------------------------------------------------------------
+ * input: a string that is the apache format time
+ *
+ * return: a time_t representation of the time
+ *
+ */
+time_t parse_time(char * input)
+{
+    /*
+      [day/month/year:hour:minute:second zone]
+      day = 2*digit
+      month = 3*letter
+      year = 4*digit
+      hour = 2*digit
+      minute = 2*digit
+      second = 2*digit
+      zone = (`+' | `-') 4*digit
+    */
 
+    struct tm tempest;
+    time_t outtime;
+
+    int i;
+    int j = 0;
+    int n = 0;
+
+    /*int day = -2;
+    int month = -2;
+    int year = -2;
+    int hour = -2;
+    int minute = -2;
+    int second = -2;
+    */
+
+
+    //int zone = -22;
+    
+    
+    char* temp;
+    temp = (char*) malloc(5 * sizeof(char));   
+
+
+        //first step is to break down each part of the time field
+    for(i = 0;i < strlen(input); i++)
+    {
+        switch (n)
+        {
+            case 0:
+                if(input[i] != '[')
+                {
+                    printf("ERROR\n");
+                }
+                n = 1;
+                j = 0;
+                break;
+
+               //DAY!!! 
+            case 1:
+                if (input[i] == '/')
+                {
+                    temp[j+1] = '\0';
+                    tempest.tm_mday = atoi(temp);
+                    n = 2;
+                    j = 0;
+                }
+                else
+                {
+                    temp[j] = input[i];
+                    j++;
+                }
+                break;
+
+
+                //MONTH 
+            case 2:
+                if(input[i] == '/')
+                {
+                    temp[j] = '\0';
+                    if(strlen(temp) != 3)
+                    {
+                        printf("ERROR MONTH\n");
+                    }
+                    else
+                    {
+                        n = 3;
+                        j = 0;
+
+                            //printf("%s \n",temp);
+                        if(strcmp(temp,"Jan") == 0)
+                        {
+                            tempest.tm_mon = 0;
+                        }
+                        else if(strcmp(temp,"Feb") == 0)
+                        {
+                            tempest.tm_mon = 1;
+                        }
+                        else if(strcmp(temp,"Mar") == 0)
+                        {
+                            tempest.tm_mon = 2;
+                        }
+                        else if(strcmp(temp,"Apr") == 0)
+                        {
+                            tempest.tm_mon = 3;
+                        }
+                        else if(strcmp(temp,"May") == 0)
+                        {
+                            tempest.tm_mon = 4;
+                        }
+                        else if(strcmp(temp,"Jun") == 0)
+                        {
+                            tempest.tm_mon = 5;
+                        }
+                        else if(strcmp(temp,"Jul") == 0)
+                        {
+                            tempest.tm_mon = 6;
+                        }
+                        else if(strcmp(temp,"Aug") == 0)
+                        {
+                            tempest.tm_mon = 7;
+                        }
+                        else if(strcmp(temp,"Sep") == 0)
+                        {
+                            tempest.tm_mon = 8;
+                        }
+                        else if(strcmp(temp,"Oct") == 0)
+                        {
+                            tempest.tm_mon = 9; 
+                        }
+                        else if(strcmp(temp,"Nov") == 0)
+                        {
+                            tempest.tm_mon = 10;
+                        }
+                        else if(strcmp(temp,"Dec") == 0)
+                        {
+                            tempest.tm_mon = 11;
+                        }
+                        else 
+                        {
+                            printf("ERROR");
+                            //return 0;
+                            tempest.tm_mon = -1;
+                        }
+
+                    }
+                }
+                else
+                {
+                    temp[j] = input[i];
+                    j++;
+                }
+                break;
+            
+                
+                //YEAR
+            case 3:
+                if (input[i] == ':')
+                {
+                    temp[j] = '\0';
+                    tempest.tm_year = (atoi(temp) - 1900);
+                    n = 4;
+                    j = 0;
+                }
+                else
+                {
+                    temp[j] = input[i];
+                    j++;
+                }
+                break;
+                
+                //HOUR
+            case 4:
+                if (input[i] == ':')
+                {
+                    temp[j] = '\0';
+                    tempest.tm_hour = atoi(temp);
+                    n = 5;
+                    j = 0;
+                }
+                else
+                {
+                        temp[j] = input[i];
+                        j++;
+                }
+                break;
+
+
+                //MINUTE
+            case 5:
+                if (input[i] == ':')
+                {
+                    temp[j] = '\0';
+                    tempest.tm_min = atoi(temp);
+                    n = 6;
+                    j = 0;
+                }
+                else
+                {
+                    temp[j] = input[i];
+                    j++;
+                }
+                break;
+
+
+                //SECOND 
+            case 6:
+                if (input[i] == ' ')
+                {
+                    temp[j] = '\0';
+                    tempest.tm_sec = atoi(temp);
+                    n = 7;
+                    j = 0;
+                }
+                else
+                {
+                    temp[j] = input[i];
+                    j++;
+                }
+                break;
+
+            case 7:
+                if (input[i] == ']')
+                {
+                    temp[j] = '\0';
+                    //zone = atoi(temp);
+                    j = 0;
+                }
+                else
+                {
+                    temp[j] = input[i];
+                    j++;
+                }
+                break;         
+
+            default:
+                printf("BLARG/n");
+                break;
+        }
+
+    }
+    free(temp);
+
+
+
+    /*tempest.tm_hour = hour ;
+    tempest.tm_sec = second;
+    tempest.tm_min = minute;
+    tempest.tm_mday = day;
+    tempest.tm_mon = month -1 ;
+    tempest.tm_year = year - 1900;
+    */
+
+    //printf("tm: %s",asctime(&tempest));
+    
+    outtime = mktime(&tempest);
+
+    //printf("time_t: %s",asctime(localtime(&outtime))); 
+
+
+    return outtime;
+}
 
 /*
  * FUNCTION: slice
