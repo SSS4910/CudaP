@@ -51,7 +51,7 @@ main(int argc, char** argv){
     open_debug_file();
 
     debug_write("Opening access.log file\n");
-    if ((logfile = fopen("../../UofS_access_log", "r")) == NULL)
+    if ((logfile = fopen("access.log", "r")) == NULL)
     {
         debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
