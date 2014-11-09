@@ -26,7 +26,12 @@ int parse_line(char * line, Request *outRequest)
 {
         //if(debug2) printf("%s \n",line);
     
-    
+    if(strlen(line)< 30)
+    {
+        printf("ERROR: parse line - Bad input\n");
+        return 1;
+    }
+
         //counters
     int currentField = 0;
     int lengthOfCurrentField = 0;
@@ -148,7 +153,7 @@ int parse_line(char * line, Request *outRequest)
                 if(lengthOfCurrentField >= 30)
                 {
                     //time cannot be bigger than 23
-                    return -1;
+                    return 1;
                 }
                 if(flag == 1)
                 {
@@ -349,8 +354,18 @@ int parse_line(char * line, Request *outRequest)
     /*free(outRequest.referer);
     free(outRequest.userAgent);*/
 
+    
+    if(outRequest->strTime[0] == '~')
+    {
+        printf("%s\n",line);
+        return 1;
+    }
+    
     outRequest->time = parse_time(outRequest->strTime);
     
+    //printf("time_t: %s",asctime(localtime(&outRequest->time))); 
+
+ 
             
     return 0;
 }
@@ -453,6 +468,11 @@ time_t parse_time(char * input)
       zone = (`+' | `-') 4*digit
     */
 
+    if(input[0] == '~')
+    {
+        return (time_t) 0;
+    }
+
     struct tm tempest;
     time_t outtime;
 
@@ -484,7 +504,7 @@ time_t parse_time(char * input)
             case 0:
                 if(input[i] != '[')
                 {
-                    printf("ERROR\n");
+                    printf("ERROR %s \n",input);
                 }
                 n = 1;
                 j = 0;
@@ -572,7 +592,7 @@ time_t parse_time(char * input)
                         }
                         else 
                         {
-                            printf("ERROR");
+                            printf("ERROR: parse_time\n");
                             //return 0;
                             tempest.tm_mon = -1;
                         }
