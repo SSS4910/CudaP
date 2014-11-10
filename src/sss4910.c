@@ -8,6 +8,7 @@
 #include "parser.h"
 #include "debug.h"
 #include "analysis.h"
+#include "gopt.h"
 
 // Globals
 Buffer buffer1;
@@ -32,8 +33,15 @@ main(int argc, char** argv){
     int err;
     int lineNum = 0;
     char * logline;
+    char * fileName = "../../access.log";
     FILE * logfile;
 
+    if(parse_opt(argc, argv, &fileName)  != TRUE)
+    {
+        fprintf(stderr, "Non-execution option selected\n");
+        exit(0);
+    }
+    fprintf(stderr, "FileName in Main: %s\n", fileName);
     MASTER_SWITCH = TRUE;
 
     // Initialize Queue404
@@ -50,11 +58,11 @@ main(int argc, char** argv){
     //getopt()
     open_debug_file();
 
-    debug_write("Opening access.log file\n");
-    if ((logfile = fopen("access.log", "r")) == NULL)
+    debug_write("Opening access log file\n");
+    if ((logfile = fopen(fileName, "r")) == NULL)
     {
-        debug_write("access.log not found, aborting!\n");
-        printf("access.log not found, aborting!\n");
+        debug_write("access log not found, aborting!\n");
+        printf("%s not found, aborting!\n", fileName);
         return -1;
     }
 
@@ -227,7 +235,7 @@ main(int argc, char** argv){
     //cleanup
     buffer_free(&buffer1);
     buffer_free(&buffer2);
-
+    //free(fileName);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
 

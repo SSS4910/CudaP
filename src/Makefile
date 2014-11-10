@@ -4,9 +4,9 @@ PTHRD = -lpthread
 
 all: sss4910
 
-sss4910: sss4910.o parser.o debug.o ppfile.o analysis.o
+sss4910: sss4910.o parser.o debug.o ppfile.o analysis.o gopt.o
 	@echo Linking object files...
-	@ $(CC) $(WARN) sss4910.o parser.o debug.o ppfile.o analysis.o $(PTHRD) -o sss4910
+	@ $(CC) $(WARN) sss4910.o parser.o debug.o ppfile.o analysis.o gopt.o $(PTHRD) -o sss4910
 	@echo DONE!
 
 sss4910.o:
@@ -24,6 +24,10 @@ debug.o:
 analysis.o:
 	@echo Generating analysis.c object file...
 	@ $(CC) $(WARN) $(PTHRD) -c analysis.c
+
+gopt.o:
+	@echo Generating gopt.c object file...
+	@ $(CC) $(WARN) $(PTHRD) -c gopt.c
 
 ppfile.o:
 	@echo Generating ppfile.c object file...
