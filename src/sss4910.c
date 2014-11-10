@@ -245,13 +245,6 @@ main(int argc, char** argv){
         printf("Total 404s: %d\n", totalStats.total404);
         printf("Total injections: %d\n", totalStats.totalInjections);
         printf("Total visits: %d\n", totalStats.totalVisits);
-
-        /*printf("\nList of 404 requests\n");
-        printf("Total 404 requests: %d\n", queue404.currentSize);
-        for(i = 0; i < queue404.currentSize; i++)
-        {
-            printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].strTime, queue404.requests[i].retCode);
-        }*/
     #endif
 
     //Write Statistics to file
@@ -260,7 +253,18 @@ main(int argc, char** argv){
                                         totalStats.total404,
                                         totalStats.totalInjections,
                                         totalStats.totalVisits);
-    fclose(statsFile);
+
+    for(i = 0; i < 24;i++)
+    {
+        fprintf(statsFile, "%lld;", totalStats.hourlyAccess[i]);
+    }
+    fprintf(statsFile, "\n");
+
+    for(i = 0; i < 12;i++)
+    {
+        fprintf(statsFile, "%lld;", totalStats.monthlyAccess[i]);
+    }
+    fprintf(statsFile, "\n");
 
     // Testing time stats
     for(i = 0; i < 24;i++)
@@ -279,6 +283,7 @@ main(int argc, char** argv){
     buffer_free(&buffer1);
     buffer_free(&buffer2);
     //free(fileName);
+    fclose(statsFile);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
 
