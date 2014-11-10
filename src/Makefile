@@ -48,4 +48,7 @@ objectclean:
 clean: objectclean outputclean errorclean
 	@echo Removing executeable...
 	@rm -f ./sss4910
+	@echo Removing output data...
+	@rm -f stats.txt
+	@rm -f 404Data.txt
 	@echo DONE!

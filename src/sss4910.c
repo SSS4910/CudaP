@@ -4,6 +4,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "core.h"
 #include "parser.h"
@@ -49,9 +50,9 @@ main(int argc, char** argv){
     MASTER_SWITCH = TRUE;
 
     //Delete output files
-    if(!delete_output_files())
+    if(delete_output_files() != 0)
     {
-        fprintf(stderr, "Error deleting output files\n");
+        fprintf(stderr, "Error while deleting output files\n");
         exit(1);
     }
 
@@ -243,6 +244,14 @@ main(int argc, char** argv){
         }*/
     #endif
 
+    //Write Statistics to file
+    FILE *statsFile = fopen("stats.txt", "w");
+    fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
+                                        totalStats.total404,
+                                        totalStats.totalInjections,
+                                        totalStats.totalVisits);
+    fclose(statsFile);
+
     //cleanup
     buffer_free(&buffer1);
     buffer_free(&buffer2);
@@ -388,12 +397,29 @@ log_readline(FILE * logfile){
 
 int delete_output_files()
 {
-    if(unlink("404Data.txt") < 0)
+    //404Data.txt
+    if(access("404Data.txt", F_OK) == 0)
     {
-
-        fprintf(stderr, "Failed to delete 404Data.txt\n");
-        return 1;
+        int err = remove("404Data.txt");
+        if(err != 0)
+        {
+            fprintf(stderr, "Failed to delete 404Data.txt\n");
+            return 1;
+        }
     }
+
+    //stats.txt
+    if(access("stats.txt", F_OK) == 0)
+    {
+        int err = remove("stats.txt");
+        if(err != 0)
+        {
+            fprintf(stderr, "Failed to delete stats.txt\n");
+            return 1;
+        }
+    }
+
+    
 
     return 0;
 }
