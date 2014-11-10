@@ -52,6 +52,7 @@ int req_init(Request *);
 int req_null(Request *);
 void req_free(Request *);
 char * log_readline(FILE *);
+int delete_output_files();
 
 // Global Variables
 extern Buffer buffer1;

@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <string.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "core.h"
 #include "parser.h"
@@ -36,13 +37,23 @@ main(int argc, char** argv){
     char * fileName = "../../access.log";
     FILE * logfile;
 
+    // parse command line arguments
     if(parse_opt(argc, argv, &fileName)  != TRUE)
     {
         fprintf(stderr, "Non-execution option selected\n");
         exit(0);
     }
     fprintf(stderr, "FileName in Main: %s\n", fileName);
+
+    // Switch MASTER_SWITCH to TRUE
     MASTER_SWITCH = TRUE;
+
+    //Delete output files
+    if(!delete_output_files())
+    {
+        fprintf(stderr, "Error deleting output files\n");
+        exit(1);
+    }
 
     // Initialize Queue404
     /*queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
@@ -373,4 +384,16 @@ log_readline(FILE * logfile){
         return line;
     }
     return (char *)NULL;
+}
+
+int delete_output_files()
+{
+    if(unlink("404Data.txt") < 0)
+    {
+
+        fprintf(stderr, "Failed to delete 404Data.txt\n");
+        return 1;
+    }
+
+    return 0;
 }

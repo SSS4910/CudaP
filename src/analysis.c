@@ -85,6 +85,9 @@ void * manage_data()
 */
 int analyze(Buffer *buffer)
 {
+    //open output files
+    //FILE *file404 = fopen("404Data.txt", "a");
+
     int total404        = 0;
     int total200        = 0;
     int totalInjections = 0;
@@ -113,6 +116,18 @@ int analyze(Buffer *buffer)
             }
 
             // Add 404 to queue404 
+            FILE *file404 = fopen("404Data.txt", "a");
+            fprintf(file404, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
+                                                                 buffer->requests[x].clientId, 
+                                                                 buffer->requests[x].userId, 
+                                                                 buffer->requests[x].strTime,
+                                                                 buffer->requests[x].time,
+                                                                 buffer->requests[x].req,
+                                                                 buffer->requests[x].retCode,
+                                                                 buffer->requests[x].dataSize,
+                                                                 buffer->requests[x].referer,
+                                                                 buffer->requests[x].userAgent);
+            fclose(file404);
             /*memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
             queue404.currentIndex++;
             queue404.currentSize++;*/
