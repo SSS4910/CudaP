@@ -13,7 +13,7 @@
 Buffer buffer1;
 Buffer buffer2;
 Statistics totalStats;
-Queue404 queue404;
+//Queue404 queue404;
 int MASTER_SWITCH;
 
 /*
@@ -37,9 +37,9 @@ main(int argc, char** argv){
     MASTER_SWITCH = TRUE;
 
     // Initialize Queue404
-    queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
+    /*queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
     queue404.currentSize  = 0;
-    queue404.currentIndex = 0;
+    queue404.currentIndex = 0;*/
 
     // Initialize totalStats
     totalStats.total200        = 0;
@@ -51,7 +51,7 @@ main(int argc, char** argv){
     open_debug_file();
 
     debug_write("Opening access.log file\n");
-    if ((logfile = fopen("../../../access.log", "r")) == NULL)
+    if ((logfile = fopen("../../../UofS_access_log", "r")) == NULL)
     {
         debug_write("access.log not found, aborting!\n");
         printf("access.log not found, aborting!\n");
@@ -206,12 +206,12 @@ main(int argc, char** argv){
         printf("Total injections: %d\n", totalStats.totalInjections);
         printf("Total visits: %d\n", totalStats.totalVisits);
 
-        printf("\nList of 404 requests\n");
+        /*printf("\nList of 404 requests\n");
         printf("Total 404 requests: %d\n", queue404.currentSize);
         for(i = 0; i < queue404.currentSize; i++)
         {
-            printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].strTime, queue404.requests[i].retCode);
-        }
+            printf("%d: %s %s %s %d\n", i+1, queue404.requests[i].host, queue404.requests[i].req, queue404.requests[i].time, queue404.requests[i].retCode);
+        }*/
     #endif
 
     //cleanup
@@ -286,7 +286,7 @@ req_init(Request *request)
     request->host = (char *) malloc(1000 * sizeof(char));
     request->clientId = (char *) malloc(50 * sizeof(char));
     request->userId = (char *) malloc(150 * sizeof(char));
-    request->strTime = (char *) malloc(100 * sizeof(char));
+    request->time = (char *) malloc(100 * sizeof(char));
     request->req = (char *) malloc(2000 * sizeof(char));
     request->referer = (char *) malloc(700 * sizeof(char));
     request->userAgent = (char *) malloc(300 * sizeof(char));
@@ -307,7 +307,7 @@ req_null(Request *request)
     strcpy(request->host, "~");
     strcpy(request->clientId, "~");
     strcpy(request->userId, "~");
-    strcpy(request->strTime, "~");
+    strcpy(request->time, "~");
     strcpy(request->req, "~");
     request->retCode = -1;
     request->dataSize = -1;
@@ -331,7 +331,7 @@ req_free(Request *request)
     free(request->host);
     free(request->clientId);
     free(request->userId);
-    free(request->strTime);
+    free(request->time);
     free(request->req);
     free(request->referer);
     free(request->userAgent);
@@ -352,6 +352,7 @@ log_readline(FILE * logfile){
     char * line = malloc((MAX_LINE_LENGTH) * sizeof(char));
     if (fgets(line, MAX_LINE_LENGTH, logfile) != NULL)
     {
+        fprintf(stderr, "%s\t*********************************\n", line);
         return line;
     }
     return (char *)NULL;

@@ -113,9 +113,9 @@ int analyze(Buffer *buffer)
             }
 
             // Add 404 to queue404 
-            memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
+            /*memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
             queue404.currentIndex++;
-            queue404.currentSize++;
+            queue404.currentSize++;*/
         }
 
         totalVisits++;

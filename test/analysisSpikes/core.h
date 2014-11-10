@@ -7,16 +7,16 @@
 #define DEBUG 1
 #define TRUE 1
 #define FALSE 0
-#define BUFFER_SIZE 100//327680
-#define MAX_LINE_LENGTH 16384
+#define BUFFER_SIZE 1024//327680
+#define MAX_LINE_LENGTH 25000
 
 // Structures
 typedef struct{
     char *host;
     char *clientId;
     char *userId;
-    char *strTime;
-    time_t time;
+    char *time;
+    //time_t time;
     char *req;
     int retCode;
     int dataSize;
