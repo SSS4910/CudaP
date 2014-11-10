@@ -7,6 +7,7 @@
 #include "debug.h"
 
 time_t parse_time(char * input);
+char * stripreq(char * inputString );
 
 
 
@@ -363,6 +364,8 @@ int parse_line(char * line, Request *outRequest)
     
     outRequest->time = parse_time(outRequest->strTime);
     
+    outRequest->req = stripreq(outRequest->req);
+
     //printf("time_t: %s",asctime(localtime(&outRequest->time))); 
 
  
