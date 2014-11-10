@@ -67,6 +67,16 @@ main(int argc, char** argv){
     totalStats.totalInjections = 0;
     totalStats.totalVisits     = 0;
 
+    for(i = 0; i < 24; i++)
+    {
+        totalStats.hourlyAccess[i] = 0;
+    }
+
+    for(i = 0; i < 12; i++)
+    {
+        totalStats.monthlyAccess[i] = 0;
+    }
+
     //getopt()
     open_debug_file();
 
@@ -251,6 +261,19 @@ main(int argc, char** argv){
                                         totalStats.totalInjections,
                                         totalStats.totalVisits);
     fclose(statsFile);
+
+    // Testing time stats
+    for(i = 0; i < 24;i++)
+    {
+        fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
+    }
+    fprintf(stderr, "\n");
+
+    for(i = 0; i < 12;i++)
+    {
+        fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
+    }
+    fprintf(stderr, "\n");
 
     //cleanup
     buffer_free(&buffer1);

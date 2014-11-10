@@ -37,6 +37,8 @@ typedef struct{
     int total404;
     int totalInjections;
     int totalVisits;
+    long long int hourlyAccess[24];
+    long long int monthlyAccess[12];
 } Statistics;
 
 typedef struct{

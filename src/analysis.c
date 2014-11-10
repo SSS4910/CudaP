@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "core.h"
 #include "analysis.h"
@@ -96,6 +97,14 @@ int analyze(Buffer *buffer)
     int x;
     for(x = 0; x < buffer->currentSize; x++)
     {
+
+        //Gather time statistics
+        struct tm *reqTime;
+        reqTime = localtime( &buffer->requests[x].time);
+        //printf("time %d\n", reqTime->tm_hour);
+        totalStats.hourlyAccess[reqTime->tm_hour]++;
+        totalStats.monthlyAccess[reqTime->tm_mon]++;
+
         // check and Handle 200 return codes
         if(buffer->requests[x].retCode == 200)
         {
