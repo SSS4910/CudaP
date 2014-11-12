@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <regex.h>
 
 #include "core.h"
 #include "parser.h"
@@ -37,6 +38,15 @@ main(int argc, char** argv){
     char * logline;
     char * fileName = "../../access.log";
     FILE * logfile;
+
+    // Set/Compile regex
+    regex_t regex;
+    err = regcomp(&regex, "/.* .* .* .*/", 0); ///.* .* .* \\[[\\d]{2}/[\\w]{3}/[\\d]{4}:[\\d]{2}:[\\d]{2}:[\\d]{2} [-]{0,1}[\\d]{4}\\] \\\".*HTTP.*\\\" \\d* \\d* .*/
+    if(err)
+    {
+        fprintf(stderr, "Regular expression failed to compile\n");
+        exit(1);
+    }
 
     // parse command line arguments
     if(parse_opt(argc, argv, &fileName)  != TRUE)
@@ -140,7 +150,7 @@ main(int argc, char** argv){
                 req_null(&buffer1.requests[i]);
 
                 //read a line
-                logline = log_readline(logfile);
+                logline = log_readline(logfile, &regex);
                 lineNum++;
                 if (feof(logfile))
                 {
@@ -192,7 +202,7 @@ main(int argc, char** argv){
                 req_null(&buffer2.requests[i]);
 
                 //read a line
-                logline = log_readline(logfile);
+                logline = log_readline(logfile, &regex);
                 lineNum++;
                 if (feof(logfile))
                 {
@@ -266,6 +276,7 @@ main(int argc, char** argv){
     }
     fprintf(statsFile, "\n");
 
+    #if DEBUG==1
     // Testing time stats
     for(i = 0; i < 24;i++)
     {
@@ -278,6 +289,7 @@ main(int argc, char** argv){
         fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
     }
     fprintf(stderr, "\n");
+    #endif
 
     //cleanup
     buffer_free(&buffer1);
@@ -414,10 +426,19 @@ req_free(Request *request)
  *  a newline terminated string containing the next line from file
  */
 char *
-log_readline(FILE * logfile){
+log_readline(FILE * logfile, regex_t *regex)
+{
+    int err;
     char * line = malloc((MAX_LINE_LENGTH) * sizeof(char));
     if (fgets(line, MAX_LINE_LENGTH, logfile) != NULL)
     {
+        /* REGULAR EXPRESSION */
+        err = regexec(regex, line, 0, NULL, 0);
+        if(err == REG_NOMATCH)
+        {
+            fprintf(stderr, "No regex match on %s\n", line);
+        }
+
         return line;
     }
     return (char *)NULL;

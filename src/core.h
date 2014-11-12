@@ -3,6 +3,7 @@
 #define CORE_H
 
 #include <time.h>
+#include <regex.h>
 
 #define DEBUG 1
 #define TRUE 1
@@ -53,7 +54,7 @@ void buffer_free(Buffer *);
 int req_init(Request *);
 int req_null(Request *);
 void req_free(Request *);
-char * log_readline(FILE *);
+char * log_readline(FILE *, regex_t *);
 int delete_output_files();
 
 // Global Variables
