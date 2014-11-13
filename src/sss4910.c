@@ -39,9 +39,15 @@ main(int argc, char** argv){
     char * fileName = "../../access.log";
     FILE * logfile;
 
+
     // Set/Compile regex
     regex_t regex;
-    err = regcomp(&regex, "/.* .* .* .*/", 0); ///.* .* .* \\[[\\d]{2}/[\\w]{3}/[\\d]{4}:[\\d]{2}:[\\d]{2}:[\\d]{2} [-]{0,1}[\\d]{4}\\] \\\".*HTTP.*\\\" \\d* \\d* .*/
+    char * regexString;
+    regexString = "[A-Za-z0-9.][A-Za-z0-9.]* [A-Za-z0-9-][A-Za-z0-9-]* [A-Za-z0-9.@-][A-Za-z0-9.@-]* *[A-Za-z0-9.@-]* [\\[][0-3][0-9][/][JFMAMSOND][aepuco][nbrylgpvtc][/][0-9][0-9][0-9][0-9][:][0-2][0-9][:][0-5][0-9][:][0-5][0-9] [-+]*[0-9][0-9][0-9][0-9][]] [\\\"].*[\\\"] [0-9][0-9]* [0-9-][0-9-]*";
+    
+    err = regcomp(&regex, regexString, 0);
+    
+    
     if(err)
     {
         fprintf(stderr, "Regular expression failed to compile\n");
@@ -168,7 +174,7 @@ main(int argc, char** argv){
                 err = parse_line(logline, &buffer1.requests[i]);
                 if (err)
                 {
-                    printf("parse error on line %d\n", lineNum);
+                    printf("parse error on line %d\n%s\n", lineNum, logline);
                 }
                 buffer1.currentSize++;
                 free(logline);
@@ -218,7 +224,7 @@ main(int argc, char** argv){
                 err = parse_line(logline, &buffer2.requests[i]);
                 if (err)
                 {
-                    printf("parse error on line %d\n", lineNum);
+                    printf("parse error on line %d\n%s\n", lineNum,logline);
                 }
                 buffer2.currentSize++;
                 free(logline);
@@ -303,7 +309,7 @@ main(int argc, char** argv){
     close_debug_file();
 
     printf("\nEND OF PROGRAM\n");
-
+    printf("%s\n",regexString);
     return 0;
 }
 
