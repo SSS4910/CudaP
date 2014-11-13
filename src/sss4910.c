@@ -17,7 +17,6 @@
 Buffer buffer1;
 Buffer buffer2;
 Statistics totalStats;
-//Queue404 queue404;
 int MASTER_SWITCH;
 
 /*
@@ -72,11 +71,6 @@ main(int argc, char** argv){
         exit(1);
     }
 
-    // Initialize Queue404
-    /*queue404.requests = (Request *)malloc(sizeof(Request) * BUFFER_SIZE);// would prefer this be more dynamic
-    queue404.currentSize  = 0;
-    queue404.currentIndex = 0;*/
-
     // Initialize totalStats
     totalStats.total200        = 0;
     totalStats.total404        = 0;
@@ -128,18 +122,6 @@ main(int argc, char** argv){
     buffer2.readyRead = FALSE;
     buffer2.readyWrite = TRUE;
 
-    /*
-
-    strcpy(buffer.requests[0].host, "127.0.0.1");
-
-    printf("%s\n", buffer.requests[0].host);
-
-    req_null(&buffer.requests[0]);
-
-    printf("%s\n", buffer.requests[0].host);
-
-    */
-
     /* SPAWN ANALYSIS THREAD HERE */
     pthread_t analysisThread;
     pthread_create(&analysisThread, NULL, manage_data, NULL);
@@ -160,7 +142,6 @@ main(int argc, char** argv){
                 lineNum++;
                 if (feof(logfile))
                 {
-                    //printf("hit eof\n");
                     break;
                 }
                 else if(logline == (char *) NULL)
@@ -168,8 +149,6 @@ main(int argc, char** argv){
                     fprintf(stderr, "Error: reading line: %d in log file\n", lineNum);
                 }
                 
-
-                //printf("%s\n", logline);
                 //parse line and add it to the buffer
                 err = parse_line(logline, &buffer1.requests[i]);
                 if (err)
@@ -195,8 +174,6 @@ main(int argc, char** argv){
 
             buffer1.readyWrite = FALSE;
             buffer1.readyRead = TRUE;
-
-            //manage_data(); // this should actually be a thread
         }
 
         if(buffer2.readyWrite)
@@ -219,7 +196,7 @@ main(int argc, char** argv){
                 {
                     fprintf(stderr, "Error: reading line: %d in log file\n", lineNum);
                 }
-                //printf("%s\n", logline);
+
                 //parse line and add it to the buffer
                 err = parse_line(logline, &buffer2.requests[i]);
                 if (err)
@@ -245,14 +222,12 @@ main(int argc, char** argv){
 
             buffer2.readyWrite = FALSE;
             buffer2.readyRead = TRUE;
-
-            //manage_data(); // this should actually be a thread
         }
    
     }
 
     MASTER_SWITCH = FALSE;
-    /* JOIN ANALYSIS THREAD HERE */
+    // wait for any remaining analysis to finish
     pthread_join(analysisThread, NULL);
 
     #if DEBUG==1
@@ -283,18 +258,18 @@ main(int argc, char** argv){
     fprintf(statsFile, "\n");
 
     #if DEBUG==1
-    // Testing time stats
-    for(i = 0; i < 24;i++)
-    {
-        fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
-    }
-    fprintf(stderr, "\n");
+        // Testing time stats
+        for(i = 0; i < 24;i++)
+        {
+            fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
+        }
+        fprintf(stderr, "\n");
 
-    for(i = 0; i < 12;i++)
-    {
-        fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
-    }
-    fprintf(stderr, "\n");
+        for(i = 0; i < 12;i++)
+        {
+            fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
+        }
+        fprintf(stderr, "\n");
     #endif
 
     //cleanup
@@ -443,6 +418,7 @@ log_readline(FILE * logfile, regex_t *regex)
         if(err == REG_NOMATCH)
         {
             fprintf(stderr, "No regex match on %s\n", line);
+            /* RETURN NULL */
         }
 
         return line;
