@@ -44,7 +44,7 @@ main(int argc, char** argv){
     // Set/Compile regex
     regex_t regex;
     char * regexString;
-    regexString = "^[A-Za-z0-9_:.'?#()/&-][A-Za-z0-9_:.'?#()/&-]* [A-Za-z0-9_-][A-Za-z0-9_-]* [A-Za-z0-9.@_-][A-Za-z0-9.@_-]* *[A-Za-z0-9.@_-]* [\\[][0-3][0-9][/][JFMASOND][aepuco][nbrylgpvtc][/][0-9][0-9][0-9][0-9][:][0-2][0-9][:][0-5][0-9][:][0-5][0-9] [-+]*[0-9][0-9][0-9][0-9][]] [\\\"].*[\\\"] [0-9][0-9]* [0-9-][0-9-]*";
+    regexString = "^[A-Za-z0-9_:.'?#()/&-]* [A-Za-z0-9_-]* [A-Za-z0-9.@_ -]* [\\[][0-3][0-9][/][JFMASOND][aepuco][nbrylgpvtc][/]....[:][0-2][0-9][:][0-5][0-9][:][0-5][0-9] [-+]....[]] [\\\"].*[\\\"] [0-9][0-9]* [0-9-][0-9-]*"; 
     err = regcomp(&regex, regexString, 0);    
     if(err)
     {
@@ -461,7 +461,6 @@ log_readline(FILE * logfile, char * line, regex_t *regex)
             debug_write("Failed regex match\n");
             status = 1;
         }
-
         return status;
     }
 
