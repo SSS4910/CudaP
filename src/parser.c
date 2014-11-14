@@ -445,7 +445,7 @@ char * stripreq(char * inputString )
     }
 
     //if(stripdebug) printf("\n\n\n stripout:\n %s \n\n%s \n",inputString,buffer);
-    
+    free(inputString); 
     return buffer;
 }
 
