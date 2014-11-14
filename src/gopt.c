@@ -31,12 +31,9 @@ parse_opt(int argc, char **argv, char **fileName)
             case 'f':
                 /* handle -a, set a flag, whatever */
                 fflag = optarg;
-                fprintf(stderr, "Before strcpy; fileName: %s\n", *fileName);
-                fprintf(stderr, "Before strcpy; fflag: %s\n", fflag);
                 *fileName = (char *)malloc(30 * sizeof(char));
                 strcpy(*fileName, fflag);
-                fprintf(stderr, "After strcpy: %s\n", *fileName);
-                printf("%s\n", fflag);
+                //printf("%s\n", fflag);
                 break;
             case 'h':
                 print_usage(argv[0]);
@@ -49,7 +46,7 @@ parse_opt(int argc, char **argv, char **fileName)
             case '?':
             default:
                 /* invalid option */
-                print_usage(argv[0]);
+                //print_usage(argv[0]);
                 return FALSE;
         }
     }

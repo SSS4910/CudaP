@@ -5,7 +5,7 @@
 #include <time.h>
 #include <regex.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define TRUE 1
 #define FALSE 0
 #define BUFFER_SIZE 1024//327680
@@ -54,7 +54,7 @@ void buffer_free(Buffer *);
 int req_init(Request *);
 int req_null(Request *);
 void req_free(Request *);
-char * log_readline(FILE *, regex_t *);
+int log_readline(FILE *, char *, regex_t *);
 int delete_output_files();
 
 // Global Variables

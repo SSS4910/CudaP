@@ -34,22 +34,22 @@ main(int argc, char** argv){
     int i;
     int err;
     int lineNum = 0;
-    char * logline;
+    char * logLine;
     char * fileName = "../../access.log";
     FILE * logfile;
+    FILE * errorFile;
 
+     open_debug_file();
 
     // Set/Compile regex
     regex_t regex;
     char * regexString;
-    regexString = "[A-Za-z0-9.][A-Za-z0-9.]* [A-Za-z0-9-][A-Za-z0-9-]* [A-Za-z0-9.@-][A-Za-z0-9.@-]* *[A-Za-z0-9.@-]* [\\[][0-3][0-9][/][JFMAMSOND][aepuco][nbrylgpvtc][/][0-9][0-9][0-9][0-9][:][0-2][0-9][:][0-5][0-9][:][0-5][0-9] [-+]*[0-9][0-9][0-9][0-9][]] [\\\"].*[\\\"] [0-9][0-9]* [0-9-][0-9-]*";
-    
-    err = regcomp(&regex, regexString, 0);
-    
-    
+    regexString = "^[A-Za-z0-9_:.'?#()/&-][A-Za-z0-9_:.'?#()/&-]* [A-Za-z0-9_-][A-Za-z0-9_-]* [A-Za-z0-9.@_-][A-Za-z0-9.@_-]* *[A-Za-z0-9.@_-]* [\\[][0-3][0-9][/][JFMASOND][aepuco][nbrylgpvtc][/][0-9][0-9][0-9][0-9][:][0-2][0-9][:][0-5][0-9][:][0-5][0-9] [-+]*[0-9][0-9][0-9][0-9][]] [\\\"].*[\\\"] [0-9][0-9]* [0-9-][0-9-]*";
+    err = regcomp(&regex, regexString, 0);    
     if(err)
     {
         fprintf(stderr, "Regular expression failed to compile\n");
+        debug_write("Regular expression failed to compile\n");
         exit(1);
     }
 
@@ -59,7 +59,7 @@ main(int argc, char** argv){
         fprintf(stderr, "Non-execution option selected\n");
         exit(0);
     }
-    fprintf(stderr, "FileName in Main: %s\n", fileName);
+    fprintf(stderr, "Analyzing file: %s\n", fileName);
 
     // Switch MASTER_SWITCH to TRUE
     MASTER_SWITCH = TRUE;
@@ -68,6 +68,7 @@ main(int argc, char** argv){
     if(delete_output_files() != 0)
     {
         fprintf(stderr, "Error while deleting output files\n");
+        debug_write("Error while deleting output files\n");
         exit(1);
     }
 
@@ -87,13 +88,19 @@ main(int argc, char** argv){
         totalStats.monthlyAccess[i] = 0;
     }
 
-    //getopt()
-    open_debug_file();
+    debug_write("Opening error file\n");
+    if((errorFile = fopen("errors.txt", "w")) == NULL)
+    {
+        debug_write("Unable to create errors.txt\n");
+        fprintf(stderr, "Unable to create errors.txt\n");
+        return -1;
+    }
 
     debug_write("Opening access log file\n");
     if ((logfile = fopen(fileName, "r")) == NULL)
     {
         debug_write("access log not found, aborting!\n");
+        fprintf(errorFile, "access log not found\n");
         printf("%s not found, aborting!\n", fileName);
         return -1;
     }
@@ -114,6 +121,7 @@ main(int argc, char** argv){
         debug_write("buffer2 allocation failure, aborting!\n");
         return -1;
     }
+
     buffer1.id = 1;
     buffer1.readyRead = FALSE;
     buffer1.readyWrite = TRUE;
@@ -138,25 +146,39 @@ main(int argc, char** argv){
                 req_null(&buffer1.requests[i]);
 
                 //read a line
-                logline = log_readline(logfile, &regex);
+                logLine = malloc((MAX_LINE_LENGTH) * sizeof(char));
+                err = log_readline(logfile, logLine, &regex);
                 lineNum++;
                 if (feof(logfile))
                 {
                     break;
                 }
-                else if(logline == (char *) NULL)
+                else if(err == 1)
                 {
-                    fprintf(stderr, "Error: reading line: %d in log file\n", lineNum);
+                    fprintf(stderr, "Error: invalid entry on line %d in log file\n", lineNum);
+                    fprintf(errorFile, "Error: invalid entry on line %d : %s\n", lineNum, logLine);
+                    --i;
+                    continue;
+                }
+                else if(err == 2)
+                {
+                    fprintf(stderr, "Error: reader error: %d in log file\n", lineNum);
+                    fprintf(errorFile, "Error: reader error %d\n", lineNum);
+                    /* close all files for clean exit? */
+                    exit(1);
                 }
                 
                 //parse line and add it to the buffer
-                err = parse_line(logline, &buffer1.requests[i]);
+                err = parse_line(logLine, &buffer1.requests[i]);
                 if (err)
                 {
-                    printf("parse error on line %d\n%s\n", lineNum, logline);
+                    printf("parse error on line %d\n%s\n", lineNum, logLine);
+                    fprintf(errorFile, "Error: parsing line %d : %s\n", lineNum, logLine);
+                    --i;
+                    continue;
                 }
                 buffer1.currentSize++;
-                free(logline);
+                free(logLine);
 
                 /*#if DEBUG==1
                     printf("%s\n", buffer1.requests[i].host);
@@ -185,26 +207,39 @@ main(int argc, char** argv){
                 req_null(&buffer2.requests[i]);
 
                 //read a line
-                logline = log_readline(logfile, &regex);
+                logLine = malloc((MAX_LINE_LENGTH) * sizeof(char));
+                err = log_readline(logfile, logLine, &regex);
                 lineNum++;
                 if (feof(logfile))
                 {
-                    //printf("hit eof\n");
                     break;
                 }
-                else if(logline == (char *) NULL)
+                else if(err == 1)
                 {
-                    fprintf(stderr, "Error: reading line: %d in log file\n", lineNum);
+                    fprintf(stderr, "Error: invalid entry on line %d in log file\n", lineNum);
+                    fprintf(errorFile, "Error: invalid entry on line %d : %s\n", lineNum, logLine);
+                    --i;
+                    continue;
                 }
-
+                else if(err == 2)
+                {
+                    fprintf(stderr, "Error: unknown reader error: %d in log file\n", lineNum);
+                    fprintf(errorFile, "Error: unknown reader error %d\n", lineNum);
+                    /* close all files for clean exit? */
+                    exit(1);
+                }
+                
                 //parse line and add it to the buffer
-                err = parse_line(logline, &buffer2.requests[i]);
+                err = parse_line(logLine, &buffer2.requests[i]);
                 if (err)
                 {
-                    printf("parse error on line %d\n%s\n", lineNum,logline);
+                    printf("parse error on line %d\n%s\n", lineNum, logLine);
+                    fprintf(errorFile, "Error: parsing line %d : %s\n", lineNum, logLine);
+                    --i;
+                    continue;
                 }
                 buffer2.currentSize++;
-                free(logline);
+                free(logLine);
 
                 /*#if DEBUG==1
                     printf("%s\n", buffer2.requests[i].host);
@@ -239,7 +274,14 @@ main(int argc, char** argv){
     #endif
 
     //Write Statistics to file
-    FILE *statsFile = fopen("stats.txt", "w");
+    FILE *statsFile; 
+    if((statsFile = fopen("stats.txt", "w")) == NULL)
+    {
+        debug_write("Unable to create stats.txt file\n");
+        fprintf(errorFile, "Unable to create output file\n");
+        exit(1);
+    }
+
     fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
                                         totalStats.total404,
                                         totalStats.totalInjections,
@@ -279,12 +321,11 @@ main(int argc, char** argv){
     fclose(statsFile);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
-
+    fclose(errorFile);
     debug_write("Closing access.log file...\n");
     close_debug_file();
 
-    printf("\nEND OF PROGRAM\n");
-    printf("%s\n",regexString);
+    printf("\nFinished Analysis\n\n");
     return 0;
 }
 
@@ -406,24 +447,26 @@ req_free(Request *request)
  * return:
  *  a newline terminated string containing the next line from file
  */
-char *
-log_readline(FILE * logfile, regex_t *regex)
+int
+log_readline(FILE * logfile, char * line, regex_t *regex)
 {
+    int status = 0;
     int err;
-    char * line = malloc((MAX_LINE_LENGTH) * sizeof(char));
     if (fgets(line, MAX_LINE_LENGTH, logfile) != NULL)
     {
         /* REGULAR EXPRESSION */
         err = regexec(regex, line, 0, NULL, 0);
         if(err == REG_NOMATCH)
         {
-            fprintf(stderr, "No regex match on %s\n", line);
-            /* RETURN NULL */
+            debug_write("Failed regex match\n");
+            status = 1;
         }
 
-        return line;
+        return status;
     }
-    return (char *)NULL;
+
+    status = 2;
+    return status;
 }
 
 int delete_output_files()
@@ -434,7 +477,7 @@ int delete_output_files()
         int err = remove("404Data.txt");
         if(err != 0)
         {
-            fprintf(stderr, "Failed to delete 404Data.txt\n");
+            debug_write("Failed to delete 404Data.txt\n");
             return 1;
         }
     }
@@ -445,7 +488,18 @@ int delete_output_files()
         int err = remove("stats.txt");
         if(err != 0)
         {
-            fprintf(stderr, "Failed to delete stats.txt\n");
+            debug_write("Failed to delete stats.txt\n");
+            return 1;
+        }
+    }
+
+    //errorFile.txt
+    if(access("errorFile.txt", F_OK) == 0)
+    {
+        int err = remove("errorFile.txt");
+        if(err != 0)
+        {
+            debug_write("Failed to delete errorFile.txt\n");
             return 1;
         }
     }

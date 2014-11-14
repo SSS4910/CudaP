@@ -51,4 +51,5 @@ clean: objectclean outputclean errorclean
 	@echo Removing output data...
 	@rm -f stats.txt
 	@rm -f 404Data.txt
+	@rm -f errors.txt
 	@echo DONE!
