@@ -1,3 +1,15 @@
+/**
+ *  Parcer.c
+ *  -------------------------------------------
+ *  This Module is designed to take a standard apache log line
+ *  and split it up into its various feilds and places them into a struct
+ *
+ *
+ *
+ *
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +24,7 @@ char * stripreq(char * inputString );
 
 
 
-/*
+/**
  * FUNCTION: parse_line
  * --------------------
  * parses a NCSA Common Log Format string into a Request structure
@@ -20,9 +32,11 @@ char * stripreq(char * inputString );
  * line: a string containing a NCSA Common Log Format access line
  * request: a pointer to a structure to hold parsed data
  *
- * returns:
- *  0 on success
- *  1 on failure
+ *
+ *  @param line Char * that is the log line to be parsed
+ *  @param outRequest this is a pointer to the struct which holds the parsed data
+ *  
+ *  @return 0 on success 1 on failure
  */
 int parse_line(char * line, Request *outRequest)
 {
@@ -337,11 +351,13 @@ int parse_line(char * line, Request *outRequest)
 
 
 
-/* FUCTION: stripreq
-*---------------------
+/**  FUCTION: stripreq
+*    ---------------------
 *    returns a req string that has its first and last part stripped off
-*    for easier use in analysis
-*
+*    this is done so to make the analisys is easier.
+*   
+*   @param inputString this is the inputed string 
+*   @return returns the new string 
 */
 char * stripreq(char * inputString )
 {
@@ -402,12 +418,17 @@ char * stripreq(char * inputString )
 }
 
 
-/*
+/**
  * FUNCTION: Parse Time
  * ------------------------------------------------------------
  * input: a string that is the apache format time
  *
- * return: a time_t representation of the time
+ * Parse_time taked an imput string in the standard apache log format and 
+ * converts it into a time_t
+ *  it does this by puting each field into a tm struct then converting.
+ *
+ * @param input this is a char * of the time that will be converted to time_t
+ * @return a time_t representation of the time
  *
  */
 time_t parse_time(char * input)
@@ -643,14 +664,14 @@ time_t parse_time(char * input)
     return outtime;
 }
 
-/*
+/**
  * FUNCTION: slice
  * ---------------
- * returns a slice of given string from start offset to end offset
+ * @return a slice of given string from start offset to end offset
  *
- * line: a char pointer to be sliced
- * so: the start offset (inclusive)
- * eo: the end offset (inclusive)
+ * @param line a char pointer to be sliced
+ * @param so the start offset (inclusive)
+ * @param eo the end offset (inclusive)
  */
 char *
 slice(char *line, int so, int eo){
