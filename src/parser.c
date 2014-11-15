@@ -22,37 +22,30 @@ char * stripreq(char * inputString );
  *
  * returns:
  *  0 on success
+ *  1 on failure
  */
 int parse_line(char * line, Request *outRequest)
 {
         //if(debug2) printf("%s \n",line);
-    
     if(strlen(line)< 30)
     {
-        printf("ERROR: parse line - Bad input\n");
+        //printf("ERROR: parse line - Bad input\n");
         return 1;
     }
-
         //counters
     int currentField = 0;
     int lengthOfCurrentField = 0;
     int i = 0;
     int lengthOfReq = 0;
     int k = 0;
-    
     int flag = 0;
-    
-
+        //temp buffers to fill
     char* retCode;
     retCode = (char *)malloc((30) * sizeof(char));  
-       
     char* retSize;
     retSize = (char *)malloc((30) * sizeof(char));
-
-
     outRequest->referer[0] = '~';
     outRequest->referer[1] = '\0';
-
     outRequest->userAgent[0] = '~';
     outRequest->userAgent[1] = '\0';
 
@@ -60,7 +53,7 @@ int parse_line(char * line, Request *outRequest)
     for(i =0; i < strlen(line); i++)
     {
 
-            //this parses and breaks down the line into fields, each case is a different 
+            //this parses and breaks down the line into fields, each case is a different field 
         switch(currentField)
         {
 
@@ -70,8 +63,7 @@ int parse_line(char * line, Request *outRequest)
                 //
                 //          terminated by ' '
             case 0:
-                    //if(debug3)printf(" In field one \n");
-                
+                    //printf(" In field one \n");
                 if (line[i] == ' ')
                 {
                     currentField = 1;
@@ -91,8 +83,7 @@ int parse_line(char * line, Request *outRequest)
                 //
                 //          terminated by ' '
             case 1:
-                    //if(debug3)printf(" In field two \n");
-
+                    //printf(" In field two \n");
                 if(line[i] == ' ')
                 {
                     currentField = 2;
@@ -111,8 +102,7 @@ int parse_line(char * line, Request *outRequest)
                 //      
                 //      terminated by a ' '
             case 2:
-                	//if(debug3) printf(" In field three \n");
-                
+                	//printf(" In field three \n");
                 if(line[i] == ' ')
                 {
                     if(line[i+1] == '[')
@@ -149,8 +139,7 @@ int parse_line(char * line, Request *outRequest)
                 //
                 //      terminated by a ']'
             case 3:
-                    //if(debug3)printf(" In field four \n");
-                
+                    //printf(" In field four \n");
                 if(lengthOfCurrentField >= 30)
                 {
                     //time cannot be bigger than 23
@@ -189,8 +178,7 @@ int parse_line(char * line, Request *outRequest)
                 //      PROBLAMATIC
 
             case 4:
-                    //if(debug3) printf(" In field five \n");
-
+                    //printf(" In field five \n");
                 if(flag == 2)
                 {
                     if (line[i] != ' ')
@@ -211,7 +199,6 @@ int parse_line(char * line, Request *outRequest)
                 }
                 else if( line[i] == '"')
                 {
-
                     outRequest->req[lengthOfCurrentField] = line[i];
                     lengthOfCurrentField++;
                     flag++;
@@ -233,8 +220,7 @@ int parse_line(char * line, Request *outRequest)
                 //          terminated by a ' '
                 //
             case 5:
-                    //if(debug3)printf(" In field six \n");
-
+                    //printf(" In field six \n");
                 if(line[i] == ' ')
                 {
                     retCode[lengthOfCurrentField] = '\0';
@@ -259,7 +245,6 @@ int parse_line(char * line, Request *outRequest)
                 }
                 else
                 {
-                    
                     retCode[lengthOfCurrentField] = line[i];
                     lengthOfCurrentField++;
                 }
@@ -273,7 +258,7 @@ int parse_line(char * line, Request *outRequest)
                 //      terminated by a ' ' or a '\n' for "short" logs
                 //
             case 6:
-                    //if(debug3) printf(" In field seven \n");
+                    //printf(" In field seven \n");
 
                 if(line[i] == ' ' || line[i] == '\n')
                 {
@@ -288,11 +273,9 @@ int parse_line(char * line, Request *outRequest)
                     lengthOfCurrentField++;
                 }
                 break;
-
            //EXTENDED LOG FORMAT FOLLOWS 
             case 7:
-                    //if(debug3) printf(" In field eight \n");
-                
+                    //printf(" In field eight \n");
                 if(flag == 2)
                 {
                     flag = 0;
@@ -302,7 +285,6 @@ int parse_line(char * line, Request *outRequest)
                 }
                 else if( line[i] == '"')
                 {
-
                     //outRequest->referer[lengthOfCurrentField] = line[i];
                     //lengthOfCurrentField++;
                     flag++;
@@ -314,8 +296,7 @@ int parse_line(char * line, Request *outRequest)
                 }
                 break;
              case 8:
-                    //if(debug3) printf(" In field eight \n");
-                
+                    //printf(" In field eight \n");
                 if(flag == 2)
                 {
                     flag = 0;
@@ -325,7 +306,6 @@ int parse_line(char * line, Request *outRequest)
                 }
                 else if( line[i] == '"')
                 {
-
                     //outRequest->userAgent[lengthOfCurrentField] = line[i];
                     //lengthOfCurrentField++;
                     flag++;
@@ -336,38 +316,20 @@ int parse_line(char * line, Request *outRequest)
                     lengthOfCurrentField++;
                 }
                 break;
-            
-
         }   
-
-
     }
-
-    //if(debug1) printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
+    //printf("   Inside: H:%s R:%s A:%s T:%s C:%s c:%d S:%d r:%s U:%s \n \n",outRequest->host, outRequest->clientId, outRequest->userId, outRequest->time, outRequest->req, outRequest->httpReturnCode, outRequest->dataSize, outRequest->referer, outRequest->userAgent );
     
-    /*free(outRequest.host);
-    free(outRequest.rfc);
-    free(outRequest.auth);
-    free(outRequest.time);
-    free(outRequest.req);*/
     free(retCode);
     free(retSize);
-    /*free(outRequest.referer);
-    free(outRequest.userAgent);*/
 
-    
     if(outRequest->strTime[0] == '~')
     {
-        printf("%s\n",line);
         return 1;
     }
-    
     outRequest->time = parse_time(outRequest->strTime);
-    
     outRequest->req = stripreq(outRequest->req);
-
     //printf("time_t: %s",asctime(localtime(&outRequest->time))); 
-
  
             
     return 0;
@@ -388,11 +350,8 @@ char * stripreq(char * inputString )
     int currentSpace = 0;
     char * buffer;
     buffer = (char *)malloc((2000) * sizeof(char));  
-
    
     int currentLengthOfBuffer = 0;
-    
-    //if(stripdebug2) printf("A"); 
     
     for(i = 0; i < strlen(inputString);i++)
     {
@@ -401,14 +360,8 @@ char * stripreq(char * inputString )
             spaces++;
         }
     }
-    
-
-    //if(stripdebug2) printf("B %d ",spaces);
-    
     for(i = 0; i < strlen(inputString); i++)
-    {
-        //if(stripdebug2) printf("C%d ", i);
-            
+    {       
         if(currentSpace == 0)
         {
             if(inputString[i] == ' ')
@@ -443,8 +396,7 @@ char * stripreq(char * inputString )
     {
         buffer[currentLengthOfBuffer-1] = '\0';
     }
-
-    //if(stripdebug) printf("\n\n\n stripout:\n %s \n\n%s \n",inputString,buffer);
+    //printf("\n\n\n stripout:\n %s \n\n%s \n",inputString,buffer);
     free(inputString); 
     return buffer;
 }
@@ -483,21 +435,9 @@ time_t parse_time(char * input)
     int j = 0;
     int n = 0;
 
-    /*int day = -2;
-    int month = -2;
-    int year = -2;
-    int hour = -2;
-    int minute = -2;
-    int second = -2;
-    */
-
-
-    //int zone = -22;
-    
-    
+    //int zone = -22;    
     char* temp;
     temp = (char*) malloc(5 * sizeof(char));   
-
 
         //first step is to break down each part of the time field
     for(i = 0;i < strlen(input); i++)
@@ -697,24 +637,9 @@ time_t parse_time(char * input)
 
     }
     free(temp);
-
-
-
-    /*tempest.tm_hour = hour ;
-    tempest.tm_sec = second;
-    tempest.tm_min = minute;
-    tempest.tm_mday = day;
-    tempest.tm_mon = month -1 ;
-    tempest.tm_year = year - 1900;
-    */
-
     //printf("tm: %s",asctime(&tempest));
-    
     outtime = mktime(&tempest);
-
     //printf("time_t: %s",asctime(localtime(&outtime))); 
-
-
     return outtime;
 }
 
