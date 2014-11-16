@@ -122,6 +122,7 @@ main(int argc, char** argv){
         return -1;
     }
 
+    // initialize buffer values
     buffer1.id = 1;
     buffer1.readyRead = FALSE;
     buffer1.readyWrite = TRUE;
@@ -130,7 +131,7 @@ main(int argc, char** argv){
     buffer2.readyRead = FALSE;
     buffer2.readyWrite = TRUE;
 
-    /* SPAWN ANALYSIS THREAD HERE */
+    // Create analysis thread
     pthread_t analysisThread;
     pthread_create(&analysisThread, NULL, manage_data, NULL);
 
