@@ -19,15 +19,15 @@ Buffer buffer2;
 Statistics totalStats;
 int MASTER_SWITCH;
 
-/*
+/**
  * FUNCTION: main
  * --------------
  * the entry point of the application
  *
- * argc: the number of command line arguments
- * argv: the command line arguments, kept as a pointer to a string
+ * @param argc the number of command line arguments
+ * @param argv the command line arguments, kept as a pointer to a string
  *
- * returns: 0 on successful completion, -1 on failure
+ * @return 0 on successful completion, -1 on failure
  */
 int
 main(int argc, char** argv){
@@ -330,13 +330,12 @@ main(int argc, char** argv){
 }
 
 
-/*
+/**
  * FUNCTION: buffer_init
  * -----------------------
  * initialize buffer to store each line of the log
  *
- * return:
- *  a pointer to a buffer structure on success, NULL on failure
+ * @return a pointer to a buffer structure on success, NULL on failure
  */
 int 
 buffer_init(Buffer * buffer){
@@ -353,7 +352,7 @@ buffer_init(Buffer * buffer){
     return 0;
 }
 
-/*
+/**
  * FUNCTION: buffer_free
  * ---------------------
  * frees memory allocated to buffer
@@ -369,7 +368,7 @@ buffer_free(Buffer * buffer){
     free(buffer->requests);
 }
 
-/*
+/**
  * FUNCTION: req_init
  * ------------------
  * allocates memory for a request
@@ -393,7 +392,7 @@ req_init(Request *request)
     return 0;
 }
 
-/*
+/**
  * FUNCTION: req_null
  * ------------------
  * tombstones a request structure
@@ -417,7 +416,7 @@ req_null(Request *request)
 }
 
 
-/*
+/**
  * FUNCTION: req_free
  * ------------------
  * frees individual fields of provided request
@@ -437,7 +436,7 @@ req_free(Request *request)
     free(request->userAgent);
 }
 
-/*
+/**
  * FUNCTION: log_readline
  * ----------------------
  * reads next line from provided log file
