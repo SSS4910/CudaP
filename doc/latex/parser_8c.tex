@@ -1,0 +1,114 @@
+\hypertarget{parser_8c}{\section{parser.\-c File Reference}
+\label{parser_8c}\index{parser.\-c@{parser.\-c}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}core.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}parser.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}debug.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+time\-\_\-t \hyperlink{parser_8c_ad82597572726f78dc49230530eb22f50}{parse\-\_\-time} (char $\ast$input)
+\item 
+char $\ast$ \hyperlink{parser_8c_a74f1b68773a876db16036ca6b813df6d}{stripreq} (char $\ast$input\-String)
+\item 
+int \hyperlink{parser_8c_a5deeb71259c8709b4dc00f86864ad866}{parse\-\_\-line} (char $\ast$line, \hyperlink{struct_request}{Request} $\ast$out\-Request)
+\item 
+char $\ast$ \hyperlink{parser_8c_af94af19a92d0c521eb285421838ad459}{slice} (char $\ast$line, int so, int eo)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{parser_8c_a5deeb71259c8709b4dc00f86864ad866}{\index{parser.\-c@{parser.\-c}!parse\-\_\-line@{parse\-\_\-line}}
+\index{parse\-\_\-line@{parse\-\_\-line}!parser.c@{parser.\-c}}
+\subsubsection[{parse\-\_\-line}]{\setlength{\rightskip}{0pt plus 5cm}int parse\-\_\-line (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{line, }
+\item[{{\bf Request} $\ast$}]{out\-Request}
+\end{DoxyParamCaption}
+)}}\label{parser_8c_a5deeb71259c8709b4dc00f86864ad866}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: parse\-\_\-line }
+
+parses a N\-C\-S\-A Common Log Format string into a \hyperlink{struct_request}{Request} structure
+
+line\-: a string containing a N\-C\-S\-A Common Log Format access line request\-: a pointer to a structure to hold parsed data
+
+
+\begin{DoxyParams}{Parameters}
+{\em line} & Char $\ast$ that is the log line to be parsed \\
+\hline
+{\em out\-Request} & this is a pointer to the struct which holds the parsed data\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success 1 on failure 
+\end{DoxyReturn}
+\hypertarget{parser_8c_ad82597572726f78dc49230530eb22f50}{\index{parser.\-c@{parser.\-c}!parse\-\_\-time@{parse\-\_\-time}}
+\index{parse\-\_\-time@{parse\-\_\-time}!parser.c@{parser.\-c}}
+\subsubsection[{parse\-\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}time\-\_\-t parse\-\_\-time (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{parser_8c_ad82597572726f78dc49230530eb22f50}
+\subsubsection*{Parcer.\-c }
+
+This Module is designed to take a standard apache log line and split it up into its various feilds and places them into a struct
+
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: Parse Time }
+
+input\-: a string that is the apache format time
+
+Parse\-\_\-time taked an imput string in the standard apache log format and converts it into a time\-\_\-t it does this by puting each field into a tm struct then converting.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & this is a char $\ast$ of the time that will be converted to time\-\_\-t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a time\-\_\-t representation of the time 
+\end{DoxyReturn}
+\hypertarget{parser_8c_af94af19a92d0c521eb285421838ad459}{\index{parser.\-c@{parser.\-c}!slice@{slice}}
+\index{slice@{slice}!parser.c@{parser.\-c}}
+\subsubsection[{slice}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ slice (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{line, }
+\item[{int}]{so, }
+\item[{int}]{eo}
+\end{DoxyParamCaption}
+)}}\label{parser_8c_af94af19a92d0c521eb285421838ad459}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: slice }
+
+\begin{DoxyReturn}{Returns}
+a slice of given string from start offset to end offset
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em line} & a char pointer to be sliced \\
+\hline
+{\em so} & the start offset (inclusive) \\
+\hline
+{\em eo} & the end offset (inclusive) \\
+\hline
+\end{DoxyParams}
+\hypertarget{parser_8c_a74f1b68773a876db16036ca6b813df6d}{\index{parser.\-c@{parser.\-c}!stripreq@{stripreq}}
+\index{stripreq@{stripreq}!parser.c@{parser.\-c}}
+\subsubsection[{stripreq}]{\setlength{\rightskip}{0pt plus 5cm}char $\ast$ stripreq (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{input\-String}
+\end{DoxyParamCaption}
+)}}\label{parser_8c_a74f1b68773a876db16036ca6b813df6d}
+\subsubsection*{F\-U\-C\-T\-I\-O\-N\-: stripreq }
+
+returns a req string that has its first and last part stripped off this is done so to make the analisys is easier.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\-String} & this is the inputed string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+returns the new string 
+\end{DoxyReturn}

@@ -1,0 +1,50 @@
+\hypertarget{analysis_8h}{\section{analysis.\-h File Reference}
+\label{analysis_8h}\index{analysis.\-h@{analysis.\-h}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}core.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{analysis_8h_a00d3a4e315de592e166c99568b730322}{manage\-\_\-data} ()
+\item 
+int \hyperlink{analysis_8h_aec6c24b6bbbbb79fd6f473ab1c060b37}{analyze} (\hyperlink{struct_buffer}{Buffer} $\ast$buffer)
+\item 
+int \hyperlink{analysis_8h_a6bb914bbec8325bdac6c83978fb699e3}{is\-\_\-injection} (char $\ast$request)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{analysis_8h_aec6c24b6bbbbb79fd6f473ab1c060b37}{\index{analysis.\-h@{analysis.\-h}!analyze@{analyze}}
+\index{analyze@{analyze}!analysis.h@{analysis.\-h}}
+\subsubsection[{analyze}]{\setlength{\rightskip}{0pt plus 5cm}int analyze (
+\begin{DoxyParamCaption}
+\item[{{\bf Buffer} $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{analysis_8h_aec6c24b6bbbbb79fd6f473ab1c060b37}
+\hypertarget{analysis_8h_a6bb914bbec8325bdac6c83978fb699e3}{\index{analysis.\-h@{analysis.\-h}!is\-\_\-injection@{is\-\_\-injection}}
+\index{is\-\_\-injection@{is\-\_\-injection}!analysis.h@{analysis.\-h}}
+\subsubsection[{is\-\_\-injection}]{\setlength{\rightskip}{0pt plus 5cm}int is\-\_\-injection (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{analysis_8h_a6bb914bbec8325bdac6c83978fb699e3}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: is\-\_\-injection }
+
+Determines if the given c-\/style string contains any phpmyadmin injections
+
+
+\begin{DoxyParams}{Parameters}
+{\em char$\ast$} & C-\/style string to be tested \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int T\-R\-U\-E (1) or F\-A\-L\-S\-E (0) 
+\end{DoxyReturn}
+\hypertarget{analysis_8h_a00d3a4e315de592e166c99568b730322}{\index{analysis.\-h@{analysis.\-h}!manage\-\_\-data@{manage\-\_\-data}}
+\index{manage\-\_\-data@{manage\-\_\-data}!analysis.h@{analysis.\-h}}
+\subsubsection[{manage\-\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ manage\-\_\-data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{analysis_8h_a00d3a4e315de592e166c99568b730322}

@@ -1,0 +1,178 @@
+\hypertarget{core_8h}{\section{core.\-h File Reference}
+\label{core_8h}\index{core.\-h@{core.\-h}}
+}
+{\ttfamily \#include $<$time.\-h$>$}\\*
+{\ttfamily \#include $<$regex.\-h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_request}{Request}
+\item 
+struct \hyperlink{struct_buffer}{Buffer}
+\item 
+struct \hyperlink{struct_statistics}{Statistics}
+\item 
+struct \hyperlink{struct_queue404}{Queue404}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{core_8h_ad72dbcf6d0153db1b8d8a58001feed83}{D\-E\-B\-U\-G}~0
+\item 
+\#define \hyperlink{core_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\-R\-U\-E}~1
+\item 
+\#define \hyperlink{core_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\-A\-L\-S\-E}~0
+\item 
+\#define \hyperlink{core_8h_a6b20d41d6252e9871430c242cb1a56e7}{B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}~1024
+\item 
+\#define \hyperlink{core_8h_af0f2173e3b202ddf5756531b4471dcb2}{M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H}~16384
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{core_8h_aa86af066a6b49bc87c0d3ce420494ecb}{buffer\-\_\-init} (\hyperlink{struct_buffer}{Buffer} $\ast$)
+\item 
+void \hyperlink{core_8h_a17a65943f67c8dc3e65bf5848959bcde}{buffer\-\_\-free} (\hyperlink{struct_buffer}{Buffer} $\ast$)
+\item 
+int \hyperlink{core_8h_a660404bd85a6b1235159f5762f070b7f}{req\-\_\-init} (\hyperlink{struct_request}{Request} $\ast$)
+\item 
+int \hyperlink{core_8h_a48652ca0f09e813764a7575676807caa}{req\-\_\-null} (\hyperlink{struct_request}{Request} $\ast$)
+\item 
+void \hyperlink{core_8h_adaa79c19064471c4a35b523da85659b8}{req\-\_\-free} (\hyperlink{struct_request}{Request} $\ast$)
+\item 
+int \hyperlink{core_8h_ac7417ea86753aa3e9fb3ea5d7d613aad}{log\-\_\-readline} (F\-I\-L\-E $\ast$, char $\ast$, regex\-\_\-t $\ast$)
+\item 
+int \hyperlink{core_8h_a54702c0d82e8f942023b18d41fee1d5b}{delete\-\_\-output\-\_\-files} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_buffer}{Buffer} \hyperlink{core_8h_ae2b3761e1e153585f2ef5940f6c7797a}{buffer1}
+\item 
+\hyperlink{struct_buffer}{Buffer} \hyperlink{core_8h_a554ae6d24598dfc189abfd9204e536b6}{buffer2}
+\item 
+\hyperlink{struct_statistics}{Statistics} \hyperlink{core_8h_a68b3938b5f1e9a2cee31af9092921527}{total\-Stats}
+\item 
+\hyperlink{struct_queue404}{Queue404} \hyperlink{core_8h_a84a08ab0df35ad3a04b30d49296b22fd}{queue404}
+\item 
+int \hyperlink{core_8h_a585494cabe195b25d97415b9c8fa19c7}{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{core_8h_a6b20d41d6252e9871430c242cb1a56e7}{\index{core.\-h@{core.\-h}!B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E@{B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}}
+\index{B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E@{B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}!core.h@{core.\-h}}
+\subsubsection[{B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E~1024}}\label{core_8h_a6b20d41d6252e9871430c242cb1a56e7}
+\hypertarget{core_8h_ad72dbcf6d0153db1b8d8a58001feed83}{\index{core.\-h@{core.\-h}!D\-E\-B\-U\-G@{D\-E\-B\-U\-G}}
+\index{D\-E\-B\-U\-G@{D\-E\-B\-U\-G}!core.h@{core.\-h}}
+\subsubsection[{D\-E\-B\-U\-G}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-E\-B\-U\-G~0}}\label{core_8h_ad72dbcf6d0153db1b8d8a58001feed83}
+\hypertarget{core_8h_aa93f0eb578d23995850d61f7d61c55c1}{\index{core.\-h@{core.\-h}!F\-A\-L\-S\-E@{F\-A\-L\-S\-E}}
+\index{F\-A\-L\-S\-E@{F\-A\-L\-S\-E}!core.h@{core.\-h}}
+\subsubsection[{F\-A\-L\-S\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\-A\-L\-S\-E~0}}\label{core_8h_aa93f0eb578d23995850d61f7d61c55c1}
+\hypertarget{core_8h_af0f2173e3b202ddf5756531b4471dcb2}{\index{core.\-h@{core.\-h}!M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H}!core.h@{core.\-h}}
+\subsubsection[{M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X\-\_\-\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H~16384}}\label{core_8h_af0f2173e3b202ddf5756531b4471dcb2}
+\hypertarget{core_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{\index{core.\-h@{core.\-h}!T\-R\-U\-E@{T\-R\-U\-E}}
+\index{T\-R\-U\-E@{T\-R\-U\-E}!core.h@{core.\-h}}
+\subsubsection[{T\-R\-U\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\-R\-U\-E~1}}\label{core_8h_aa8cecfc5c5c054d2875c03e77b7be15d}
+
+
+\subsection{Function Documentation}
+\hypertarget{core_8h_a17a65943f67c8dc3e65bf5848959bcde}{\index{core.\-h@{core.\-h}!buffer\-\_\-free@{buffer\-\_\-free}}
+\index{buffer\-\_\-free@{buffer\-\_\-free}!core.h@{core.\-h}}
+\subsubsection[{buffer\-\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void buffer\-\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf Buffer} $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{core_8h_a17a65943f67c8dc3e65bf5848959bcde}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: buffer\-\_\-free }
+
+frees memory allocated to buffer \hypertarget{core_8h_aa86af066a6b49bc87c0d3ce420494ecb}{\index{core.\-h@{core.\-h}!buffer\-\_\-init@{buffer\-\_\-init}}
+\index{buffer\-\_\-init@{buffer\-\_\-init}!core.h@{core.\-h}}
+\subsubsection[{buffer\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int buffer\-\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf Buffer} $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{core_8h_aa86af066a6b49bc87c0d3ce420494ecb}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: buffer\-\_\-init }
+
+initialize buffer to store each line of the log
+
+\begin{DoxyReturn}{Returns}
+a pointer to a buffer structure on success, N\-U\-L\-L on failure 
+\end{DoxyReturn}
+\hypertarget{core_8h_a54702c0d82e8f942023b18d41fee1d5b}{\index{core.\-h@{core.\-h}!delete\-\_\-output\-\_\-files@{delete\-\_\-output\-\_\-files}}
+\index{delete\-\_\-output\-\_\-files@{delete\-\_\-output\-\_\-files}!core.h@{core.\-h}}
+\subsubsection[{delete\-\_\-output\-\_\-files}]{\setlength{\rightskip}{0pt plus 5cm}int delete\-\_\-output\-\_\-files (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{core_8h_a54702c0d82e8f942023b18d41fee1d5b}
+\hypertarget{core_8h_ac7417ea86753aa3e9fb3ea5d7d613aad}{\index{core.\-h@{core.\-h}!log\-\_\-readline@{log\-\_\-readline}}
+\index{log\-\_\-readline@{log\-\_\-readline}!core.h@{core.\-h}}
+\subsubsection[{log\-\_\-readline}]{\setlength{\rightskip}{0pt plus 5cm}int log\-\_\-readline (
+\begin{DoxyParamCaption}
+\item[{F\-I\-L\-E $\ast$}]{logfile, }
+\item[{char $\ast$}]{line, }
+\item[{regex\-\_\-t $\ast$}]{regex}
+\end{DoxyParamCaption}
+)}}\label{core_8h_ac7417ea86753aa3e9fb3ea5d7d613aad}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: log\-\_\-readline }
+
+reads next line from provided log file
+
+logfile\-: the log file pointer
+
+return\-: a newline terminated string containing the next line from file \hypertarget{core_8h_adaa79c19064471c4a35b523da85659b8}{\index{core.\-h@{core.\-h}!req\-\_\-free@{req\-\_\-free}}
+\index{req\-\_\-free@{req\-\_\-free}!core.h@{core.\-h}}
+\subsubsection[{req\-\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void req\-\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf Request} $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{core_8h_adaa79c19064471c4a35b523da85659b8}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: req\-\_\-free }
+
+frees individual fields of provided request
+
+request\-: \hyperlink{struct_request}{Request} structure to free \hypertarget{core_8h_a660404bd85a6b1235159f5762f070b7f}{\index{core.\-h@{core.\-h}!req\-\_\-init@{req\-\_\-init}}
+\index{req\-\_\-init@{req\-\_\-init}!core.h@{core.\-h}}
+\subsubsection[{req\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int req\-\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf Request} $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{core_8h_a660404bd85a6b1235159f5762f070b7f}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: req\-\_\-init }
+
+allocates memory for a request
+
+request\-: \hyperlink{struct_request}{Request} structure requiring memory
+
+return\-: 0 on success \hypertarget{core_8h_a48652ca0f09e813764a7575676807caa}{\index{core.\-h@{core.\-h}!req\-\_\-null@{req\-\_\-null}}
+\index{req\-\_\-null@{req\-\_\-null}!core.h@{core.\-h}}
+\subsubsection[{req\-\_\-null}]{\setlength{\rightskip}{0pt plus 5cm}int req\-\_\-null (
+\begin{DoxyParamCaption}
+\item[{{\bf Request} $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{core_8h_a48652ca0f09e813764a7575676807caa}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: req\-\_\-null }
+
+tombstones a request structure
+
+return\-: 0 on success 
+
+\subsection{Variable Documentation}
+\hypertarget{core_8h_ae2b3761e1e153585f2ef5940f6c7797a}{\index{core.\-h@{core.\-h}!buffer1@{buffer1}}
+\index{buffer1@{buffer1}!core.h@{core.\-h}}
+\subsubsection[{buffer1}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Buffer} buffer1}}\label{core_8h_ae2b3761e1e153585f2ef5940f6c7797a}
+\hypertarget{core_8h_a554ae6d24598dfc189abfd9204e536b6}{\index{core.\-h@{core.\-h}!buffer2@{buffer2}}
+\index{buffer2@{buffer2}!core.h@{core.\-h}}
+\subsubsection[{buffer2}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Buffer} buffer2}}\label{core_8h_a554ae6d24598dfc189abfd9204e536b6}
+\hypertarget{core_8h_a585494cabe195b25d97415b9c8fa19c7}{\index{core.\-h@{core.\-h}!M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H@{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}}
+\index{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H@{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}!core.h@{core.\-h}}
+\subsubsection[{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}]{\setlength{\rightskip}{0pt plus 5cm}int M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}}\label{core_8h_a585494cabe195b25d97415b9c8fa19c7}
+\hypertarget{core_8h_a84a08ab0df35ad3a04b30d49296b22fd}{\index{core.\-h@{core.\-h}!queue404@{queue404}}
+\index{queue404@{queue404}!core.h@{core.\-h}}
+\subsubsection[{queue404}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Queue404} queue404}}\label{core_8h_a84a08ab0df35ad3a04b30d49296b22fd}
+\hypertarget{core_8h_a68b3938b5f1e9a2cee31af9092921527}{\index{core.\-h@{core.\-h}!total\-Stats@{total\-Stats}}
+\index{total\-Stats@{total\-Stats}!core.h@{core.\-h}}
+\subsubsection[{total\-Stats}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Statistics} total\-Stats}}\label{core_8h_a68b3938b5f1e9a2cee31af9092921527}

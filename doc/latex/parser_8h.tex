@@ -1,0 +1,60 @@
+\hypertarget{parser_8h}{\section{parser.\-h File Reference}
+\label{parser_8h}\index{parser.\-h@{parser.\-h}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{parser_8h_a435ddc6ce5c1f80d0a3624c431f2b2fe}{parse\-\_\-line} (char $\ast$, \hyperlink{struct_request}{Request} $\ast$)
+\item 
+char $\ast$ \hyperlink{parser_8h_a7da9daf27699b6d40caf5863307a3a24}{slice} (char $\ast$, int, int)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{parser_8h_a435ddc6ce5c1f80d0a3624c431f2b2fe}{\index{parser.\-h@{parser.\-h}!parse\-\_\-line@{parse\-\_\-line}}
+\index{parse\-\_\-line@{parse\-\_\-line}!parser.h@{parser.\-h}}
+\subsubsection[{parse\-\_\-line}]{\setlength{\rightskip}{0pt plus 5cm}int parse\-\_\-line (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{line, }
+\item[{{\bf Request} $\ast$}]{out\-Request}
+\end{DoxyParamCaption}
+)}}\label{parser_8h_a435ddc6ce5c1f80d0a3624c431f2b2fe}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: parse\-\_\-line }
+
+parses a N\-C\-S\-A Common Log Format string into a \hyperlink{struct_request}{Request} structure
+
+line\-: a string containing a N\-C\-S\-A Common Log Format access line request\-: a pointer to a structure to hold parsed data
+
+
+\begin{DoxyParams}{Parameters}
+{\em line} & Char $\ast$ that is the log line to be parsed \\
+\hline
+{\em out\-Request} & this is a pointer to the struct which holds the parsed data\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success 1 on failure 
+\end{DoxyReturn}
+\hypertarget{parser_8h_a7da9daf27699b6d40caf5863307a3a24}{\index{parser.\-h@{parser.\-h}!slice@{slice}}
+\index{slice@{slice}!parser.h@{parser.\-h}}
+\subsubsection[{slice}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ slice (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{line, }
+\item[{int}]{so, }
+\item[{int}]{eo}
+\end{DoxyParamCaption}
+)}}\label{parser_8h_a7da9daf27699b6d40caf5863307a3a24}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: slice }
+
+\begin{DoxyReturn}{Returns}
+a slice of given string from start offset to end offset
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em line} & a char pointer to be sliced \\
+\hline
+{\em so} & the start offset (inclusive) \\
+\hline
+{\em eo} & the end offset (inclusive) \\
+\hline
+\end{DoxyParams}

@@ -283,17 +283,19 @@ main(int argc, char** argv){
         exit(1);
     }
 
+    // Write general stats to file
     fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
                                         totalStats.total404,
                                         totalStats.totalInjections,
                                         totalStats.totalVisits);
-
+    // Write hours to file
     for(i = 0; i < 24;i++)
     {
         fprintf(statsFile, "%lld;", totalStats.hourlyAccess[i]);
     }
     fprintf(statsFile, "\n");
 
+    // Write Months to file
     for(i = 0; i < 12;i++)
     {
         fprintf(statsFile, "%lld;", totalStats.monthlyAccess[i]);

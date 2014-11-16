@@ -1,0 +1,165 @@
+\hypertarget{sss4910_8c}{\section{sss4910.\-c File Reference}
+\label{sss4910_8c}\index{sss4910.\-c@{sss4910.\-c}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$pthread.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$unistd.\-h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\-h$>$}\\*
+{\ttfamily \#include $<$regex.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}core.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}parser.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}analysis.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}gopt.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{sss4910_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, char $\ast$$\ast$argv)
+\item 
+int \hyperlink{sss4910_8c_ac87c8bb990dcb54d1dd40882600620e3}{buffer\-\_\-init} (\hyperlink{struct_buffer}{Buffer} $\ast$buffer)
+\item 
+void \hyperlink{sss4910_8c_a3852445615e4fc1cbd983cab4ec1b47e}{buffer\-\_\-free} (\hyperlink{struct_buffer}{Buffer} $\ast$buffer)
+\item 
+int \hyperlink{sss4910_8c_a1ed7a787843cb2ef90691f5705873392}{req\-\_\-init} (\hyperlink{struct_request}{Request} $\ast$request)
+\item 
+int \hyperlink{sss4910_8c_a098b7e09d434a1cf9dfc91f7ce682cce}{req\-\_\-null} (\hyperlink{struct_request}{Request} $\ast$request)
+\item 
+void \hyperlink{sss4910_8c_a951f08daa9603a6e1d5c0e8e1d2e9d7d}{req\-\_\-free} (\hyperlink{struct_request}{Request} $\ast$request)
+\item 
+int \hyperlink{sss4910_8c_aa65eef80cf47446f40cc2e12b4e05dd1}{log\-\_\-readline} (F\-I\-L\-E $\ast$logfile, char $\ast$line, regex\-\_\-t $\ast$regex)
+\item 
+int \hyperlink{sss4910_8c_a54702c0d82e8f942023b18d41fee1d5b}{delete\-\_\-output\-\_\-files} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_buffer}{Buffer} \hyperlink{sss4910_8c_ae2b3761e1e153585f2ef5940f6c7797a}{buffer1}
+\item 
+\hyperlink{struct_buffer}{Buffer} \hyperlink{sss4910_8c_a554ae6d24598dfc189abfd9204e536b6}{buffer2}
+\item 
+\hyperlink{struct_statistics}{Statistics} \hyperlink{sss4910_8c_a68b3938b5f1e9a2cee31af9092921527}{total\-Stats}
+\item 
+int \hyperlink{sss4910_8c_a585494cabe195b25d97415b9c8fa19c7}{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{sss4910_8c_a3852445615e4fc1cbd983cab4ec1b47e}{\index{sss4910.\-c@{sss4910.\-c}!buffer\-\_\-free@{buffer\-\_\-free}}
+\index{buffer\-\_\-free@{buffer\-\_\-free}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{buffer\-\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void buffer\-\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf Buffer} $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_a3852445615e4fc1cbd983cab4ec1b47e}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: buffer\-\_\-free }
+
+frees memory allocated to buffer \hypertarget{sss4910_8c_ac87c8bb990dcb54d1dd40882600620e3}{\index{sss4910.\-c@{sss4910.\-c}!buffer\-\_\-init@{buffer\-\_\-init}}
+\index{buffer\-\_\-init@{buffer\-\_\-init}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{buffer\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int buffer\-\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf Buffer} $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_ac87c8bb990dcb54d1dd40882600620e3}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: buffer\-\_\-init }
+
+initialize buffer to store each line of the log
+
+\begin{DoxyReturn}{Returns}
+a pointer to a buffer structure on success, N\-U\-L\-L on failure 
+\end{DoxyReturn}
+\hypertarget{sss4910_8c_a54702c0d82e8f942023b18d41fee1d5b}{\index{sss4910.\-c@{sss4910.\-c}!delete\-\_\-output\-\_\-files@{delete\-\_\-output\-\_\-files}}
+\index{delete\-\_\-output\-\_\-files@{delete\-\_\-output\-\_\-files}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{delete\-\_\-output\-\_\-files}]{\setlength{\rightskip}{0pt plus 5cm}int delete\-\_\-output\-\_\-files (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_a54702c0d82e8f942023b18d41fee1d5b}
+\hypertarget{sss4910_8c_aa65eef80cf47446f40cc2e12b4e05dd1}{\index{sss4910.\-c@{sss4910.\-c}!log\-\_\-readline@{log\-\_\-readline}}
+\index{log\-\_\-readline@{log\-\_\-readline}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{log\-\_\-readline}]{\setlength{\rightskip}{0pt plus 5cm}int log\-\_\-readline (
+\begin{DoxyParamCaption}
+\item[{F\-I\-L\-E $\ast$}]{logfile, }
+\item[{char $\ast$}]{line, }
+\item[{regex\-\_\-t $\ast$}]{regex}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_aa65eef80cf47446f40cc2e12b4e05dd1}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: log\-\_\-readline }
+
+reads next line from provided log file
+
+logfile\-: the log file pointer
+
+return\-: a newline terminated string containing the next line from file \hypertarget{sss4910_8c_a3c04138a5bfe5d72780bb7e82a18e627}{\index{sss4910.\-c@{sss4910.\-c}!main@{main}}
+\index{main@{main}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$$\ast$}]{argv}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_a3c04138a5bfe5d72780bb7e82a18e627}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: main }
+
+the entry point of the application
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & the number of command line arguments \\
+\hline
+{\em argv} & the command line arguments, kept as a pointer to a string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on successful completion, -\/1 on failure 
+\end{DoxyReturn}
+\hypertarget{sss4910_8c_a951f08daa9603a6e1d5c0e8e1d2e9d7d}{\index{sss4910.\-c@{sss4910.\-c}!req\-\_\-free@{req\-\_\-free}}
+\index{req\-\_\-free@{req\-\_\-free}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{req\-\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void req\-\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf Request} $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_a951f08daa9603a6e1d5c0e8e1d2e9d7d}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: req\-\_\-free }
+
+frees individual fields of provided request
+
+request\-: \hyperlink{struct_request}{Request} structure to free \hypertarget{sss4910_8c_a1ed7a787843cb2ef90691f5705873392}{\index{sss4910.\-c@{sss4910.\-c}!req\-\_\-init@{req\-\_\-init}}
+\index{req\-\_\-init@{req\-\_\-init}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{req\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}int req\-\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf Request} $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_a1ed7a787843cb2ef90691f5705873392}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: req\-\_\-init }
+
+allocates memory for a request
+
+request\-: \hyperlink{struct_request}{Request} structure requiring memory
+
+return\-: 0 on success \hypertarget{sss4910_8c_a098b7e09d434a1cf9dfc91f7ce682cce}{\index{sss4910.\-c@{sss4910.\-c}!req\-\_\-null@{req\-\_\-null}}
+\index{req\-\_\-null@{req\-\_\-null}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{req\-\_\-null}]{\setlength{\rightskip}{0pt plus 5cm}int req\-\_\-null (
+\begin{DoxyParamCaption}
+\item[{{\bf Request} $\ast$}]{request}
+\end{DoxyParamCaption}
+)}}\label{sss4910_8c_a098b7e09d434a1cf9dfc91f7ce682cce}
+\subsubsection*{F\-U\-N\-C\-T\-I\-O\-N\-: req\-\_\-null }
+
+tombstones a request structure
+
+return\-: 0 on success 
+
+\subsection{Variable Documentation}
+\hypertarget{sss4910_8c_ae2b3761e1e153585f2ef5940f6c7797a}{\index{sss4910.\-c@{sss4910.\-c}!buffer1@{buffer1}}
+\index{buffer1@{buffer1}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{buffer1}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Buffer} buffer1}}\label{sss4910_8c_ae2b3761e1e153585f2ef5940f6c7797a}
+\hypertarget{sss4910_8c_a554ae6d24598dfc189abfd9204e536b6}{\index{sss4910.\-c@{sss4910.\-c}!buffer2@{buffer2}}
+\index{buffer2@{buffer2}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{buffer2}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Buffer} buffer2}}\label{sss4910_8c_a554ae6d24598dfc189abfd9204e536b6}
+\hypertarget{sss4910_8c_a585494cabe195b25d97415b9c8fa19c7}{\index{sss4910.\-c@{sss4910.\-c}!M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H@{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}}
+\index{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H@{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}]{\setlength{\rightskip}{0pt plus 5cm}int M\-A\-S\-T\-E\-R\-\_\-\-S\-W\-I\-T\-C\-H}}\label{sss4910_8c_a585494cabe195b25d97415b9c8fa19c7}
+\hypertarget{sss4910_8c_a68b3938b5f1e9a2cee31af9092921527}{\index{sss4910.\-c@{sss4910.\-c}!total\-Stats@{total\-Stats}}
+\index{total\-Stats@{total\-Stats}!sss4910.c@{sss4910.\-c}}
+\subsubsection[{total\-Stats}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Statistics} total\-Stats}}\label{sss4910_8c_a68b3938b5f1e9a2cee31af9092921527}
