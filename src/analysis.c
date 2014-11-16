@@ -9,8 +9,12 @@
 
 
 /*
+    FUNCTION: manage_data
+    ---------------------
     Monitors the availability of the buffers
     and chooses which buffer to perform analysis on
+
+    @return void*
 */
 void * manage_data()
 {
@@ -77,13 +81,15 @@ void * manage_data()
 }
 
 /*
+    FUNCTION: analyze
+    -----------------
     Does a linear scan of all elements in buffer
     and performs a series of checks to build
     statistics and structures to help pinpoint
     any potential intrusions
 
-    INPUT: Buffer *
-    OUTPUT: int (bool) success/failure
+    @param Buffer* buffer to be analyzed
+    @return int 0 on success; 1 on failure
 */
 int analyze(Buffer *buffer)
 {
@@ -94,6 +100,13 @@ int analyze(Buffer *buffer)
     int total200        = 0;
     int totalInjections = 0;
     int totalVisits     = 0;
+
+    // Open file to write 404 entries to
+    FILE *file404 = fopen("404Data.txt", "a");
+    if(file404 == NULL)
+    {
+        return 1;
+    }
 
     int x;
     for(x = 0; x < buffer->currentSize; x++)
@@ -125,8 +138,8 @@ int analyze(Buffer *buffer)
                 totalInjections++;    
             }
 
-            // Add 404 to queue404 
-            FILE *file404 = fopen("404Data.txt", "a");
+            // Add 404 to 404Data file 
+            
             fprintf(file404, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
                                                                  buffer->requests[x].clientId, 
                                                                  buffer->requests[x].userId, 
@@ -137,14 +150,13 @@ int analyze(Buffer *buffer)
                                                                  buffer->requests[x].dataSize,
                                                                  buffer->requests[x].referer,
                                                                  buffer->requests[x].userAgent);
-            fclose(file404);
-            /*memcpy(&queue404.requests[queue404.currentIndex], &buffer->requests[x], sizeof(Request));
-            queue404.currentIndex++;
-            queue404.currentSize++;*/
+            
         }
 
         totalVisits++;
     }
+
+    fclose(file404);
 
     #if DEBUG==1
         printf("\nBuffer%d\n", buffer->id);
@@ -160,10 +172,19 @@ int analyze(Buffer *buffer)
     totalStats.totalInjections += totalInjections;
     totalStats.totalVisits     += totalVisits;
 
-    return TRUE;
+    return 0;
 
 }
 
+/**
+    FUNCTION: is_injection
+    ----------------------
+    Determines if the given c-style string contains 
+    any phpmyadmin injections
+
+    @param char* C-style string to be tested
+    @return int TRUE (1) or FALSE (0)
+*/
 int is_injection(char * request)
 {
     if(strcmp(request, "/PHPMYADMIN/scripts/setup.php") == 0)
