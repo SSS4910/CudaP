@@ -29,28 +29,28 @@
 
   <body>
 
-    <!-- Navbar
-    ================================================== -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">CS4910 - Log Processing Dashboard</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right pull-right">
-            <li><a href="#" id="homeButton">Home</a></li>
+            <li><a href="./index.html" id="homeButton">Home</a></li>
             <li><a href="#" id="aboutButton">About</a></li>
             <li class="dropdown" id="menulogin">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">Login▼</a>
             <div class="dropdown-menu" style="padding:17px;">
-              <form class="form" id="formLogin" action="test.php" method="post">
+              <form class="form" id="formLogin">
                 <input name="username" id="username" placeholder="Username" type="text">
                 <input name="password" id="password" placeholder="Password" type="password"><br>
-                <button type="submit" id="btnLogin" class="btn">Login</button>
+                <button type="button" id="btnLogin" class="btn">Login</button>
               </form>
             </div>
             </li>
@@ -59,35 +59,29 @@
       </div>
     </nav>
 
-    <!-- Carousel
-    ================================================== -->
-    <div id="main-carousel" class="carousel slide" data-ride="carousel">
-      <ol class="carousel-indicators">
-        <li data-target="#main-carousel" data-slide-to="0" class="active"></li>
-        <li data-target="#main-carousel" data-slide-to="1"></li>
-      </ol>
-     
-      <div class="carousel-inner">
-        <div class="item active">
-          <img src="http://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-24013.jpg" alt="...">
-          <div class="carousel-caption">
-              <h3>Home</h3>
-          </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Settings<span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Output</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="#analysis1">Analysis #1</a></li>
+            <li><a href="">Analysis #2</a></li>
+            <li><a href="">Analysis #3</a></li>
+            <li><a href="">Analysis #4</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Profile</a></li>
+          </ul>
         </div>
-        <div class="item">
-          <img src="http://placehold.it/1200x315" alt="...">
-          <div class="carousel-caption">
-              <h3>About</h3>
-          </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Dashboard</h1>
+          <p id="content"></p>
         </div>
       </div>
-     
-      <a class="left carousel-control" href="#main-carousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-      </a>
-      <a class="right carousel-control" href="#main-carousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-      </a>
     </div>
 
     <!-- Bootstrap core JavaScript
@@ -101,10 +95,6 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        $('#content').load('home.html');
-        $('#homeButton').on('click', function() {
-          $('#content').load('home.html');
-        });
         $('#aboutButton').on('click', function() {
           $('#content').load('about.html');
         });
