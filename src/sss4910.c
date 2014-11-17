@@ -17,6 +17,7 @@
 Buffer buffer1;
 Buffer buffer2;
 Statistics totalStats;
+UniqueRequests uniqueRequests;
 int MASTER_SWITCH;
 
 /**
@@ -121,6 +122,10 @@ main(int argc, char** argv){
         debug_write("buffer2 allocation failure, aborting!\n");
         return -1;
     }
+
+    // initialize uniqueRequests
+    uniqueRequests.urls = (URL *)malloc(sizeof(URL)*MAX_UNIQUE_URLS);
+    uniqueRequests.currentSize = 0;
 
     // initialize buffer values
     buffer1.id = 1;
@@ -317,6 +322,14 @@ main(int argc, char** argv){
         fprintf(stderr, "\n");
     #endif
 
+
+    fprintf(stderr, "Total number of unique requests: %d\n", uniqueRequests.currentSize);
+
+    /*for(i = 0; i < uniqueRequests.currentSize; ++i)
+    {
+        fprintf(stderr, "URL: %s Num visits: %d\n", uniqueRequests.urls[i].url, uniqueRequests.urls[i].occurances);
+    }*/
+
     //cleanup
     buffer_free(&buffer1);
     buffer_free(&buffer2);
@@ -324,9 +337,17 @@ main(int argc, char** argv){
     fclose(statsFile);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
+    //free(uniqueRequests);
+    regfree(&regex);
     fclose(errorFile);
     debug_write("Closing access.log file...\n");
     close_debug_file();
+
+    for(i = 0; i < uniqueRequests.currentSize; i++)
+    {
+        free(uniqueRequests.urls[i].url);
+    }
+    free(uniqueRequests.urls);
 
     printf("\nFinished Analysis\n\n");
     return 0;

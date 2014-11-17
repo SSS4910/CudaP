@@ -8,8 +8,9 @@
 #define DEBUG 0
 #define TRUE 1
 #define FALSE 0
-#define BUFFER_SIZE 1024//327680
+#define BUFFER_SIZE 2048//327680
 #define MAX_LINE_LENGTH 16384
+#define MAX_UNIQUE_URLS 200000
 
 // Structures
 typedef struct{
@@ -43,10 +44,14 @@ typedef struct{
 } Statistics;
 
 typedef struct{
-    int currentIndex;
+    int occurances;
+    char *url;
+} URL;
+
+typedef struct{
     int currentSize;
-    Request *requests;
-} Queue404;
+    URL *urls;
+} UniqueRequests;
 
 // Function Prototypes
 int buffer_init(Buffer *);
@@ -56,12 +61,13 @@ int req_null(Request *);
 void req_free(Request *);
 int log_readline(FILE *, char *, regex_t *);
 int delete_output_files();
+int query_url(char *);
 
 // Global Variables
 extern Buffer buffer1;
 extern Buffer buffer2;
 extern Statistics totalStats;
-extern Queue404 queue404;
+extern UniqueRequests uniqueRequests;
 extern int MASTER_SWITCH;
 
 #endif
