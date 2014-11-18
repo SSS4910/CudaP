@@ -296,6 +296,10 @@ main(int argc, char** argv){
         exit(1);
     }
     
+    UniqueRequests topRequests; // will need memory freed
+    get_top_unique_requests(10, &topRequests);
+    write_top_requests(&topRequests);
+
     fprintf(stderr, "Total number of unique requests: %d\n", uniqueRequests.currentSize);
 
     //cleanup
@@ -549,5 +553,108 @@ int write_general_stats()
 
     fclose(statsFile);
 
+    return 0;
+}
+
+/**
+    FUNCTION: write_top_unique_requests
+    -----------------------------------
+    Writes top N requests to an output file
+    @return int 0 on success; 1 on failure
+*/
+int get_top_unique_requests(int N, UniqueRequests *topRequests)
+{
+    topRequests->urls = (URL *)malloc(sizeof(URL) * N); 
+    topRequests->currentSize = N;
+
+    // initialize top requests
+    int x;
+    for(x = 0; x < N; x++)
+    {
+        topRequests->urls[x].url = (char *)malloc(sizeof(char) * 2000);
+        strcpy(topRequests->urls[x].url, "***");
+        topRequests->urls[x].occurances = 0;
+    }
+
+    // Compare all unique requests
+    for(x = 0; x < uniqueRequests.currentSize; x++)
+    {
+        cmp_top_requests(&uniqueRequests.urls[x], topRequests);
+    }
+
+    /* WRITE TOP REQUESTS TO FILE */
+
+    #if DEBUG==2 //print top results
+    for(x = 0; x < topRequests->currentSize; x++)
+    {
+        fprintf(stderr, "%d: %s x%d\n", x, topRequests->urls[x].url, topRequests->urls[x].occurances);
+    }
+    #endif
+
+    return 0;
+}
+
+/**
+    FUNCTION: cmp_top_requests
+    --------------------------
+    Compares a URL strut to a list of other URLs and determines if
+    the given URL has more hits than any URLs in the list.
+    @param URL* the target URL
+    @param UniqueRequests* list of top visited URLs
+    @return int 0 on success; 1 on failure
+*/
+int cmp_top_requests(URL *url, UniqueRequests *topRequests)
+{
+    URL temp;
+    temp.url = (char *)malloc(sizeof(char) * 2000);
+    temp.occurances = 0;
+
+    int x;
+    for(x = 0; x < topRequests->currentSize; x++)
+    {
+        // determine if url has more visit than current top requests
+        if(url->occurances > topRequests->urls[x].occurances)
+        {
+            // put current URL in temp
+            strcpy(temp.url, topRequests->urls[x].url);
+            temp.occurances = topRequests->urls[x].occurances;
+
+            // add new URL to top requests
+            strcpy(topRequests->urls[x].url, url->url);
+            topRequests->urls[x].occurances = url->occurances;
+
+            // check if previous URL is still a top request
+            cmp_top_requests(&temp, topRequests);
+
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+/**
+    FUNCTION: write_top_requests
+    ----------------------------
+    Writes the top requests/UniqueRequest struct to an output file:
+    topRequests.txt
+    @param UniqueRequests* the list to be written to file
+    @return 0 on success; 1 on failure
+*/
+int write_top_requests(UniqueRequests *topRequests)
+{
+    FILE *outFile;
+    if((outFile = fopen("topRequests.txt", "w")) == NULL)
+    {
+        return 1;
+    }
+
+    int x;
+    for(x = 0; x < topRequests->currentSize; x++)
+    {
+        fprintf(outFile, "%s;%d\n", topRequests->urls[x].url, topRequests->urls[x].occurances);
+    }
+
+    fclose(outFile);
     return 0;
 }
