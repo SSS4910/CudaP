@@ -51,6 +51,7 @@ main(int argc, char** argv){
     {
         fprintf(stderr, "Regular expression failed to compile\n");
         debug_write("Regular expression failed to compile\n");
+        close_debug_file();
         exit(1);
     }
 
@@ -58,6 +59,7 @@ main(int argc, char** argv){
     if(parse_opt(argc, argv, &fileName)  != TRUE)
     {
         fprintf(stderr, "Non-execution option selected\n");
+        close_debug_file();
         exit(0);
     }
     fprintf(stderr, "Analyzing file: %s\n", fileName);
@@ -70,6 +72,7 @@ main(int argc, char** argv){
     {
         fprintf(stderr, "Error while deleting output files\n");
         debug_write("Error while deleting output files\n");
+        close_debug_file();
         exit(1);
     }
 
@@ -170,7 +173,9 @@ main(int argc, char** argv){
                 {
                     fprintf(stderr, "Error: reader error: %d in log file\n", lineNum);
                     fprintf(errorFile, "Error: reader error %d\n", lineNum);
-                    /* close all files for clean exit? */
+                    fclose(logfile);
+                    fclose(errorFile);
+                    close_debug_file();
                     exit(1);
                 }
                 
@@ -231,7 +236,9 @@ main(int argc, char** argv){
                 {
                     fprintf(stderr, "Error: unknown reader error: %d in log file\n", lineNum);
                     fprintf(errorFile, "Error: unknown reader error %d\n", lineNum);
-                    /* close all files for clean exit? */
+                    fclose(logfile);
+                    fclose(errorFile);
+                    close_debug_file();
                     exit(1);
                 }
                 
@@ -283,6 +290,9 @@ main(int argc, char** argv){
     if(write_general_stats() != 0)
     {
         fprintf(errorFile, "Error: Unable to write statistics\n");
+        fclose(logfile);
+        fclose(errorFile);
+        close_debug_file();
         exit(1);
     }
     
@@ -291,10 +301,8 @@ main(int argc, char** argv){
     //cleanup
     buffer_free(&buffer1);
     buffer_free(&buffer2);
-    //free(fileName);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
-    //free(uniqueRequests);
     regfree(&regex);
     fclose(errorFile);
     debug_write("Closing access.log file...\n");
