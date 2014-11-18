@@ -280,61 +280,18 @@ main(int argc, char** argv){
     #endif
 
     //Write Statistics to file
-    FILE *statsFile; 
-    if((statsFile = fopen("stats.txt", "w")) == NULL)
+    if(write_general_stats() != 0)
     {
-        debug_write("Unable to create stats.txt file\n");
-        fprintf(errorFile, "Unable to create output file\n");
+        fprintf(errorFile, "Error: Unable to write statistics\n");
         exit(1);
     }
-
-    // Write general stats to file
-    fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
-                                        totalStats.total404,
-                                        totalStats.totalInjections,
-                                        totalStats.totalVisits);
-    // Write hours to file
-    for(i = 0; i < 24;i++)
-    {
-        fprintf(statsFile, "%lld;", totalStats.hourlyAccess[i]);
-    }
-    fprintf(statsFile, "\n");
-
-    // Write Months to file
-    for(i = 0; i < 12;i++)
-    {
-        fprintf(statsFile, "%lld;", totalStats.monthlyAccess[i]);
-    }
-    fprintf(statsFile, "\n");
-
-    #if DEBUG==1
-        // Testing time stats
-        for(i = 0; i < 24;i++)
-        {
-            fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
-        }
-        fprintf(stderr, "\n");
-
-        for(i = 0; i < 12;i++)
-        {
-            fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
-        }
-        fprintf(stderr, "\n");
-    #endif
-
-
+    
     fprintf(stderr, "Total number of unique requests: %d\n", uniqueRequests.currentSize);
-
-    /*for(i = 0; i < uniqueRequests.currentSize; ++i)
-    {
-        fprintf(stderr, "URL: %s Num visits: %d\n", uniqueRequests.urls[i].url, uniqueRequests.urls[i].occurances);
-    }*/
 
     //cleanup
     buffer_free(&buffer1);
     buffer_free(&buffer2);
     //free(fileName);
-    fclose(statsFile);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
     //free(uniqueRequests);
@@ -527,6 +484,62 @@ int delete_output_files()
     }
 
     
+
+    return 0;
+}
+
+/**
+    FUNCTION: write_general_stats
+    -----------------------------
+    Writes the global Statistics struct, totalStats,
+    to an output file, stats.txt.
+*/
+int write_general_stats()
+{
+
+    FILE *statsFile; 
+    if((statsFile = fopen("stats.txt", "w")) == NULL)
+    {
+        debug_write("Unable to create stats.txt file\n");
+        //fprintf(errorFile, "Unable to create output file\n");
+        return 1;
+    }
+
+    fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
+                                        totalStats.total404,
+                                        totalStats.totalInjections,
+                                        totalStats.totalVisits);
+    // Write hours to file
+    int i;
+    for(i = 0; i < 24;i++)
+    {
+        fprintf(statsFile, "%lld;", totalStats.hourlyAccess[i]);
+    }
+    fprintf(statsFile, "\n");
+
+    // Write Months to file
+    for(i = 0; i < 12;i++)
+    {
+        fprintf(statsFile, "%lld;", totalStats.monthlyAccess[i]);
+    }
+    fprintf(statsFile, "\n");
+
+    #if DEBUG==1
+        // Testing time stats
+        for(i = 0; i < 24;i++)
+        {
+            fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
+        }
+        fprintf(stderr, "\n");
+
+        for(i = 0; i < 12;i++)
+        {
+            fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
+        }
+        fprintf(stderr, "\n");
+    #endif
+
+    fclose(statsFile);
 
     return 0;
 }

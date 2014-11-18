@@ -62,6 +62,7 @@ void req_free(Request *);
 int log_readline(FILE *, char *, regex_t *);
 int delete_output_files();
 int query_url(char *);
+int write_general_stats();
 
 // Global Variables
 extern Buffer buffer1;
