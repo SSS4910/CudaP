@@ -296,7 +296,7 @@ main(int argc, char** argv){
         exit(1);
     }
     
-    UniqueRequests topRequests; // will need memory freed
+    UniqueRequests topRequests;
     if(get_top_unique_requests(10, &topRequests) != 0)
     {
         fprintf(stderr, "Error: unable to get top requests\n");
@@ -327,7 +327,11 @@ main(int argc, char** argv){
     fclose(errorFile);
     debug_write("Closing access.log file...\n");
     close_debug_file();
-
+    for(i = 0;i <topRequests.currentSize; i++)
+    {
+        free(topRequests.urls[i].url);
+    }
+    free(topRequests.urls);
     for(i = 0; i < uniqueRequests.currentSize; i++)
     {
         free(uniqueRequests.urls[i].url);
@@ -475,7 +479,12 @@ log_readline(FILE * logfile, char * line, regex_t *regex)
     status = 2;
     return status;
 }
-
+/*FUNCTION: delete_output_files
+ *----------------------------
+ *deletes all the outputfiles so that new ones can be created.
+ *
+ *@return success status
+ */
 int delete_output_files()
 {
     //404Data.txt
@@ -507,6 +516,17 @@ int delete_output_files()
         if(err != 0)
         {
             debug_write("Failed to delete errorFile.txt\n");
+            return 1;
+        }
+    }
+    
+    //topRequests.txt
+    if(access("topRequests.txt", F_OK) == 0)
+    {
+        int err = remove("topRequests.txt");
+        if(err != 0)
+        {
+            debug_write("Failed to delete topRequests.txt\n");
             return 1;
         }
     }
