@@ -52,4 +52,5 @@ clean: objectclean outputclean errorclean
 	@rm -f stats.txt
 	@rm -f 404Data.txt
 	@rm -f errors.txt
+	@rm -f topRequests.txt
 	@echo DONE!

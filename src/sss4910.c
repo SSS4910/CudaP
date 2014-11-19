@@ -297,8 +297,24 @@ main(int argc, char** argv){
     }
     
     UniqueRequests topRequests; // will need memory freed
-    get_top_unique_requests(10, &topRequests);
-    write_top_requests(&topRequests);
+    if(get_top_unique_requests(10, &topRequests) != 0)
+    {
+        fprintf(stderr, "Error: unable to get top requests\n");
+        fprintf(errorFile, "Error: unable to get top requests\n");
+        fclose(logfile);
+        fclose(errorFile);
+        close_debug_file();
+        exit(1);
+    }
+    if(write_top_requests(&topRequests) != 0)
+    {
+        fprintf(stderr, "Error: unable to write top requests\n");
+        fprintf(errorFile, "Error: unable to write top requests\n");
+        fclose(logfile);
+        fclose(errorFile);
+        close_debug_file();
+        exit(1);
+    }
 
     fprintf(stderr, "Total number of unique requests: %d\n", uniqueRequests.currentSize);
 
@@ -624,7 +640,10 @@ int cmp_top_requests(URL *url, UniqueRequests *topRequests)
             topRequests->urls[x].occurances = url->occurances;
 
             // check if previous URL is still a top request
-            cmp_top_requests(&temp, topRequests);
+            if(cmp_top_requests(&temp, topRequests) != 0)
+            {
+                return 1;
+            }
 
             return 0;
         }
