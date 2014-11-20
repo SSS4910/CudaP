@@ -53,4 +53,5 @@ clean: objectclean outputclean errorclean
 	@rm -f 404Data.txt
 	@rm -f errors.txt
 	@rm -f topRequests.txt
+	@rm -f injectFile.txt
 	@echo DONE!

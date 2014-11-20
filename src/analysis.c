@@ -114,7 +114,12 @@ int analyze(Buffer *buffer)
 
     // Open file to write 404 entries to
     FILE *file404 = fopen("404Data.txt", "a");
+    FILE *injectFile = fopen("injectFile.txt", "a");
     if(file404 == NULL)
+    {
+        return 1;
+    }
+    if(injectFile == NULL)
     {
         return 1;
     }
@@ -145,6 +150,18 @@ int analyze(Buffer *buffer)
             if(is_injection(buffer->requests[x].req))
             {
                 totalInjections++;
+
+                // write to injection file
+                fprintf(injectFile, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
+                                                                        buffer->requests[x].clientId, 
+                                                                        buffer->requests[x].userId, 
+                                                                        buffer->requests[x].strTime,
+                                                                        buffer->requests[x].time,
+                                                                        buffer->requests[x].req,
+                                                                        buffer->requests[x].retCode,
+                                                                        buffer->requests[x].dataSize,
+                                                                        buffer->requests[x].referer,
+                                                                        buffer->requests[x].userAgent);
             }
         } // check and handle 404 error codes
         else if(buffer->requests[x].retCode == 404)
@@ -153,7 +170,19 @@ int analyze(Buffer *buffer)
 
             if(is_injection(buffer->requests[x].req))
             {
-                totalInjections++;    
+                totalInjections++;   
+
+                // write to injection file
+                fprintf(injectFile, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
+                                                                        buffer->requests[x].clientId, 
+                                                                        buffer->requests[x].userId, 
+                                                                        buffer->requests[x].strTime,
+                                                                        buffer->requests[x].time,
+                                                                        buffer->requests[x].req,
+                                                                        buffer->requests[x].retCode,
+                                                                        buffer->requests[x].dataSize,
+                                                                        buffer->requests[x].referer,
+                                                                        buffer->requests[x].userAgent); 
             }
 
             // Add 404 to 404Data file 
@@ -173,7 +202,9 @@ int analyze(Buffer *buffer)
         totalVisits++;
     }
 
+    // close files
     fclose(file404);
+    fclose(injectFile);
 
     #if DEBUG==1
         printf("\nBuffer%d\n", buffer->id);

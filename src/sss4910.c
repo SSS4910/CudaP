@@ -531,6 +531,17 @@ int delete_output_files()
         }
     }
 
+    //injectFile.txt
+    if(access("injectFile.txt", F_OK) == 0)
+    {
+        int err = remove("injectFile.txt");
+        if(err != 0)
+        {
+            debug_write("Failed to delete injectFile.txt\n");
+            return 1;
+        }
+    }
+
     
 
     return 0;
