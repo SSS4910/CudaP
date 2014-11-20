@@ -17,6 +17,7 @@
 Buffer buffer1;
 Buffer buffer2;
 Statistics totalStats;
+UniqueRequests uniqueRequests;
 int MASTER_SWITCH;
 
 /**
@@ -50,6 +51,7 @@ main(int argc, char** argv){
     {
         fprintf(stderr, "Regular expression failed to compile\n");
         debug_write("Regular expression failed to compile\n");
+        close_debug_file();
         exit(1);
     }
 
@@ -57,6 +59,7 @@ main(int argc, char** argv){
     if(parse_opt(argc, argv, &fileName)  != TRUE)
     {
         fprintf(stderr, "Non-execution option selected\n");
+        close_debug_file();
         exit(0);
     }
     fprintf(stderr, "Analyzing file: %s\n", fileName);
@@ -69,6 +72,7 @@ main(int argc, char** argv){
     {
         fprintf(stderr, "Error while deleting output files\n");
         debug_write("Error while deleting output files\n");
+        close_debug_file();
         exit(1);
     }
 
@@ -122,6 +126,10 @@ main(int argc, char** argv){
         return -1;
     }
 
+    // initialize uniqueRequests
+    uniqueRequests.urls = (URL *)malloc(sizeof(URL)*MAX_UNIQUE_URLS);
+    uniqueRequests.currentSize = 0;
+
     // initialize buffer values
     buffer1.id = 1;
     buffer1.readyRead = FALSE;
@@ -165,7 +173,9 @@ main(int argc, char** argv){
                 {
                     fprintf(stderr, "Error: reader error: %d in log file\n", lineNum);
                     fprintf(errorFile, "Error: reader error %d\n", lineNum);
-                    /* close all files for clean exit? */
+                    fclose(logfile);
+                    fclose(errorFile);
+                    close_debug_file();
                     exit(1);
                 }
                 
@@ -226,7 +236,9 @@ main(int argc, char** argv){
                 {
                     fprintf(stderr, "Error: unknown reader error: %d in log file\n", lineNum);
                     fprintf(errorFile, "Error: unknown reader error %d\n", lineNum);
-                    /* close all files for clean exit? */
+                    fclose(logfile);
+                    fclose(errorFile);
+                    close_debug_file();
                     exit(1);
                 }
                 
@@ -275,58 +287,56 @@ main(int argc, char** argv){
     #endif
 
     //Write Statistics to file
-    FILE *statsFile; 
-    if((statsFile = fopen("stats.txt", "w")) == NULL)
+    if(write_general_stats() != 0)
     {
-        debug_write("Unable to create stats.txt file\n");
-        fprintf(errorFile, "Unable to create output file\n");
+        fprintf(errorFile, "Error: Unable to write statistics\n");
+        fclose(logfile);
+        fclose(errorFile);
+        close_debug_file();
+        exit(1);
+    }
+    
+    UniqueRequests topRequests;
+    if(get_top_unique_requests(10, &topRequests) != 0)
+    {
+        fprintf(stderr, "Error: unable to get top requests\n");
+        fprintf(errorFile, "Error: unable to get top requests\n");
+        fclose(logfile);
+        fclose(errorFile);
+        close_debug_file();
+        exit(1);
+    }
+    if(write_top_requests(&topRequests) != 0)
+    {
+        fprintf(stderr, "Error: unable to write top requests\n");
+        fprintf(errorFile, "Error: unable to write top requests\n");
+        fclose(logfile);
+        fclose(errorFile);
+        close_debug_file();
         exit(1);
     }
 
-    // Write general stats to file
-    fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
-                                        totalStats.total404,
-                                        totalStats.totalInjections,
-                                        totalStats.totalVisits);
-    // Write hours to file
-    for(i = 0; i < 24;i++)
-    {
-        fprintf(statsFile, "%lld;", totalStats.hourlyAccess[i]);
-    }
-    fprintf(statsFile, "\n");
-
-    // Write Months to file
-    for(i = 0; i < 12;i++)
-    {
-        fprintf(statsFile, "%lld;", totalStats.monthlyAccess[i]);
-    }
-    fprintf(statsFile, "\n");
-
-    #if DEBUG==1
-        // Testing time stats
-        for(i = 0; i < 24;i++)
-        {
-            fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
-        }
-        fprintf(stderr, "\n");
-
-        for(i = 0; i < 12;i++)
-        {
-            fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
-        }
-        fprintf(stderr, "\n");
-    #endif
+    fprintf(stderr, "Total number of unique requests: %d\n", uniqueRequests.currentSize);
 
     //cleanup
     buffer_free(&buffer1);
     buffer_free(&buffer2);
-    //free(fileName);
-    fclose(statsFile);
     debug_write("Freeing memory for line buffer\n");
     fclose(logfile);
+    regfree(&regex);
     fclose(errorFile);
     debug_write("Closing access.log file...\n");
     close_debug_file();
+    for(i = 0;i <topRequests.currentSize; i++)
+    {
+        free(topRequests.urls[i].url);
+    }
+    free(topRequests.urls);
+    for(i = 0; i < uniqueRequests.currentSize; i++)
+    {
+        free(uniqueRequests.urls[i].url);
+    }
+    free(uniqueRequests.urls);
 
     printf("\nFinished Analysis\n\n");
     return 0;
@@ -469,7 +479,12 @@ log_readline(FILE * logfile, char * line, regex_t *regex)
     status = 2;
     return status;
 }
-
+/*FUNCTION: delete_output_files
+ *----------------------------
+ *deletes all the outputfiles so that new ones can be created.
+ *
+ *@return success status
+ */
 int delete_output_files()
 {
     //404Data.txt
@@ -504,8 +519,192 @@ int delete_output_files()
             return 1;
         }
     }
+    
+    //topRequests.txt
+    if(access("topRequests.txt", F_OK) == 0)
+    {
+        int err = remove("topRequests.txt");
+        if(err != 0)
+        {
+            debug_write("Failed to delete topRequests.txt\n");
+            return 1;
+        }
+    }
+
+    //injectFile.txt
+    if(access("injectFile.txt", F_OK) == 0)
+    {
+        int err = remove("injectFile.txt");
+        if(err != 0)
+        {
+            debug_write("Failed to delete injectFile.txt\n");
+            return 1;
+        }
+    }
 
     
 
+    return 0;
+}
+
+/**
+    FUNCTION: write_general_stats
+    -----------------------------
+    Writes the global Statistics struct, totalStats,
+    to an output file, stats.txt.
+*/
+int write_general_stats()
+{
+
+    FILE *statsFile; 
+    if((statsFile = fopen("stats.txt", "w")) == NULL)
+    {
+        debug_write("Unable to create stats.txt file\n");
+        //fprintf(errorFile, "Unable to create output file\n");
+        return 1;
+    }
+
+    fprintf(statsFile, "%d;%d;%d;%d\n", totalStats.total200,
+                                        totalStats.total404,
+                                        totalStats.totalInjections,
+                                        totalStats.totalVisits);
+    // Write hours to file
+    int i;
+    for(i = 0; i < 24;i++)
+    {
+        fprintf(statsFile, "%lld;", totalStats.hourlyAccess[i]);
+    }
+    fprintf(statsFile, "\n");
+
+    // Write Months to file
+    for(i = 0; i < 12;i++)
+    {
+        fprintf(statsFile, "%lld;", totalStats.monthlyAccess[i]);
+    }
+    fprintf(statsFile, "\n");
+
+    #if DEBUG==1
+        // Testing time stats
+        for(i = 0; i < 24;i++)
+        {
+            fprintf(stderr, "Hour: %d : %lld\n", i, totalStats.hourlyAccess[i]);
+        }
+        fprintf(stderr, "\n");
+
+        for(i = 0; i < 12;i++)
+        {
+            fprintf(stderr, "Month: %d : %lld\n", i, totalStats.monthlyAccess[i]);
+        }
+        fprintf(stderr, "\n");
+    #endif
+
+    fclose(statsFile);
+
+    return 0;
+}
+
+/**
+    FUNCTION: write_top_unique_requests
+    -----------------------------------
+    Writes top N requests to an output file
+    @return int 0 on success; 1 on failure
+*/
+int get_top_unique_requests(int N, UniqueRequests *topRequests)
+{
+    topRequests->urls = (URL *)malloc(sizeof(URL) * N); 
+    topRequests->currentSize = N;
+
+    // initialize top requests
+    int x;
+    for(x = 0; x < N; x++)
+    {
+        topRequests->urls[x].url = (char *)malloc(sizeof(char) * 2000);
+        strcpy(topRequests->urls[x].url, "***");
+        topRequests->urls[x].occurances = 0;
+    }
+
+    // Compare all unique requests
+    for(x = 0; x < uniqueRequests.currentSize; x++)
+    {
+        cmp_top_requests(&uniqueRequests.urls[x], topRequests);
+    }
+
+    /* WRITE TOP REQUESTS TO FILE */
+
+    #if DEBUG==2 //print top results
+    for(x = 0; x < topRequests->currentSize; x++)
+    {
+        fprintf(stderr, "%d: %s x%d\n", x, topRequests->urls[x].url, topRequests->urls[x].occurances);
+    }
+    #endif
+
+    return 0;
+}
+
+/**
+    FUNCTION: cmp_top_requests
+    --------------------------
+    Compares a URL strut to a list of other URLs and determines if
+    the given URL has more hits than any URLs in the list.
+    @param URL* the target URL
+    @param UniqueRequests* list of top visited URLs
+    @return int 0 on success; 1 on failure
+*/
+int cmp_top_requests(URL *url, UniqueRequests *topRequests)
+{
+    URL temp;
+    temp.url = (char *)malloc(sizeof(char) * 2000);
+    temp.occurances = 0;
+
+    int x;
+    for(x = 0; x < topRequests->currentSize; x++)
+    {
+        // determine if url has more visit than current top requests
+        if(url->occurances > topRequests->urls[x].occurances)
+        {
+            // put current URL in temp
+            strcpy(temp.url, topRequests->urls[x].url);
+            temp.occurances = topRequests->urls[x].occurances;
+
+            // add new URL to top requests
+            strcpy(topRequests->urls[x].url, url->url);
+            topRequests->urls[x].occurances = url->occurances;
+
+            // check if previous URL is still a top request
+            if(cmp_top_requests(&temp, topRequests) != 0)
+            {
+                return 1;
+            }
+
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+/**
+    FUNCTION: write_top_requests
+    ----------------------------
+    Writes the top requests/UniqueRequest struct to an output file:
+    topRequests.txt
+    @param UniqueRequests* the list to be written to file
+    @return 0 on success; 1 on failure
+*/
+int write_top_requests(UniqueRequests *topRequests)
+{
+    FILE *outFile;
+    if((outFile = fopen("topRequests.txt", "w")) == NULL)
+    {
+        return 1;
+    }
+
+    int x;
+    for(x = 0; x < topRequests->currentSize; x++)
+    {
+        fprintf(outFile, "%s;%d\n", topRequests->urls[x].url, topRequests->urls[x].occurances);
+    }
+
+    fclose(outFile);
     return 0;
 }

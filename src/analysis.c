@@ -31,7 +31,10 @@ void * manage_data()
             // Don't analyze empty buffers
             if(buffer1.currentSize != 0)
             {
-                analyze(&buffer1);
+                if(analyze(&buffer1) == 1)
+                {
+                    fprintf(stderr, "Analysis Failure\n");
+                }
 
                 buffer1.readyRead = FALSE;
                 buffer1.readyWrite = TRUE;
@@ -43,7 +46,10 @@ void * manage_data()
             // Don't analyze empty buffers
             if(buffer2.currentSize != 0)
             {
-                analyze(&buffer2);
+                if(analyze(&buffer2) == 1)
+                {
+                    fprintf(stderr, "Analysis Failure\n");
+                }
 
                 buffer2.readyRead = FALSE;
                 buffer2.readyWrite = TRUE;
@@ -59,7 +65,10 @@ void * manage_data()
     {
         if(buffer1.currentSize != 0)
         {
-            analyze(&buffer1);
+            if(analyze(&buffer1) == 1)
+            {
+                fprintf(stderr, "Analysis Failure\n");
+            }
 
             buffer1.readyRead = FALSE;
             buffer1.readyWrite = TRUE;
@@ -70,7 +79,10 @@ void * manage_data()
     {
         if(buffer2.currentSize != 0)
         {
-            analyze(&buffer2);
+            if(analyze(&buffer2) == 1)
+            {
+                fprintf(stderr, "Analysis Failure\n");
+            }
 
             buffer2.readyRead = FALSE;
             buffer2.readyWrite = TRUE;
@@ -93,8 +105,7 @@ void * manage_data()
 */
 int analyze(Buffer *buffer)
 {
-    //open output files
-    //FILE *file404 = fopen("404Data.txt", "a");
+    int status;
 
     int total404        = 0;
     int total200        = 0;
@@ -103,7 +114,12 @@ int analyze(Buffer *buffer)
 
     // Open file to write 404 entries to
     FILE *file404 = fopen("404Data.txt", "a");
+    FILE *injectFile = fopen("injectFile.txt", "a");
     if(file404 == NULL)
+    {
+        return 1;
+    }
+    if(injectFile == NULL)
     {
         return 1;
     }
@@ -119,6 +135,13 @@ int analyze(Buffer *buffer)
         totalStats.hourlyAccess[reqTime->tm_hour]++;
         totalStats.monthlyAccess[reqTime->tm_mon]++;
 
+        // Query URL
+        status = query_url(buffer->requests[x].req);
+        if(status != 0)
+        {
+            return 1;
+        }
+
         // check and Handle 200 return codes
         if(buffer->requests[x].retCode == 200)
         {
@@ -127,6 +150,18 @@ int analyze(Buffer *buffer)
             if(is_injection(buffer->requests[x].req))
             {
                 totalInjections++;
+
+                // write to injection file
+                fprintf(injectFile, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
+                                                                        buffer->requests[x].clientId, 
+                                                                        buffer->requests[x].userId, 
+                                                                        buffer->requests[x].strTime,
+                                                                        buffer->requests[x].time,
+                                                                        buffer->requests[x].req,
+                                                                        buffer->requests[x].retCode,
+                                                                        buffer->requests[x].dataSize,
+                                                                        buffer->requests[x].referer,
+                                                                        buffer->requests[x].userAgent);
             }
         } // check and handle 404 error codes
         else if(buffer->requests[x].retCode == 404)
@@ -135,11 +170,22 @@ int analyze(Buffer *buffer)
 
             if(is_injection(buffer->requests[x].req))
             {
-                totalInjections++;    
+                totalInjections++;   
+
+                // write to injection file
+                fprintf(injectFile, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
+                                                                        buffer->requests[x].clientId, 
+                                                                        buffer->requests[x].userId, 
+                                                                        buffer->requests[x].strTime,
+                                                                        buffer->requests[x].time,
+                                                                        buffer->requests[x].req,
+                                                                        buffer->requests[x].retCode,
+                                                                        buffer->requests[x].dataSize,
+                                                                        buffer->requests[x].referer,
+                                                                        buffer->requests[x].userAgent); 
             }
 
             // Add 404 to 404Data file 
-            
             fprintf(file404, "%s;%s;%s;%s;%ld;%s;%d;%d;%s;%s\n", buffer->requests[x].host, 
                                                                  buffer->requests[x].clientId, 
                                                                  buffer->requests[x].userId, 
@@ -156,7 +202,9 @@ int analyze(Buffer *buffer)
         totalVisits++;
     }
 
+    // close files
     fclose(file404);
+    fclose(injectFile);
 
     #if DEBUG==1
         printf("\nBuffer%d\n", buffer->id);
@@ -282,4 +330,33 @@ int is_injection(char * request)
     
     return FALSE;
     
+}
+
+int query_url(char *in_url)
+{
+    int x;
+    for(x = 0; x < uniqueRequests.currentSize; x++)
+    {
+        if(strcmp(in_url, uniqueRequests.urls[x].url) == 0)
+        {
+            //fprintf(stderr, "In loop: %s\n", in_url);
+            uniqueRequests.urls[x].occurances++;
+            return 0;
+        }
+    }
+
+    if(uniqueRequests.currentSize > MAX_UNIQUE_URLS)
+    {
+        return 1;
+    }
+
+    //uniqueRequests.urls[uniqueRequests.currentSize] = (URL*)malloc(sizeof(URL));
+    uniqueRequests.urls[uniqueRequests.currentSize].url = (char *)malloc(sizeof(char)*2000);
+    strcpy(uniqueRequests.urls[uniqueRequests.currentSize].url, in_url);
+    uniqueRequests.urls[uniqueRequests.currentSize].occurances = 1;
+    uniqueRequests.currentSize++;
+
+
+    return 0;
+
 }
