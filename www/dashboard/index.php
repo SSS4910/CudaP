@@ -51,10 +51,6 @@ include_once("./../resources/templates/navbar.php");
           <h2 class="sub-header">University</h2>
           <p class="lead">Lorem ipsum dolor sit amet, nec cetero euismod ea, eos at suas labitur detraxit. Cum ubique oportere ex. Te quo purto accumsan cotidieque, iusto euripidis cu vel, pro alii veri nostro an. Eam graeco meliore cu, diam scaevola perfecto usu at. Ne soluta petentium tincidunt his.</p>
           <h2 class="sub-header">Email</h2>
-          <p>Qui te odio case definitionem, eos purto vivendum similique ei. Putant appetere interpretaris mea ei, ei magna dicunt dignissim sit. Officiis intellegat te duo. Meis tamquam interesset qui eu, vix ne labitur apeirian dissentiet. His et movet affert invidunt, at quod stet sea. Cum ut dolorum propriae dissentiunt, ne duo agam aeterno vivendo. Sit an sint solet denique.</p>
-          <p>Cu mel saepe offendit, ne has eros tamquam. Nec nibh vocent aliquam an. Est congue dissentias et, delicata theophrastus vel eu. Sit ea amet meis eloquentiam, quo ne eros porro, ad vis denique definiebas. Eu mei causae aeterno mentitum. Nam et facer deserunt concludaturque, has ei illud affert.</p>
-          <p>An natum causae sed, ut summo mundi salutatus ius. Mea cu clita essent legimus, usu quod veri atqui ei. Usu cu minimum recteque, assum utamur pri no. Sit id suas tincidunt, nam nibh natum consectetuer no.</p>
-          <p>Vide sale eam no. Mea mazim hendrerit eu, est alia lucilius ei. Pro percipitur signiferumque at. Ne vix sumo persius, sit ut vidit definiebas vituperatoribus. Usu ex dolorem omittam suscipit, dico quando pro ex. Dicat convenire voluptatum ad vis, sed te tota minim.</p>
         </div>
       </div>
     </div>
