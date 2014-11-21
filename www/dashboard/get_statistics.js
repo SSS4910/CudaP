@@ -11,7 +11,7 @@ function get_statistics()
 		success: function(data)
 		{
 			//Update the field html fields with data
-			//alert(data);
+			alert(data);
 			// separate data
 			var dataArray = data.split("*");
 			
