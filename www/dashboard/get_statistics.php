@@ -4,15 +4,20 @@ $path = ($_POST['path']);
 
 $file404 = fopen($path."404Data.txt", "r");
 $statsFile = fopen($path."stats.txt", "r");
-
+$injectFile = fopen($path."injectFile.txt", "r");
 
 // read in 404 data
 $str404 = "";
 while(!feof($file404))
 {
-	//echo fgets($file404);
 	$str404 .= fgets($file404)."<br>";
-	//echo $str404."<br>";
+}
+
+// read in Injection data
+$injectStr = "";
+while(!feof($injectFile))
+{
+    $inectStr .= fgets($injectFile)."<br>";
 }
 
 // read in stats data
@@ -22,24 +27,24 @@ $totalMonths = fgets($statsFile);
 
 // done with files
 fclose($file404);
+fclose($injectFile);
 fclose($statsFile);
 
 // break-up data
-$statsArray = explode(";", $totalStats);
+/*$statsArray = explode(";", $totalStats);
 $hoursArray = explode(";", $totalHours);
-$monthsArray = explode(";", $totalMonths);
+$monthsArray = explode(";", $totalMonths);*/
 
 // Format all strings into one string to be sent back to site.
 $outputStr = "";
 
-// Stats data formatting
-$outputStr .= "<li>Total 200s: ".$statsArray[0]."</li>";
-$outputStr .= "<li>Total 404s: ".$statsArray[1]."</li>";
-$outputStr .= "<li>Total Injections: ".$statsArray[2]."</li>";
-$outputStr .= "<li>Total Visits: ".$statsArray[3]."</li>";
+// add stats data to outputStr (delimiter added at end)
+$outputStr .= $totalStats."*";
+$outputStr .= $totalHours."*";
+$outputStr .= $totalMonths."*";
 
 // add delimiter
-$outputStr .= "*";
+/*$outputStr .= "*";
 
 // hours formatting
 for($x = 0; $x < 24; $x++)
@@ -58,9 +63,11 @@ for($x = 0; $x < 12; $x++)
 
 // add delimiter
 $outputStr .= "*";
+*/
 
 // add 404 data
-$outputStr .= $str404;
+$outputStr .= $str404."*";
+$outputStr .= $injectStr;
 
 // return all data
 echo $outputStr;

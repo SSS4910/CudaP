@@ -40,5 +40,10 @@ include_once("./../resources/templates/navbar.php");
     <script src="../../assets/js/docs.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
   </body>
 </html>
