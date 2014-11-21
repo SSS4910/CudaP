@@ -25,6 +25,9 @@ include_once("./../resources/templates/navbar.php");
     <!-- Custom styles for this template -->
     <link href="./../resouces/css/core.css" rel="stylesheet">
 
+    <!-- sss4910 Javascript-->
+    <script src="./get_statistics.js"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -36,7 +39,7 @@ include_once("./../resources/templates/navbar.php");
     <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
