@@ -46,12 +46,6 @@ include_once("./../resources/templates/navbar.php");
             <li class="active"><a href="#">Contact Us<span class="sr-only">(current)</span></a></li>
           </ul>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Contact Us</h1>
-          <h2 class="sub-header">University</h2>
-          <p class="lead">Lorem ipsum dolor sit amet, nec cetero euismod ea, eos at suas labitur detraxit. Cum ubique oportere ex. Te quo purto accumsan cotidieque, iusto euripidis cu vel, pro alii veri nostro an. Eam graeco meliore cu, diam scaevola perfecto usu at. Ne soluta petentium tincidunt his.</p>
-          <h2 class="sub-header">Email</h2>
-        </div>
       </div>
     </div>
 
