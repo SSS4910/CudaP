@@ -46,7 +46,7 @@ include_once("./../resources/templates/navbar.php");
       <p>An natum causae sed, ut summo mundi salutatus ius. Mea cu clita essent legimus, usu quod veri atqui ei. Usu cu minimum recteque, assum utamur pri no. Sit id suas tincidunt, nam nibh natum consectetuer no.</p>
       <p>Vide sale eam no. Mea mazim hendrerit eu, est alia lucilius ei. Pro percipitur signiferumque at. Ne vix sumo persius, sit ut vidit definiebas vituperatoribus. Usu ex dolorem omittam suscipit, dico quando pro ex. Dicat convenire voluptatum ad vis, sed te tota minim.</p>
     </div>
-    <span onclick="get_statistics()">Do shit</span>
+    <button type="button" onclick="get_statistics()">Do shit</button>
     <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
