@@ -36,6 +36,7 @@ include_once("./../resources/templates/navbar.php");
   </head>
   <body>
 
+    <button type="button" onclick="get_statistics()">Do shit</button>
     <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
