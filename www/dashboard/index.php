@@ -35,7 +35,7 @@ include_once("./../resources/templates/navbar.php");
     <![endif]-->
   </head>
   <body>
-
+    fggfjsdhjgklhsdlhgjsdhfglsdhjgksdlfhgsdfjk
     <span onclick="get_statistics()">Do shit</span>
     <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
