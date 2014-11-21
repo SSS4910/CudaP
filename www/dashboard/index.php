@@ -36,8 +36,7 @@ include_once("./../resources/templates/navbar.php");
   </head>
   <body>
 
-  <script src="js/highcharts.js"></script>
-  <script src="js/modules/exporting.js"></script>
+  
 
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
 
@@ -54,6 +53,9 @@ include_once("./../resources/templates/navbar.php");
     <script src="../../assets/js/docs.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+  <script src="js/highcharts.js"></script>
+  <script src="js/modules/exporting.js"></script>
 
 
 
