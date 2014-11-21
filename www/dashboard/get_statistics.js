@@ -27,6 +27,12 @@ function get_statistics()
 			var list404 = dataArray[3];
 			var listInject = dataArray[4];
 
+			alert(generalStats);
+			alert(hourlyStats);
+			alert(monthlyStats);
+			alert(list404);
+			alert(listInject);
+
 			$(function () {
 				$('#hourly_stats').highcharts({
 				    title: {
