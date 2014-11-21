@@ -39,14 +39,12 @@ include_once("./../resources/templates/navbar.php");
   <script src="js/highcharts.js"></script>
   <script src="js/modules/exporting.js"></script>
 
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <button type="button" onclick="get_statistics()">Do shit</button>
-      <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-      <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-      <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
 
-    
+    <button type="button" onclick="get_statistics()">Do shit</button>
+    <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
