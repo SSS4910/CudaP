@@ -40,6 +40,9 @@ include_once("./../resources/sessions.php");
     <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="topRequests_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="404_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="inject_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

@@ -33,11 +33,7 @@ function get_statistics()
 			alert(list404);
 			alert(listInject);*/
 
-			var intGeneralStats = new Array();
-			for(var x = 0; x < 4; x++)
-			{
-				intGeneralStats[x] = parseInt(generalStats[x]);
-			}
+			
 
 			var intHourlyStats = new Array();
 			for(x = 0; x < 24; x++)
@@ -51,46 +47,7 @@ function get_statistics()
 				intMonthlyStats[x] = parseInt(monthlyStats[x]);
 			}
 
-			$(function () {
-			    $('#general_stats').highcharts({
-			        chart: {
-			            type: 'column'
-			        },
-			        title: {
-			            text: 'General Statistics'
-			        },
-			        subtitle: {
-			            text: ''
-			        },
-			        xAxis: {
-			            categories: ['200s', '404s', 'Injections', 'Total Visits']
-			        },
-			        yAxis: {
-			            min: 0,
-			            title: {
-			                text: 'Occurrences'
-			            }
-			        },
-			        tooltip: {
-			            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-			            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-			                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-			            footerFormat: '</table>',
-			            shared: true,
-			            useHTML: true
-			        },
-			        plotOptions: {
-			            column: {
-			                pointPadding: 0.2,
-			                borderWidth: 0
-			            }
-			        },
-			        series: [{
-			            name: 'Occurrences',
-			            data: [intGeneralStats[0], intGeneralStats[1], intGeneralStats[2], intGeneralStats[3]]
-			        }]
-			    });
-			});
+			graph_generalStats(generalStats);			
 
 			$(function () {
 				$('#hourly_stats').highcharts({
@@ -135,49 +92,103 @@ function get_statistics()
 				});
 			});
 
-				$(function () {
-					$('#monthly_stats').highcharts({
-					    title: {
-					        text: 'Months of Access',
-					        x: -20 //center
-					    },
-					    subtitle: {
-					        text: 'Number of Visits per Month',
-					        x: -20
-					    },
-					    xAxis: {
-					        categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
-					        			 'August', 'September', 'October', 'November','December']
-					    },
-					    yAxis: {
-					        title: {
-					            text: 'Number of Visits'
-					        },
-					        plotLines: [{
-					            value: 0,
-					            width: 1,
-					            color: '#808080'
-					        }]
-					    },
-					    tooltip: {
-					        valueSuffix: 'Visits'
-					    },
-					    legend: {
-					        layout: 'vertical',
-					        align: 'right',
-					        verticalAlign: 'middle',
-					        borderWidth: 0
-					    },
-					    series: [{
-					        name: 'Visits',
-					        data: [intMonthlyStats[0], intMonthlyStats[1], intMonthlyStats[2], intMonthlyStats[3], intMonthlyStats[4], 
-					        		intMonthlyStats[5], intMonthlyStats[6], intMonthlyStats[7], intMonthlyStats[8], intMonthlyStats[9], 
-					        		intMonthlyStats[10], intMonthlyStats[11]]
-					    }]
-					});
+			$(function () {
+				$('#monthly_stats').highcharts({
+				    title: {
+				        text: 'Months of Access',
+				        x: -20 //center
+				    },
+				    subtitle: {
+				        text: 'Number of Visits per Month',
+				        x: -20
+				    },
+				    xAxis: {
+				        categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
+				        			 'August', 'September', 'October', 'November','December']
+				    },
+				    yAxis: {
+				        title: {
+				            text: 'Number of Visits'
+				        },
+				        plotLines: [{
+				            value: 0,
+				            width: 1,
+				            color: '#808080'
+				        }]
+				    },
+				    tooltip: {
+				        valueSuffix: 'Visits'
+				    },
+				    legend: {
+				        layout: 'vertical',
+				        align: 'right',
+				        verticalAlign: 'middle',
+				        borderWidth: 0
+				    },
+				    series: [{
+				        name: 'Visits',
+				        data: [intMonthlyStats[0], intMonthlyStats[1], intMonthlyStats[2], intMonthlyStats[3], intMonthlyStats[4], 
+				        		intMonthlyStats[5], intMonthlyStats[6], intMonthlyStats[7], intMonthlyStats[8], intMonthlyStats[9], 
+				        		intMonthlyStats[10], intMonthlyStats[11]]
+				    }]
 				});
+			});
+		
+			// Fill lists
+
 			
 			
 		}
 	});
+}
+
+function graph_generalStats(generalStats)
+{
+	var intGeneralStats = new Array();
+	for(var x = 0; x < 4; x++)
+	{
+		intGeneralStats[x] = parseInt(generalStats[x]);
+	}
+
+
+    $('#general_stats').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'General Statistics'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: ['200s', '404s', 'Injections', 'Total Visits']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Occurrences'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Occurrences',
+            data: [intGeneralStats[0], intGeneralStats[1], intGeneralStats[2], intGeneralStats[3]]
+        }]
+    });
+	
+	return 0;	
 }
