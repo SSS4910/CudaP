@@ -26,8 +26,8 @@ function get_statistics()
 
 			// Fill lists
 			//$('#404_list').html(list404);
-			$('#404_list').html("<h3>404 List</h3><br>" + list404);
-			$('#inject_list').html("<h3>Injection List list</h3><br>" + listInject);
+			$('#404_list').html("<h3>404 List</h3><br>" + list404.replace(";", " "));
+			$('#inject_list').html("<h3>Injection List list</h3><br>" + listInject.replace(";", " "));
 		}
 	});
 }
