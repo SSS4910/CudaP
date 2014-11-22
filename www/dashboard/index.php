@@ -39,12 +39,7 @@ include_once("./../resources/templates/navbar.php");
   <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="./index.html">About This Project</a></li>
-            <li><a href="./../doc/index.html">Documentation</a></li>
-            <li><a href="./download.html">Download</a></li>
-            <li class="active"><a href="#">Contact Us<span class="sr-only">(current)</span></a></li>
-          </ul>
+      
         </div>
       </div>
     </div>
