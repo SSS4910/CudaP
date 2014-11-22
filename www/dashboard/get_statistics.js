@@ -200,7 +200,8 @@ function graph_topRequests(listTopReq)
 	var topReqHits = new Array();
 	for(var x = 0; x < 10; x++)
 	{
-		var tempArr = array[x].split(";");
+		var tempArr = new Array();
+		tempArr = array[x].split(";");
 		topReqNames[x] = tempArr[0];
 		topReqHits[x] = tempArr[1];
 	}
