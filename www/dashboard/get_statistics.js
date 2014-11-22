@@ -241,7 +241,7 @@ function graph_topRequests(listTopReq)
         },
         series: [{
             name: 'hits',
-            data: [topReqHits[0]s, topReqHits[1], topReqHits[2], topReqHits[3], topReqHits[4], 
+            data: [topReqHits[0], topReqHits[1], topReqHits[2], topReqHits[3], topReqHits[4], 
             	   topReqHits[5], topReqHits[6], topReqHits[7], topReqHits[8]., topReqHits[9]]
         }]
     });
