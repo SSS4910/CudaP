@@ -194,8 +194,55 @@ function graph_monthlyStats(monthlyStats)
 
 function graph_topRequests(listTopReq)
 {
-	
+	var array = listTopReq.split("<br>");
 
-	
+	var topReqArr = new Array();
+	for(var x = 0; x < 10; x++)
+	{
+		var tempArr = array[x].split(";");
+		topReqArr[x] = {"name":tempArr[0], "hits":tempArr[1]};
+	}
+
+	/*$('#topReq_stats').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Top Requests'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: ['200s', '404s', 'Injections', 'Total Visits']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Occurrences'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Occurrences',
+            data: [intGeneralStats[0], intGeneralStats[1], intGeneralStats[2], intGeneralStats[3]]
+        }]
+    });*/
+
+	alert(topReqArr);
+
 	return 0;
 }
