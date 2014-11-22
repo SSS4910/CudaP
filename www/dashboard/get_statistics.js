@@ -19,6 +19,7 @@ function get_statistics()
 			var monthlyStats = dataArray[2].split(";");
 			var list404 = dataArray[3];
 			var listInject = dataArray[4];
+			var listTopReq = dataArray[5];
 
 			graph_generalStats(generalStats);
 			graph_hourlyStats(hourlyStats);
@@ -26,8 +27,10 @@ function get_statistics()
 
 			// Fill lists
 			//$('#404_list').html(list404);
+			var cleanTopReq = listTopReq.replace(";", " ");
 			var cleanList404 = list404.replace(";", " ");
 			var cleanListInject = listInject.replace(";", " ");
+			$('#topReq_list').html("<h3>Top Requests List</h3><br>" + cleanTopReq);
 			$('#404_list').html("<h3>404 List</h3><br>" + cleanList404);
 			$('#inject_list').html("<h3>Injection List list</h3><br>" + cleanListInject);
 		}

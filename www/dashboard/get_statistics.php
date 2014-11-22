@@ -5,6 +5,7 @@ $path = ($_POST['path']);
 $file404 = fopen($path."404Data.txt", "r");
 $statsFile = fopen($path."stats.txt", "r");
 $injectFile = fopen($path."injectFile.txt", "r");
+$topReqFile = fopen($path."topRequests.txt", "r");
 
 // read in 404 data
 $str404 = "";
@@ -20,6 +21,13 @@ while(!feof($injectFile))
     $inectStr .= fgets($injectFile)."<br>";
 }
 
+// read in Injection data
+$topReqStr = "";
+while(!feof($topReqFile))
+{
+    $topReqStr .= fgets($topReqFile)."<br>";
+}
+
 // read in stats data
 $totalStats = fgets($statsFile);
 $totalHours = fgets($statsFile);
@@ -29,6 +37,7 @@ $totalMonths = fgets($statsFile);
 fclose($file404);
 fclose($injectFile);
 fclose($statsFile);
+fclose($topReqFile);
 
 // break-up data
 /*$statsArray = explode(";", $totalStats);
@@ -67,7 +76,8 @@ $outputStr .= "*";
 
 // add 404 data
 $outputStr .= $str404."*";
-$outputStr .= $injectStr;
+$outputStr .= $injectStr"*";
+$outputStr .= $topReqStr;
 
 // return all data
 echo $outputStr;
