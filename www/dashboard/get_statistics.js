@@ -27,11 +27,16 @@ function get_statistics()
 			var list404 = dataArray[3];
 			var listInject = dataArray[4];
 
-			alert(generalStats);
+			/*alert(generalStats);
 			alert(hourlyStats);
 			alert(monthlyStats);
 			alert(list404);
-			alert(listInject);
+			alert(listInject);*/
+			var intHourlyStats = new Array();
+			for(var x = 0; x < 24; x++)
+			{
+				intHourlyStats[x] = parseInt(hourlyStats[x]);
+			}
 
 			$(function () {
 				$('#hourly_stats').highcharts({
@@ -69,9 +74,9 @@ function get_statistics()
 				    },
 				    series: [{
 				        name: 'Visits',
-				        data: [hourlyStats[0], hourlyStats[1], hourlyStats[2], hourlyStats[3], hourlyStats[4], hourlyStats[5], hourlyStats[6], hourlyStats[7], 
-				        		hourlyStats[8], hourlyStats[9], hourlyStats[10], hourlyStats[11], hourlyStats[12], hourlyStats[13], hourlyStats[14], hourlyStats[15],
-				        		hourlyStats[16], hourlyStats[17], hourlyStats[18], hourlyStats[19], hourlyStats[20], hourlyStats[21], hourlyStats[22], hourlyStats[23]]
+				        data: [intHourlyStats[0], intHourlyStats[1], intHourlyStats[2], intHourlyStats[3], intHourlyStats[4], intHourlyStats[5], intHourlyStats[6], intHourlyStats[7], 
+				        		intHourlyStats[8], intHourlyStats[9], intHourlyStats[10], intHourlyStats[11], intHourlyStats[12], intHourlyStats[13], intHourlyStats[14], intHourlyStats[15],
+				        		intHourlyStats[16], intHourlyStats[17], intHourlyStats[18], intHourlyStats[19], intHourlyStats[20], intHourlyStats[21], intHourlyStats[22], intHourlyStats[23]]
 				    }]
 				});
 				});
