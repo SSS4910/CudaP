@@ -52,61 +52,44 @@ function get_statistics()
 			}
 
 			$(function () {
-				$('#general_stats').highcharts({
-				    chart: {
-				        type: 'bar'
-				    },
-				    title: {
-				        text: 'Basic statistics'
-				    },
-				    subtitle: {
-				        text: ''
-				    },
-				    xAxis: {
-				        categories: ['200s', '404s', 'Injections', 'total visits'],
-				        title: {
-				            text: null
-				        }
-				    },
-				    yAxis: {
-				        min: 0,
-				        title: {
-				            text: 'Population (millions)',
-				            align: 'high'
-				        },
-				        labels: {
-				            overflow: 'justify'
-				        }
-				    },
-				    tooltip: {
-				        valueSuffix: ' millions'
-				    },
-				    plotOptions: {
-				        bar: {
-				            dataLabels: {
-				                enabled: true
-				            }
-				        }
-				    },
-				    legend: {
-				        layout: 'horizontal',//'vertical',
-				        align: 'right',
-				        horizontalAlign: 'top',//verticalAlign: 'top',
-				        x: -40,
-				        y: 100,
-				        floating: true,
-				        borderWidth: 1,
-				        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-				        shadow: true
-				    },
-				    credits: {
-				        enabled: false
-				    },
-				    series: [{
-				        name: 'Occurrences',
-				        data: [intGeneralStats[0], intGeneralStats[1], intGeneralStats[2], intGeneralStats[3]]
-				    }]
-				});
+			    $('#general_stats').highcharts({
+			        chart: {
+			            type: 'column'
+			        },
+			        title: {
+			            text: 'General Statistics'
+			        },
+			        subtitle: {
+			            text: ''
+			        },
+			        xAxis: {
+			            categories: ['200s', '404s', 'Injections', 'Total Visits']
+			        },
+			        yAxis: {
+			            min: 0,
+			            title: {
+			                text: 'Occurrences'
+			            }
+			        },
+			        tooltip: {
+			            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+			            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+			                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+			            footerFormat: '</table>',
+			            shared: true,
+			            useHTML: true
+			        },
+			        plotOptions: {
+			            column: {
+			                pointPadding: 0.2,
+			                borderWidth: 0
+			            }
+			        },
+			        series: [{
+			            name: 'Occurrences',
+			            data: [intGeneralStats[0], intGeneralStats[1], intGeneralStats[2], intGeneralStats[3]]
+			        }]
+			    });
 			});
 
 			$(function () {
