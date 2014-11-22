@@ -91,7 +91,7 @@ function get_statistics()
 				    legend: {
 				        layout: 'horizontal',//'vertical',
 				        align: 'right',
-				        verticalAlign: 'top',
+				        horizontalAlign: 'top',//verticalAlign: 'top',
 				        x: -40,
 				        y: 100,
 				        floating: true,
