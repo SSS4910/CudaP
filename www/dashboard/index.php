@@ -36,14 +36,6 @@ include_once("./../resources/templates/navbar.php");
   </head>
   <body>
 
-  <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-      
-        </div>
-      </div>
-    </div>
-
     <button type="button" onclick="get_statistics()">Do shit</button>
     <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
