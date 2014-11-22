@@ -38,6 +38,12 @@ function get_statistics()
 				intHourlyStats[x] = parseInt(hourlyStats[x]);
 			}
 
+			var intMonthlyStats
+			for(x = 0; x < 12; x++)
+			{
+				intMonthlyStats[x] = parseInt(monthlyStats[x]);
+			}
+
 			$(function () {
 				$('#hourly_stats').highcharts({
 				    title: {
@@ -77,6 +83,47 @@ function get_statistics()
 				        data: [intHourlyStats[0], intHourlyStats[1], intHourlyStats[2], intHourlyStats[3], intHourlyStats[4], intHourlyStats[5], intHourlyStats[6], intHourlyStats[7], 
 				        		intHourlyStats[8], intHourlyStats[9], intHourlyStats[10], intHourlyStats[11], intHourlyStats[12], intHourlyStats[13], intHourlyStats[14], intHourlyStats[15],
 				        		intHourlyStats[16], intHourlyStats[17], intHourlyStats[18], intHourlyStats[19], intHourlyStats[20], intHourlyStats[21], intHourlyStats[22], intHourlyStats[23]]
+				    }]
+				});
+				});
+
+				$(function () {
+				$('#monthly_stats').highcharts({
+				    title: {
+				        text: 'Months of Access',
+				        x: -20 //center
+				    },
+				    subtitle: {
+				        text: 'Number of Visits per Month',
+				        x: -20
+				    },
+				    xAxis: {
+				        categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
+				        			 'August', 'September', 'October', 'November','December']
+				    },
+				    yAxis: {
+				        title: {
+				            text: 'Number of Visits'
+				        },
+				        plotLines: [{
+				            value: 0,
+				            width: 1,
+				            color: '#808080'
+				        }]
+				    },
+				    tooltip: {
+				        valueSuffix: 'Visits'
+				    },
+				    legend: {
+				        layout: 'vertical',
+				        align: 'right',
+				        verticalAlign: 'middle',
+				        borderWidth: 0
+				    },
+				    series: [{
+				        name: 'Visits',
+				        data: [intMonthlyStats[0], intMonthlyStats[1], intMonthlyStats[2], intMonthlyStats[3], intMonthlyStats[4], intMonthlyStats[5], intMonthlyStats[6], intMonthlyStats[7], 
+				        		intMonthlyStats[8], intMonthlyStats[9], intMonthlyStats[10], intMonthlyStats[11]]
 				    }]
 				});
 				});
