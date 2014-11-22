@@ -89,7 +89,7 @@ function get_statistics()
 				        }
 				    },
 				    legend: {
-				        layout: 'vertical',
+				        layout: 'horizontal',//'vertical',
 				        align: 'right',
 				        verticalAlign: 'top',
 				        x: -40,
