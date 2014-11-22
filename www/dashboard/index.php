@@ -2,7 +2,7 @@
 
 include_once("./../resources/config.php");
 include_once("./../resources/sessions.php");
-include_once("./../resources/templates/navbar.php");
+//include_once("./../resources/templates/navbar.php");
 
 ?>
 
