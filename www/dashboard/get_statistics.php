@@ -49,7 +49,7 @@ $outputStr .= $totalMonths."*";
 
 // add remaining data
 $outputStr .= $str404."*";
-$outputStr .= $injectStr"*";
+$outputStr .= $injectStr."*";
 $outputStr .= $topReqStr;
 
 // return all data
