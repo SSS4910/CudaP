@@ -23,14 +23,15 @@ function get_statistics()
 
 			graph_generalStats(generalStats);
 			graph_hourlyStats(hourlyStats);
-			graph_monthlyStats(monthlyStats);	
+			graph_monthlyStats(monthlyStats);
+			graph_topRequests(listTopReq);	
 
 			// Fill lists
 			//$('#404_list').html(list404);
-			var cleanTopReq = listTopReq.replace(";", " ");
+			//var cleanTopReq = listTopReq.replace(";", " ");
 			var cleanList404 = list404.replace(";", " ");
 			var cleanListInject = listInject.replace(";", " ");
-			$('#topReq_list').html("<h3>Top Requests List</h3><br>" + cleanTopReq);
+			//$('#topReq_list').html("<h3>Top Requests List</h3><br>" + cleanTopReq);
 			$('#404_list').html("<h3>404 List</h3><br>" + cleanList404);
 			$('#inject_list').html("<h3>Injection List list</h3><br>" + cleanListInject);
 		}
@@ -188,5 +189,13 @@ function graph_monthlyStats(monthlyStats)
 	    }]
 	});
 
+	return 0;
+}
+
+function graph_topRequests(listTopReq)
+{
+	
+
+	
 	return 0;
 }
