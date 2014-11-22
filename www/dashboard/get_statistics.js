@@ -196,11 +196,13 @@ function graph_topRequests(listTopReq)
 {
 	var array = listTopReq.split("<br>");
 
-	var topReqArr = new Array();
+	var topReqNames = new Array();
+	var topReqHits = new Array();
 	for(var x = 0; x < 10; x++)
 	{
 		var tempArr = array[x].split(";");
-		topReqArr[x] = {"name":tempArr[0], "hits":tempArr[1]};
+		topReqNames[x] = tempArr[0];
+		topReqHits[x] = tempArr[1];
 	}
 
 	$('#topReq_stats').highcharts({
@@ -214,8 +216,8 @@ function graph_topRequests(listTopReq)
             text: ''
         },
         xAxis: {
-            categories: [topReqArr[0].name, topReqArr[1].name, topReqArr[2].name, topReqArr[3].name, topReqArr[4].name, 
-            			 topReqArr[5].name, topReqArr[6].name, topReqArr[7].name, topReqArr[8].name, topReqArr[9].name]
+            categories: [topReqNames[0], topReqNames[1], topReqNames[2], topReqNames[3], topReqNames[4], 
+            			 topReqNames[5], topReqNames[6], topReqNames[7], topReqNames[8], topReqNames[9]]
         },
         yAxis: {
             min: 0,
@@ -239,8 +241,8 @@ function graph_topRequests(listTopReq)
         },
         series: [{
             name: 'hits',
-            data: [topReqArr[0].hits, topReqArr[1].hits, topReqArr[2].hits, topReqArr[3].hits, topReqArr[4].hits, 
-            	   topReqArr[5].hits, topReqArr[6].hits, topReqArr[7].hits, topReqArr[8].hits, topReqArr[9].hits]
+            data: [topReqHits[0]s, topReqHits[1], topReqHits[2], topReqHits[3], topReqHits[4], 
+            	   topReqHits[5], topReqHits[6], topReqHits[7], topReqHits[8]., topReqHits[9]]
         }]
     });
 
