@@ -203,7 +203,7 @@ function graph_topRequests(listTopReq)
 		topReqArr[x] = {"name":tempArr[0], "hits":tempArr[1]};
 	}
 
-	/*$('#topReq_stats').highcharts({
+	$('#topReq_stats').highcharts({
         chart: {
             type: 'column'
         },
@@ -214,12 +214,13 @@ function graph_topRequests(listTopReq)
             text: ''
         },
         xAxis: {
-            categories: ['200s', '404s', 'Injections', 'Total Visits']
+            categories: [topReqArr[0].name, topReqArr[1].name, topReqArr[2].name, topReqArr[3].name, topReqArr[4].name, 
+            			 topReqArr[5].name, topReqArr[6].name, topReqArr[7].name, topReqArr[8].name, topReqArr[9].name]
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Occurrences'
+                text: 'hits'
             }
         },
         tooltip: {
@@ -237,12 +238,13 @@ function graph_topRequests(listTopReq)
             }
         },
         series: [{
-            name: 'Occurrences',
-            data: [intGeneralStats[0], intGeneralStats[1], intGeneralStats[2], intGeneralStats[3]]
+            name: 'hits',
+            data: [topReqArr[0].hits, topReqArr[1].hits, topReqArr[2].hits, topReqArr[3].hits, topReqArr[4].hits, 
+            	   topReqArr[5].hits, topReqArr[6].hits, topReqArr[7].hits, topReqArr[8].hits, topReqArr[9].hits]
         }]
-    });*/
+    });
 
-	alert(topReqArr);
+	//alert(topReqArr);
 
 	return 0;
 }
