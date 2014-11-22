@@ -50,10 +50,8 @@ include_once("./../resources/sessions.php");
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
-  <script src="js/highcharts.js"></script>
-  <script src="js/modules/exporting.js"></script>
-
-
-
+    <script src="js/highcharts.js"></script>
+    <script src="js/modules/exporting.js"></script>
+    
   </body>
 </html>
