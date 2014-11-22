@@ -38,7 +38,7 @@ function get_statistics()
 				intHourlyStats[x] = parseInt(hourlyStats[x]);
 			}
 
-			var intMonthlyStats
+			var intMonthlyStats = new Array();
 			for(x = 0; x < 12; x++)
 			{
 				intMonthlyStats[x] = parseInt(monthlyStats[x]);
