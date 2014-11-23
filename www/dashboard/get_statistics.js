@@ -10,7 +10,7 @@ function get_statistics()
 		data: 	"path=" + path,
 		success: function(data)
 		{
-			alert(data);
+			//alert(data);
 			// separate data
 			var dataArray = data.split("*");
 
