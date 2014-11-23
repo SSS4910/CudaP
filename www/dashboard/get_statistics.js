@@ -232,7 +232,8 @@ function graph_topRequests(listTopReq)
                 '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
-            useHTML: true
+            useHTML: true,
+            valueSuffix: 'hits'
         },
         plotOptions: {
             column: {
