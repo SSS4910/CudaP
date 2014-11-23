@@ -203,7 +203,7 @@ function graph_topRequests(listTopReq)
 		var tempArr = new Array();
 		tempArr = array[x].split(";");
 		topReqNames[x] = tempArr[0];
-		topReqHits[x] = tempArr[1];
+		topReqHits[x] = parseInt(tempArr[1]);
 	}
 
 	$('#topReq_stats').highcharts({
