@@ -33,7 +33,7 @@ function get_statistics()
 			var cleanListInject = listInject.replace(";", " ");
 			//$('#topReq_list').html("<h3>Top Requests List</h3><br>" + cleanTopReq);
 			$('#404_list').html("<h3>404 List</h3><br>" + cleanList404);
-			$('#inject_list').html("<h3>Injection List list</h3><br>" + cleanListInject);
+			$('#inject_list').html("<h3>Injection List</h3><br>" + cleanListInject);
 		}
 	});
 }
