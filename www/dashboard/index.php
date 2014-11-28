@@ -38,11 +38,11 @@ include_once("./../resources/sessions.php");
     <div class="container-fluid">
         <button type="button" onclick="get_statistics()">Display Statistics</button>
 
-        <div class="row">
+        <div class="row-fluid">
             <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
 
-        <div class="row">
+        <div class="row-fluid">
 
             <div class="span6">
                 <div id="hourly_stats"></div><!-- -->
@@ -54,15 +54,15 @@ include_once("./../resources/sessions.php");
 
         </div>
 
-        <div class="row">
+        <div class="row-fluid">
             <div id="topReq_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
 
-        <div class="row">
+        <div class="row-fluid">
             <div id="404_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
 
-        <div class="row">
+        <div class="row-fluid">
             <div id="inject_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
 
