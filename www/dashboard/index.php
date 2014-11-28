@@ -37,6 +37,9 @@ include_once("./../resources/templates/navbar.php");
   <body>
 
     <div class="container-fluid">
+        <br>
+        <br>
+        <br>
         <button type="button" onclick="get_statistics()">Display Statistics</button>
 
         <div class="row-fluid">
