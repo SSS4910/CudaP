@@ -45,11 +45,11 @@ include_once("./../resources/sessions.php");
         <div class="row">
 
             <div class="span6">
-                <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div><!-- -->
+                <div id="hourly_stats"></div><!-- -->
             </div>
 
             <div class="span6">
-                <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                <div id="monthly_stats"></div>
             </div>
 
         </div>
