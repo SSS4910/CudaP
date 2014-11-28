@@ -35,14 +35,38 @@ include_once("./../resources/sessions.php");
     <![endif]-->
   </head>
   <body>
+    <div class="container-fluid">
+        <button type="button" onclick="get_statistics()">Display Statistics</button>
 
-    <button type="button" onclick="get_statistics()">Display Statistics</button>
-    <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    <div id="topReq_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    <div id="404_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-    <div id="inject_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div class="row">
+            <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+
+        <div class="row">
+
+            <div class="column">
+                <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+
+            <div class="column">
+                <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div id="topReq_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+
+        <div class="row">
+            <div id="404_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+
+        <div class="row">
+            <div id="inject_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+
+    </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
