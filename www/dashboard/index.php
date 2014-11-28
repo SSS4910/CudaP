@@ -44,14 +44,14 @@ include_once("./../resources/sessions.php");
 
         <div class="row">
 
-            <div class="column">
-                <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div class="span6">
+                <div id="hourly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div><!-- -->
             </div>
 
-            <div class="column">
+            <div class="span6">
                 <div id="monthly_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             </div>
-            
+
         </div>
 
         <div class="row">
