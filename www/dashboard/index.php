@@ -43,11 +43,11 @@ include_once("./../resources/templates/navbar.php");
 
         <div class="row-fluid">
 
-            <div class="col-md-6">
+            <div class="col-6">
                 <button type="button" class="btn btn-lg btn-block" onclick="get_statistics()">Display Statistics</button>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-6">
                 <button type="button" class="btn btn-lg btn-block" onclick="">Run Analysis</button>
             </div>
 
