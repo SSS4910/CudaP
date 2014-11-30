@@ -40,7 +40,18 @@ include_once("./../resources/templates/navbar.php");
         <br>
         <br>
         <br>
-        <button type="button" class="btn btn-lg btn-block" onclick="get_statistics()">Display Statistics</button>
+
+        <div class="row-fluid">
+
+            <div class="span6">
+                <button type="button" class="btn btn-lg btn-block" onclick="get_statistics()">Display Statistics</button>
+            </div>
+
+            <div class="span6">
+                <button type="button" class="btn btn-lg btn-block" onclick="">Run Analysis</button>
+            </div>
+
+        </div>
 
         <div class="row-fluid">
             <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
