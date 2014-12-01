@@ -44,11 +44,11 @@ include_once("./../resources/templates/navbar.php");
         <div class="row-fluid">
 
             <div class="col-md-6">
-                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="get_statistics()">Display Statistics</button>
+                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="">Run Analysis</button>
             </div>
 
             <div class="col-md-6">
-                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="">Run Analysis</button>
+                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="get_statistics()">Display Statistics</button>
             </div>
 
         </div>
@@ -82,7 +82,7 @@ include_once("./../resources/templates/navbar.php");
             
 
             <div class="col-md-12">
-                <input type="text" class="form-control" id="404_list"></input>
+                <div id="404_list"></div>
             </div>
 
         </div>
