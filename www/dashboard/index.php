@@ -54,7 +54,15 @@ include_once("./../resources/templates/navbar.php");
         </div>
 
         <div class="row-fluid">
-            <div id="general_stats"></div>
+
+            <div class="col-md-6">
+                <div id="general_stats"></div>
+            </div>
+
+            <div class="col-md-6">
+                <div id="topReq_stats"></div>
+            </div>
+
         </div>
 
         <div class="row-fluid">
@@ -67,10 +75,6 @@ include_once("./../resources/templates/navbar.php");
                 <div id="monthly_stats"></div>
             </div>
 
-        </div>
-
-        <div class="row-fluid">
-            <div id="topReq_stats"></div>
         </div>
 
         <div class="row-fluid">
