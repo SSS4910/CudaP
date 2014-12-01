@@ -1,0 +1,5 @@
+~~~ SSS4910 Runtime Log ~~~
+For debugging purposes only
+Opening error file
+Opening access log file
+access log not found, aborting!

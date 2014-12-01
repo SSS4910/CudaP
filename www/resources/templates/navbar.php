@@ -5,9 +5,9 @@ include_once "./../sessions.php";
 
 ?>
 
-<!DOCTYPE html>
 <html lang="en">
   <body>
+
     <!-- Navbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -22,16 +22,9 @@ include_once "./../sessions.php";
           <ul class="nav navbar-nav navbar-right pull-right">
             <li><a href="./../home/" id="homeButton">Home</a></li>
             <li><a href="./../about/" id="aboutButton">About</a></li>
-            <?php if (s_check_login() == true) : ?>
+            <?php if (true) : ?>
             <li><a href="./../dashboard/" id="dashButton">Dashboard</a></li>
-            <li class="dropdown" id="menulogout">
-            <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogout">Logout</a>
-            <div class="dropdown-menu" style="padding:17px;">
-              <form class="form" id="formLogout" action="" method="post">
-                <button type="submit" name="submitLogout" id="submitLogout" class="btn">Logout</button>
-              </form>
-            </div>
-            </li>
+            <li><a href="./../logout/" id="logoutButton">Logout</a></li>
             <?php else : ?>
             <li><a href="./../login/login.php" id="loginButton">Login</a></li>
             <?php endif; ?>
@@ -39,6 +32,7 @@ include_once "./../sessions.php";
         </div>
       </div>
     </nav>
+
   </body>
 </html>
 

@@ -1,103 +1,44 @@
 <?php
 
-include_once "./../resources/config.php";
-include_once "./../resources/sessions.php";
-
-s_start();
-
-$msg = "";
-$username = $password = "";
-$error = false;
-
-if (isset($_POST["submitLogout"]))
-{
-    s_logout();
-}
-
-if (isset($_POST["submitLogin"]))
-{
-    $db = new mysqli(HOST, USER, PASSWORD, DATABASE);
-    if($db->connect_errno > 0){
-        die('Unable to connect to database [' . $db->connect_error . ']');
-    }
-
-	empty($_POST["username"]) ? $error = true : $username = test_input($_POST["username"]);
-	empty($_POST["password"]) ? $error = true : $password = test_input($_POST["password"]);
-
-	//uname, pass rules?
-    if (!preg_match("/^[a-zA-Z0-9_]{5,32}$/", $username))
-    {
-		$nameerror = "Invalid username: must contain letters, numbers or an underscore";
-        $error = true;
-    }
-	if (!preg_match("/^[a-zA-Z0-9_]{5,64}$/", $password))
-    {
-		$passerror = "Invalid password: must contain letters, numbers or an underscore";
-        $error = true;
-    }
-	//sql login, session
-	if (!$error)
-    {
-        if (s_login($username, $password, $db))
-        {
-            $msg = "success!";
-        }
-    }
-    else
-    {
-        $msg = "error!";
-    }
-    $db->close();
-}
-
 include "./../resources/templates/navbar.php";
 
-function test_input($data) {
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars($data);
-	return $data;
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Log Parsing Dashboard">
-    <meta name="author" content="Source code refurbished from Bootstrap Sample">
-    <link rel="icon" href="../../favicon.ico">
-
-    <title>CS4910 - Log Parsing Dashboard</title>
-
-    <!-- Bootstrap core CSS -->
+    <title>Home</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="./../resources/library/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="./../resources/css/core.css" rel="stylesheet">
-  </head>
-
-  <body>
-    <span class="error">Login? <?php echo $msg; ?></span>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="./../resources/library/dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $('#content').load('home.html');
-        $('#homeButton').on('click', function() {
-          $('#content').load('home.html');
-        });
-        $('#aboutButton').on('click', function() {
-          $('#content').load('about.html');
-        });
-      });
-    </script>
-  </body>
+    <!-- Home CSS -->
+    <link href="./../resources/css/home.css" rel="stylesheet">
+    </head>
+    
+    <body>
+      <div class="jumbotron">
+        <h1>example</h1>
+        <p>test stuff here yadayadayadayadayadayadayadayadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+      </div>
+      <div class="container">
+        <p class="lead">Lorem ipsum dolor sit amet, pri eu iudico eloquentiam. Tale timeam dissentiunt vix ex. Et vis elit novum disputando, eam ex autem audire tacimates, eam ne quando oblique malorum. Eum justo homero id, et qualisque disputando vim. In ocurreret voluptaria posidonium cum, impedit voluptatum ei mel, ut etiam consectetuer eos.</p>
+        <p class="lead">Eos duis autem atomorum at, diceret nominavi id eum, pro at appetere laboramus voluptatibus. Vis menandri iudicabit ex, quo putent eripuit delicata ex. Eam oratio argumentum an. In nam odio eius sententiae, nam deleniti appareat appetere ut, veniam vivendo tractatos mei an. Pro ut facer dolorum, ei nec veniam sensibus urbanitas. Assum verterem appellantur per id.</p>
+        <p class="lead">Autem latine theophrastus an eum, ex vim minim apeirian constituto. Mei prima inermis interpretaris an, ubique delicata et sit, homero perpetua ne sed. Iriure regione honestatis eam cu. Id recteque ullamcorper ius, mel cu dico detracto appellantur, mea eius altera id. Vel liber oporteat elaboraret at. Ad tantas quidam persequeris pri.</p>
+        <p class="lead">Et sit stet efficiendi theophrastus, posse iudicabit mea ei, purto saperet accusam ex pro. Pri nostro posidonium ut, an mei malorum delenit, malis minim usu ad. Altera iudicabit laboramus no eos, ad eligendi corrumpit vis, postea aeterno an mea. In est laoreet detracto scribentur, cum an munere platonem senserit. Tincidunt adipiscing id mea, in usu assum graece persequeris. Wisi suavitate salutatus et duo, ne nam tibique accumsan.</p>
+      </div>
+      
+      <footer class="footer">
+        <div class="container">
+          <p class="text-muted">Footer things here</p>
+        </div>
+      </footer>
+      <!-- jQuery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <!-- Bootstrap javascript -->
+      <script src="./../resources/library/dist/js/boostrap.min.js"></script>
+    </body>
 </html>
