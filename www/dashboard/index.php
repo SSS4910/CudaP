@@ -43,11 +43,11 @@ include_once("./../resources/templates/navbar.php");
 
         <div class="row-fluid">
 
-            <div class="col-lg-6">
+            <div class="col-md-6">
                 <button type="button" class="btn btn-lg btn-block" onclick="get_statistics()">Display Statistics</button>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-md-6">
                 <button type="button" class="btn btn-lg btn-block" onclick="">Run Analysis</button>
             </div>
 
@@ -59,11 +59,11 @@ include_once("./../resources/templates/navbar.php");
 
         <div class="row-fluid">
 
-            <div class="span6">
+            <div class="col-md-6">
                 <div id="hourly_stats"></div><!-- -->
             </div>
 
-            <div class="span6">
+            <div class="col-md-6">
                 <div id="monthly_stats"></div>
             </div>
 
