@@ -78,7 +78,8 @@ include_once("./../resources/templates/navbar.php");
         </div>
 
         <div class="row-fluid">
-            <div id="404_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <!--<div id="404_list" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
+            <input type="text" class="form-control" id="404_list"></input>
         </div>
 
         <div class="row-fluid">
