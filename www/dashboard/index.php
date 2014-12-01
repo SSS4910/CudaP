@@ -54,13 +54,13 @@ include_once("./../resources/templates/navbar.php");
         </div>
 
         <div class="row-fluid">
-            <div id="general_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="general_stats"></div>
         </div>
 
         <div class="row-fluid">
 
             <div class="col-md-6">
-                <div id="hourly_stats"></div><!-- -->
+                <div id="hourly_stats"></div>
             </div>
 
             <div class="col-md-6">
@@ -70,7 +70,7 @@ include_once("./../resources/templates/navbar.php");
         </div>
 
         <div class="row-fluid">
-            <div id="topReq_stats" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="topReq_stats"></div>
         </div>
 
         <div class="row-fluid">
