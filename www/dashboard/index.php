@@ -43,7 +43,7 @@ include "./../resources/templates/navbar.php";
         <div class="row-fluid">
 
             <div class="col-md-6">
-                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="">Run Analysis</button>
+                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="run_analysis()">Run Analysis</button>
             </div>
 
             <div class="col-md-6">

@@ -1,3 +1,17 @@
+function run_analysis()
+{
+	path = "../../program/";
+
+	$.ajax({
+		type:	"POST",
+		url:	"./run_analysis.php",
+		data: 	"path=" + path,
+		success: function(data)
+		{
+			get_statistics();
+		}
+	});
+}
 
 function get_statistics()
 {
