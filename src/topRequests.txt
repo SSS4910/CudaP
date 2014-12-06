@@ -1,0 +1,10 @@
+/logs/access.log ;200
+/ ;28
+/robots.txt ;23
+/sitebuilder/images/navbar-5-inactive-37281.png ;6
+/sitebuilder/images/navbar-7-inactive-35843.png ;6
+/sitebuilder/images/navbar-9-inactive-11281.png ;6
+/sitebuilder/images/navbar-1-inactive-11921.png ;5
+/sitebuilder/images/navbar-10-inactive-93046.png ;5
+/sitebuilder/images/navbar-0-active-82156.png ;5
+/sitebuilder/images/navbar-8-inactive-18203.png ;5
