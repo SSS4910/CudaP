@@ -8,7 +8,8 @@ function run_analysis()
 		data: 	"path=" + path,
 		success: function(data)
 		{
-			get_statistics();
+			if(data == "ok")
+				get_statistics();
 		}
 	});
 }
