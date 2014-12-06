@@ -15,7 +15,7 @@ function run_analysis()
 
 function get_statistics()
 {
-	var path = "";
+	var path = "../../program/";
 	
 	// use an ajax call to use php script
 	$.ajax({
