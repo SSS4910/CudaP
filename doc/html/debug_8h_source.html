@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Qwhip: debug.h Source File</title>
+<title>Apache Log Processor: debug.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,10 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Qwhip
-   &#160;<span id="projectnumber">1++</span>
+   <div id="projectname">Apache Log Processor
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">Analize Server Logs like a boss</div>
+   <div id="projectbrief">Analyzes an Apache server log and generates basic statistics geared toward intrusion detection</div>
   </td>
  </tr>
  </tbody>
@@ -70,7 +70,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -93,7 +92,7 @@ $(document).ready(function(){initNavTree('debug_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -107,24 +106,21 @@ $(document).ready(function(){initNavTree('debug_8h_source.html','');});
 <div class="title">debug.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="debug_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keywordtype">int</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<a class="code" href="debug_8h.html#a86aeaa068e21bdc4f26ac12c24e61b53">open_debug_file</a>();</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keywordtype">int</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;open_debug_file();</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keywordtype">int</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<a class="code" href="debug_8h.html#ab957d66c832a7c438992de41bf733f9e">close_debug_file</a>();</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;close_debug_file();</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">int</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<a class="code" href="debug_8h.html#ac43cdec07603b5f3d6175dca61833afb">debug_write</a>(<span class="keywordtype">char</span> *);</div>
-<div class="ttc" id="debug_8h_html_ac43cdec07603b5f3d6175dca61833afb"><div class="ttname"><a href="debug_8h.html#ac43cdec07603b5f3d6175dca61833afb">debug_write</a></div><div class="ttdeci">int debug_write(char *)</div><div class="ttdef"><b>Definition:</b> debug.c:43</div></div>
-<div class="ttc" id="debug_8h_html_ab957d66c832a7c438992de41bf733f9e"><div class="ttname"><a href="debug_8h.html#ab957d66c832a7c438992de41bf733f9e">close_debug_file</a></div><div class="ttdeci">int close_debug_file()</div><div class="ttdef"><b>Definition:</b> debug.c:29</div></div>
-<div class="ttc" id="debug_8h_html_a86aeaa068e21bdc4f26ac12c24e61b53"><div class="ttname"><a href="debug_8h.html#a86aeaa068e21bdc4f26ac12c24e61b53">open_debug_file</a></div><div class="ttdeci">int open_debug_file()</div><div class="ttdef"><b>Definition:</b> debug.c:14</div></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;debug_write(<span class="keywordtype">char</span> *);</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="debug_8h.html">debug.h</a></li>
-    <li class="footer">Generated on Sat Nov 15 2014 19:30:01 for Qwhip by
+    <li class="navelem"><b>debug.h</b></li>
+    <li class="footer">Generated on Thu Dec 11 2014 13:58:31 for Apache Log Processor by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

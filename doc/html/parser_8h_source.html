@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Qwhip: parser.h Source File</title>
+<title>Apache Log Processor: parser.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,10 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Qwhip
-   &#160;<span id="projectnumber">1++</span>
+   <div id="projectname">Apache Log Processor
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">Analize Server Logs like a boss</div>
+   <div id="projectbrief">Analyzes an Apache server log and generates basic statistics geared toward intrusion detection</div>
   </td>
  </tr>
  </tbody>
@@ -70,7 +70,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -93,7 +92,7 @@ $(document).ready(function(){initNavTree('parser_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -107,21 +106,19 @@ $(document).ready(function(){initNavTree('parser_8h_source.html','');});
 <div class="title">parser.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="parser_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keywordtype">int</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<a class="code" href="parser_8h.html#a435ddc6ce5c1f80d0a3624c431f2b2fe">parse_line</a>(<span class="keywordtype">char</span> *, <a class="code" href="struct_request.html">Request</a> *);</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keywordtype">int</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;parse_line(<span class="keywordtype">char</span> *, <a class="code" href="struct_request.html">Request</a> *);</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keywordtype">char</span> *</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<a class="code" href="parser_8h.html#a7da9daf27699b6d40caf5863307a3a24">slice</a>(<span class="keywordtype">char</span> *, <span class="keywordtype">int</span>, <span class="keywordtype">int</span>);</div>
-<div class="ttc" id="struct_request_html"><div class="ttname"><a href="struct_request.html">Request</a></div><div class="ttdef"><b>Definition:</b> core.h:15</div></div>
-<div class="ttc" id="parser_8h_html_a435ddc6ce5c1f80d0a3624c431f2b2fe"><div class="ttname"><a href="parser_8h.html#a435ddc6ce5c1f80d0a3624c431f2b2fe">parse_line</a></div><div class="ttdeci">int parse_line(char *, Request *)</div><div class="ttdef"><b>Definition:</b> parser.c:41</div></div>
-<div class="ttc" id="parser_8h_html_a7da9daf27699b6d40caf5863307a3a24"><div class="ttname"><a href="parser_8h.html#a7da9daf27699b6d40caf5863307a3a24">slice</a></div><div class="ttdeci">char * slice(char *, int, int)</div><div class="ttdef"><b>Definition:</b> parser.c:677</div></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;slice(<span class="keywordtype">char</span> *, <span class="keywordtype">int</span>, <span class="keywordtype">int</span>);</div>
+<div class="ttc" id="struct_request_html"><div class="ttname"><a href="struct_request.html">Request</a></div><div class="ttdef"><b>Definition:</b> core.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="parser_8h.html">parser.h</a></li>
-    <li class="footer">Generated on Sat Nov 15 2014 19:30:01 for Qwhip by
+    <li class="navelem"><b>parser.h</b></li>
+    <li class="footer">Generated on Thu Dec 11 2014 13:58:31 for Apache Log Processor by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

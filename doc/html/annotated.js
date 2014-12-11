@@ -1,7 +1,8 @@
 var annotated =
 [
     [ "Buffer", "struct_buffer.html", "struct_buffer" ],
-    [ "Queue404", "struct_queue404.html", "struct_queue404" ],
     [ "Request", "struct_request.html", "struct_request" ],
-    [ "Statistics", "struct_statistics.html", "struct_statistics" ]
+    [ "Statistics", "struct_statistics.html", "struct_statistics" ],
+    [ "UniqueRequests", "struct_unique_requests.html", "struct_unique_requests" ],
+    [ "URL", "struct_u_r_l.html", "struct_u_r_l" ]
 ];

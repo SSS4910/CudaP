@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['false',['FALSE',['../core_8h.html#aa93f0eb578d23995850d61f7d61c55c1',1,'core.h']]]
+  ['uniquerequests',['UniqueRequests',['../struct_unique_requests.html',1,'']]],
+  ['url',['URL',['../struct_u_r_l.html',1,'']]]
 ];

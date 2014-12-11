@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Qwhip: Request Struct Reference</title>
+<title>Apache Log Processor: Request Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,10 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Qwhip
-   &#160;<span id="projectnumber">1++</span>
+   <div id="projectname">Apache Log Processor
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">Analize Server Logs like a boss</div>
+   <div id="projectbrief">Analyzes an Apache server log and generates basic statistics geared toward intrusion detection</div>
   </td>
  </tr>
  </tbody>
@@ -71,7 +71,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -94,7 +93,7 @@ $(document).ready(function(){initNavTree('struct_request.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -110,153 +109,40 @@ $(document).ready(function(){initNavTree('struct_request.html','');});
 <div class="title">Request Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="core_8h_source.html">core.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a1c2046dcb30a629d6d9f45ff8f403f12"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#a1c2046dcb30a629d6d9f45ff8f403f12">host</a></td></tr>
+<tr class="memitem:a1c2046dcb30a629d6d9f45ff8f403f12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1c2046dcb30a629d6d9f45ff8f403f12"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>host</b></td></tr>
 <tr class="separator:a1c2046dcb30a629d6d9f45ff8f403f12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc6a49356b7210c7af4fdaec589c2501"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#afc6a49356b7210c7af4fdaec589c2501">clientId</a></td></tr>
+<tr class="memitem:afc6a49356b7210c7af4fdaec589c2501"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc6a49356b7210c7af4fdaec589c2501"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>clientId</b></td></tr>
 <tr class="separator:afc6a49356b7210c7af4fdaec589c2501"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9215e76385d60b36fa2ee2a903e8005"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#ad9215e76385d60b36fa2ee2a903e8005">userId</a></td></tr>
+<tr class="memitem:ad9215e76385d60b36fa2ee2a903e8005"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9215e76385d60b36fa2ee2a903e8005"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>userId</b></td></tr>
 <tr class="separator:ad9215e76385d60b36fa2ee2a903e8005"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf3a44ace5539215bc080105d7b58bca"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#aaf3a44ace5539215bc080105d7b58bca">strTime</a></td></tr>
+<tr class="memitem:aaf3a44ace5539215bc080105d7b58bca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf3a44ace5539215bc080105d7b58bca"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>strTime</b></td></tr>
 <tr class="separator:aaf3a44ace5539215bc080105d7b58bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab842bdb7d02be824fb48613032b4ff36"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#ab842bdb7d02be824fb48613032b4ff36">time</a></td></tr>
+<tr class="memitem:ab842bdb7d02be824fb48613032b4ff36"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab842bdb7d02be824fb48613032b4ff36"></a>
+time_t&#160;</td><td class="memItemRight" valign="bottom"><b>time</b></td></tr>
 <tr class="separator:ab842bdb7d02be824fb48613032b4ff36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab47351fd475e3902c6d5da9e09474834"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#ab47351fd475e3902c6d5da9e09474834">req</a></td></tr>
+<tr class="memitem:ab47351fd475e3902c6d5da9e09474834"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab47351fd475e3902c6d5da9e09474834"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>req</b></td></tr>
 <tr class="separator:ab47351fd475e3902c6d5da9e09474834"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ff5ada708c1e7c8f38abc41907506ba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#a1ff5ada708c1e7c8f38abc41907506ba">retCode</a></td></tr>
+<tr class="memitem:a1ff5ada708c1e7c8f38abc41907506ba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1ff5ada708c1e7c8f38abc41907506ba"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>retCode</b></td></tr>
 <tr class="separator:a1ff5ada708c1e7c8f38abc41907506ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c8e474bb8d2c6f7162455416b488e50"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#a8c8e474bb8d2c6f7162455416b488e50">dataSize</a></td></tr>
+<tr class="memitem:a8c8e474bb8d2c6f7162455416b488e50"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c8e474bb8d2c6f7162455416b488e50"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>dataSize</b></td></tr>
 <tr class="separator:a8c8e474bb8d2c6f7162455416b488e50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1385d5da8c765cd03076f404f49a9b2c"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#a1385d5da8c765cd03076f404f49a9b2c">referer</a></td></tr>
+<tr class="memitem:a1385d5da8c765cd03076f404f49a9b2c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1385d5da8c765cd03076f404f49a9b2c"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>referer</b></td></tr>
 <tr class="separator:a1385d5da8c765cd03076f404f49a9b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4689522b836b1d00731611b760aab9de"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_request.html#a4689522b836b1d00731611b760aab9de">userAgent</a></td></tr>
+<tr class="memitem:a4689522b836b1d00731611b760aab9de"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4689522b836b1d00731611b760aab9de"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>userAgent</b></td></tr>
 <tr class="separator:a4689522b836b1d00731611b760aab9de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
-<a class="anchor" id="afc6a49356b7210c7af4fdaec589c2501"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* clientId</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a8c8e474bb8d2c6f7162455416b488e50"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int dataSize</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a1c2046dcb30a629d6d9f45ff8f403f12"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* host</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a1385d5da8c765cd03076f404f49a9b2c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* referer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab47351fd475e3902c6d5da9e09474834"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* req</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a1ff5ada708c1e7c8f38abc41907506ba"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int retCode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aaf3a44ace5539215bc080105d7b58bca"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* strTime</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab842bdb7d02be824fb48613032b4ff36"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">time_t time</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4689522b836b1d00731611b760aab9de"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* userAgent</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ad9215e76385d60b36fa2ee2a903e8005"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* userId</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="core_8h_source.html">core.h</a></li>
 </ul>
@@ -266,7 +152,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_request.html">Request</a></li>
-    <li class="footer">Generated on Sat Nov 15 2014 19:30:01 for Qwhip by
+    <li class="footer">Generated on Thu Dec 11 2014 13:58:31 for Apache Log Processor by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
